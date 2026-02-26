@@ -43,7 +43,7 @@ const Navigation = () => {
         {/* Logo */}
         <a
           href="#"
-          className={`font-black text-lg tracking-[0.15em] transition-colors duration-500 ${
+          className={`font-black text-[calc(1.125*var(--vf))] tracking-[0.15em] transition-colors duration-500 ${
             isLight ? "text-foreground" : "text-white"
           }`}
         >
@@ -56,7 +56,7 @@ const Navigation = () => {
             <a
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors duration-500 ${
+              className={`text-[calc(0.875*var(--vf))] font-medium transition-colors duration-500 ${
                 isLight
                   ? "text-foreground hover:text-primary"
                   : "text-white/90 hover:text-white"

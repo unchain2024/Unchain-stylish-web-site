@@ -33,21 +33,21 @@ const FeaturesSection = () => {
         {/* Intro text */}
         <div className="max-w-[60vw] mx-auto text-center mb-[4vh]">
           <ScrollReveal>
-            <p className="text-[clamp(0.875rem,1.2vw,1.25rem)] text-dark-muted leading-relaxed mb-[2vh]">
+            <p className="text-[clamp(0.875rem,calc(1.2*var(--vf)),1.25rem)] text-dark-muted leading-relaxed mb-[2vh]">
               すべての組織には解放すべき重要な使命があると私たちは信じています。
               <br />
               技術はその使命に仕えるべきであり、それを置き換えるべきではありません。
             </p>
           </ScrollReveal>
           <ScrollReveal>
-            <p className="text-[clamp(0.875rem,1.2vw,1.25rem)] text-dark-muted leading-relaxed mb-[3vh]">
+            <p className="text-[clamp(0.875rem,calc(1.2*var(--vf)),1.25rem)] text-dark-muted leading-relaxed mb-[3vh]">
               今すぐ、あたらしいAIを手に入れよう。
             </p>
           </ScrollReveal>
           <ScrollReveal>
             <a
               href="#"
-              className="text-primary font-medium text-[clamp(0.8rem,1vw,1rem)] inline-flex items-center gap-2 hover:underline"
+              className="text-primary font-medium text-[clamp(0.8rem,calc(1*var(--vf)),1rem)] inline-flex items-center gap-2 hover:underline"
             >
               ⏵ 2分でわかるUNCHAINを見る
             </a>
@@ -56,7 +56,7 @@ const FeaturesSection = () => {
 
         {/* Features heading */}
         <ScrollReveal>
-          <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-bold text-dark-fg mt-[4vh] mb-[3vh]">
+          <h3 className="text-[clamp(1.25rem,calc(2.2*var(--vf)),2rem)] font-bold text-dark-fg mt-[4vh] mb-[3vh]">
             UNCHAINの特徴
           </h3>
         </ScrollReveal>
@@ -74,7 +74,7 @@ const FeaturesSection = () => {
                   className="border border-dark-muted/20 rounded-xl p-[1.5vw] flex flex-col"
                   style={{ minHeight: "clamp(220px, 28vh, 420px)" }}
                 >
-                  <span className="text-[clamp(0.75rem,1vw,1rem)] font-bold text-dark-fg mb-[2vh]">
+                  <span className="text-[clamp(0.75rem,calc(1*var(--vf)),1rem)] font-bold text-dark-fg mb-[2vh]">
                     {feature.num}
                   </span>
 
@@ -86,10 +86,10 @@ const FeaturesSection = () => {
                     </div>
                   </div>
 
-                  <h4 className="text-[clamp(0.7rem,0.9vw,1rem)] font-bold text-dark-fg mb-[0.5vh] whitespace-pre-line text-center">
+                  <h4 className="text-[clamp(0.7rem,calc(0.9*var(--vf)),1rem)] font-bold text-dark-fg mb-[0.5vh] whitespace-pre-line text-center">
                     {feature.title}
                   </h4>
-                  <p className="text-[clamp(0.6rem,0.8vw,0.875rem)] text-dark-muted leading-relaxed text-center">
+                  <p className="text-[clamp(0.6rem,calc(0.8*var(--vf)),0.875rem)] text-dark-muted leading-relaxed text-center">
                     {feature.desc}
                   </p>
                 </div>

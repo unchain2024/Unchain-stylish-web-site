@@ -44,7 +44,7 @@ const BusinessSection = () => {
       <div className="w-full px-[5vw]">
         {/* Header */}
         <ScrollReveal>
-          <h2 className="text-[clamp(1.5rem,3.5vw,3.75rem)] font-bold text-foreground mb-[3vh]">
+          <h2 className="text-[clamp(1.5rem,calc(3.5*var(--vf)),3.75rem)] font-bold text-foreground mb-[3vh]">
             SOLUTIONS / SERVICES
           </h2>
         </ScrollReveal>
@@ -54,7 +54,7 @@ const BusinessSection = () => {
           {categories.map((cat, ci) => (
             <ScrollReveal key={cat.category} delay={ci * 0.05}>
               <div className="flex flex-col md:flex-row md:items-center gap-[2vw] md:gap-[4vw]">
-                <h3 className="text-[clamp(1.75rem,4vw,4.5rem)] font-black text-foreground tracking-tight w-[30vw] flex-shrink-0">
+                <h3 className="text-[clamp(1.75rem,calc(4*var(--vf)),4.5rem)] font-black text-foreground tracking-tight w-[30vw] flex-shrink-0">
                   {cat.category}
                 </h3>
 
@@ -72,13 +72,13 @@ const BusinessSection = () => {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <h4 className="text-[clamp(1rem,1.8vw,2rem)] font-bold text-foreground">
+                        <h4 className="text-[clamp(1rem,calc(1.8*var(--vf)),2rem)] font-bold text-foreground">
                           {item.name}
                         </h4>
                       </div>
 
                       <div className="hidden md:flex items-center gap-[1.5vw] flex-shrink-0">
-                        <p className="text-[clamp(0.75rem,1vw,1rem)] text-muted-foreground max-w-[22vw]">
+                        <p className="text-[clamp(0.75rem,calc(1*var(--vf)),1rem)] text-muted-foreground max-w-[22vw]">
                           {item.description}
                         </p>
                         <div className="w-[3vw] h-[3vw] min-w-[2rem] min-h-[2rem] rounded-full border border-border flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors">
@@ -98,7 +98,7 @@ const BusinessSection = () => {
         </div>
 
         <ScrollReveal className="flex justify-end items-center gap-[1vw] mt-[3vh]">
-          <span className="text-[clamp(0.75rem,1vw,1rem)] text-foreground font-medium">
+          <span className="text-[clamp(0.75rem,calc(1*var(--vf)),1rem)] text-foreground font-medium">
             事業内容へ
           </span>
           <div className="w-[3vw] h-[3vw] min-w-[2rem] min-h-[2rem] rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors cursor-pointer">

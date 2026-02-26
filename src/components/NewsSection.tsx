@@ -53,7 +53,7 @@ const NewsSection = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-[3vh]">
           <ScrollReveal>
-            <h2 className="text-[clamp(1.5rem,3.5vw,3.75rem)] font-bold text-foreground">
+            <h2 className="text-[clamp(1.5rem,calc(3.5*var(--vf)),3.75rem)] font-bold text-foreground">
               NEWS
             </h2>
           </ScrollReveal>
@@ -95,10 +95,10 @@ const NewsSection = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
-                <p className="text-[clamp(0.75rem,1vw,1.125rem)] font-medium mb-[0.5vh] line-clamp-2 text-foreground">
+                <p className="text-[clamp(0.75rem,calc(1*var(--vf)),1.125rem)] font-medium mb-[0.5vh] line-clamp-2 text-foreground">
                   {item.title}
                 </p>
-                <p className="text-[clamp(0.6rem,0.8vw,0.875rem)] text-muted-foreground line-clamp-1">
+                <p className="text-[clamp(0.6rem,calc(0.8*var(--vf)),0.875rem)] text-muted-foreground line-clamp-1">
                   {item.subtitle}
                 </p>
               </a>
@@ -110,7 +110,7 @@ const NewsSection = () => {
         <ScrollReveal className="text-center mt-[3vh]">
           <a
             href="#"
-            className="text-[clamp(0.75rem,0.9vw,1rem)] font-medium text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+            className="text-[clamp(0.75rem,calc(0.9*var(--vf)),1rem)] font-medium text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
           >
             すべて見る
           </a>

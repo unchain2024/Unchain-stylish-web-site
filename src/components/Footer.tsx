@@ -1,4 +1,5 @@
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
 
 const footerLinks = [
   "会社概要",
@@ -10,12 +11,14 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <footer className="section-dark h-screen flex flex-col justify-center">
+    <footer data-nav-theme="dark" className="section-dark h-screen flex flex-col justify-center">
       {/* Top area – logo + socials */}
-      <div className="w-full px-[5vw] flex flex-col items-center flex-1 justify-center">
-        <p className="font-black text-[clamp(2rem,4vw,4rem)] tracking-[0.2em] text-dark-fg mb-[5vh]">
-          UNCHAIN
-        </p>
+      <div className="w-full px-[5vw] flex flex-col items-center flex-1 justify-end pb-[5vh]">
+        <ScrollReveal>
+          <p className="font-black text-[clamp(2rem,4vw,4rem)] tracking-[0.2em] text-dark-fg mb-[5vh]">
+            UNCHAIN
+          </p>
+        </ScrollReveal>
 
         <div className="flex items-center gap-[2vw] mb-[5vh]">
           <a href="#" className="text-dark-muted hover:text-dark-fg transition-colors">

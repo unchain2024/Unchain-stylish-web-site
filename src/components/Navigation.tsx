@@ -10,30 +10,41 @@ const navItems = [
 ];
 
 const Navigation = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const sections = document.querySelectorAll<HTMLElement>("[data-nav-theme]");
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that overlaps with the top of the viewport (where the nav is)
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const t = entry.target.getAttribute("data-nav-theme");
+            if (t === "light" || t === "dark") setTheme(t);
+          }
+        }
+      },
+      { rootMargin: "-0px 0px -90% 0px", threshold: 0 }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
+  const isLight = theme === "light";
+
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
-      }`}
-    >
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
       <div className="w-full px-[5vw] flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <a
           href="#"
-          className={`font-black text-lg tracking-[0.15em] transition-colors duration-300 ${
-            scrolled ? "text-foreground" : "text-background"
+          className={`font-black text-lg tracking-[0.15em] transition-colors duration-500 ${
+            isLight ? "text-foreground" : "text-white"
           }`}
         >
           UNCHAIN
@@ -45,10 +56,10 @@ const Navigation = () => {
             <a
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors duration-300 ${
-                scrolled
+              className={`text-sm font-medium transition-colors duration-500 ${
+                isLight
                   ? "text-foreground hover:text-primary"
-                  : "text-background/90 hover:text-background"
+                  : "text-white/90 hover:text-white"
               }`}
             >
               {item.label}
@@ -59,8 +70,8 @@ const Navigation = () => {
           <div className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className={`transition-colors duration-300 ${
-                scrolled ? "text-foreground" : "text-background/90"
+              className={`transition-colors duration-500 ${
+                isLight ? "text-foreground" : "text-white/90"
               }`}
             >
               <Globe size={18} />
@@ -93,8 +104,8 @@ const Navigation = () => {
 
         {/* Mobile toggle */}
         <button
-          className={`md:hidden transition-colors ${
-            scrolled ? "text-foreground" : "text-background"
+          className={`md:hidden transition-colors duration-500 ${
+            isLight ? "text-foreground" : "text-white"
           }`}
           onClick={() => setMobileOpen(!mobileOpen)}
         >

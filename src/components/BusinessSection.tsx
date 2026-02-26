@@ -1,9 +1,8 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import neuronVisual from "@/assets/neuron-visual.png";
 import heroMain from "@/assets/hero-main.png";
 import hero2 from "@/assets/hero-2.png";
+import ScrollReveal from "./ScrollReveal";
 
 const categories = [
   {
@@ -40,33 +39,22 @@ const categories = [
 ];
 
 const BusinessSection = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-
   return (
-    <section id="solutions" className="bg-background h-screen flex items-center" ref={ref}>
+    <section id="solutions" data-nav-theme="light" className="bg-background h-screen flex items-center">
       <div className="w-full px-[5vw]">
         {/* Header */}
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-[clamp(1.5rem,3.5vw,3.75rem)] font-bold text-foreground mb-[3vh]"
-        >
-          SOLUTIONS / SERVICES
-        </motion.h2>
+        <ScrollReveal>
+          <h2 className="text-[clamp(1.5rem,3.5vw,3.75rem)] font-bold text-foreground mb-[3vh]">
+            SOLUTIONS / SERVICES
+          </h2>
+        </ScrollReveal>
 
         {/* Categories */}
         <div className="space-y-[3vh]">
           {categories.map((cat, ci) => (
-            <motion.div
-              key={cat.category}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: ci * 0.12 }}
-            >
+            <ScrollReveal key={cat.category} delay={ci * 0.05}>
               <div className="flex flex-col md:flex-row md:items-center gap-[2vw] md:gap-[4vw]">
-                <h3 className="text-[clamp(1.75rem,4vw,4.5rem)] font-black text-foreground tracking-tight min-w-[15vw]">
+                <h3 className="text-[clamp(1.75rem,4vw,4.5rem)] font-black text-foreground tracking-tight w-[30vw] flex-shrink-0">
                   {cat.category}
                 </h3>
 
@@ -105,18 +93,18 @@ const BusinessSection = () => {
               {ci < categories.length - 1 && (
                 <div className="border-t border-border mt-[2vh]" />
               )}
-            </motion.div>
+            </ScrollReveal>
           ))}
         </div>
 
-        <div className="flex justify-end items-center gap-[1vw] mt-[3vh]">
+        <ScrollReveal className="flex justify-end items-center gap-[1vw] mt-[3vh]">
           <span className="text-[clamp(0.75rem,1vw,1rem)] text-foreground font-medium">
             事業内容へ
           </span>
           <div className="w-[3vw] h-[3vw] min-w-[2rem] min-h-[2rem] rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors cursor-pointer">
             <ArrowRight size={20} />
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

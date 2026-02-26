@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;900&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 213 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 8%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 213 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 213 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Dark section tokens */
+    --dark-bg: 0 0% 7%;
+    --dark-fg: 0 0% 100%;
+    --dark-muted: 0 0% 55%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 213 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 213 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+}
+
+@layer components {
+  .section-dark {
+    background-color: hsl(var(--dark-bg));
+    color: hsl(var(--dark-fg));
+  }
+
+  .section-light {
+    background-color: hsl(var(--secondary));
+  }
+
+  .btn-cta {
+    @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm transition-all duration-300;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-cta:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+
+  .btn-cta-nav {
+    @apply inline-flex items-center justify-center px-5 py-2 rounded-full font-medium text-xs transition-all duration-300;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm border transition-all duration-300;
+    border-color: hsl(var(--dark-fg));
+    color: hsl(var(--dark-fg));
+    background: transparent;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: hsl(var(--dark-fg));
+    color: hsl(var(--dark-bg));
+  }
+}
+
+@layer utilities {
+  .hero-letter-spacing {
+    letter-spacing: 0.08em;
+  }
+
+  /* Fluid responsive utilities */
+  .text-fluid-xs { font-size: clamp(0.7rem, 0.6rem + 0.3vw, 0.875rem); }
+  .text-fluid-sm { font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem); }
+  .text-fluid-base { font-size: clamp(0.875rem, 0.75rem + 0.5vw, 1.125rem); }
+  .text-fluid-lg { font-size: clamp(1rem, 0.85rem + 0.6vw, 1.25rem); }
+  .text-fluid-xl { font-size: clamp(1.125rem, 0.9rem + 0.8vw, 1.5rem); }
+  .text-fluid-2xl { font-size: clamp(1.25rem, 1rem + 1vw, 1.875rem); }
+  .text-fluid-3xl { font-size: clamp(1.5rem, 1rem + 1.5vw, 2.25rem); }
+  .text-fluid-4xl { font-size: clamp(1.75rem, 1rem + 2.5vw, 3rem); }
+  .text-fluid-5xl { font-size: clamp(2rem, 1rem + 3vw, 3.75rem); }
+  .text-fluid-6xl { font-size: clamp(2.25rem, 1rem + 4vw, 4.5rem); }
+  .text-fluid-hero { font-size: clamp(2.5rem, 1rem + 5vw, 6rem); }
+
+  .gap-fluid-sm { gap: clamp(0.5rem, 0.3rem + 0.5vw, 1rem); }
+  .gap-fluid-md { gap: clamp(1rem, 0.5rem + 1vw, 1.5rem); }
+  .gap-fluid-lg { gap: clamp(1.5rem, 0.75rem + 2vw, 3rem); }
+  .gap-fluid-xl { gap: clamp(2rem, 1rem + 3vw, 5rem); }
+
+  .p-fluid-sm { padding: clamp(0.75rem, 0.5rem + 0.5vw, 1.25rem); }
+  .p-fluid-md { padding: clamp(1rem, 0.5rem + 1vw, 2rem); }
+  .p-fluid-lg { padding: clamp(1.5rem, 0.75rem + 2vw, 3rem); }
+
+  .py-fluid-section { 
+    padding-top: clamp(3rem, 2rem + 4vw, 8rem);
+    padding-bottom: clamp(3rem, 2rem + 4vw, 8rem);
+  }
+
+  .mb-fluid-sm { margin-bottom: clamp(0.5rem, 0.3rem + 0.5vw, 1rem); }
+  .mb-fluid-md { margin-bottom: clamp(1rem, 0.5rem + 1.5vw, 2.5rem); }
+  .mb-fluid-lg { margin-bottom: clamp(1.5rem, 0.75rem + 2vw, 4rem); }
+  .mb-fluid-xl { margin-bottom: clamp(2rem, 1rem + 3vw, 5rem); }
+
+  .size-fluid-icon-sm { width: clamp(2.5rem, 2rem + 1vw, 3.5rem); height: clamp(2.5rem, 2rem + 1vw, 3.5rem); }
+  .size-fluid-icon { width: clamp(3rem, 2rem + 1.5vw, 4.5rem); height: clamp(3rem, 2rem + 1.5vw, 4.5rem); }
+  .size-fluid-thumb { width: clamp(4rem, 3rem + 2vw, 8rem); height: clamp(4rem, 3rem + 2vw, 8rem); }
+  .size-fluid-visual { width: clamp(6rem, 4rem + 3vw, 10rem); height: clamp(6rem, 4rem + 3vw, 10rem); }
+}

@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --vf: min(1vw, 1.78vh);
+    --vf: calc(min(1vw, 1.5vh) * 0.73);
 
     --background: 0 0% 100%;
     --foreground: 0 0% 8%;
@@ -111,17 +111,17 @@
   }
 
   /* Fluid responsive utilities */
-  .text-fluid-xs { font-size: clamp(0.7rem, calc(0.6rem + 0.3 * var(--vf)), 0.875rem); }
-  .text-fluid-sm { font-size: clamp(0.8rem, calc(0.7rem + 0.4 * var(--vf)), 1rem); }
-  .text-fluid-base { font-size: clamp(0.875rem, calc(0.75rem + 0.5 * var(--vf)), 1.125rem); }
-  .text-fluid-lg { font-size: clamp(1rem, calc(0.85rem + 0.6 * var(--vf)), 1.25rem); }
-  .text-fluid-xl { font-size: clamp(1.125rem, calc(0.9rem + 0.8 * var(--vf)), 1.5rem); }
-  .text-fluid-2xl { font-size: clamp(1.25rem, calc(1rem + 1 * var(--vf)), 1.875rem); }
-  .text-fluid-3xl { font-size: clamp(1.5rem, calc(1rem + 1.5 * var(--vf)), 2.25rem); }
-  .text-fluid-4xl { font-size: clamp(1.75rem, calc(1rem + 2.5 * var(--vf)), 3rem); }
-  .text-fluid-5xl { font-size: clamp(2rem, calc(1rem + 3 * var(--vf)), 3.75rem); }
-  .text-fluid-6xl { font-size: clamp(2.25rem, calc(1rem + 4 * var(--vf)), 4.5rem); }
-  .text-fluid-hero { font-size: clamp(2.5rem, calc(1rem + 5 * var(--vf)), 6rem); }
+  .text-fluid-xs { font-size: calc(0.875 * var(--vf)); }
+  .text-fluid-sm { font-size: calc(1 * var(--vf)); }
+  .text-fluid-base { font-size: calc(1.125 * var(--vf)); }
+  .text-fluid-lg { font-size: calc(1.25 * var(--vf)); }
+  .text-fluid-xl { font-size: calc(1.5 * var(--vf)); }
+  .text-fluid-2xl { font-size: calc(1.875 * var(--vf)); }
+  .text-fluid-3xl { font-size: calc(2.25 * var(--vf)); }
+  .text-fluid-4xl { font-size: calc(3 * var(--vf)); }
+  .text-fluid-5xl { font-size: calc(3.75 * var(--vf)); }
+  .text-fluid-6xl { font-size: calc(4.5 * var(--vf)); }
+  .text-fluid-hero { font-size: calc(6 * var(--vf)); }
 
   .gap-fluid-sm { gap: clamp(0.5rem, 0.3rem + 0.5vw, 1rem); }
   .gap-fluid-md { gap: clamp(1rem, 0.5rem + 1vw, 1.5rem); }

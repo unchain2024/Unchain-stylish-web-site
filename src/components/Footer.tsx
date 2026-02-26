@@ -15,7 +15,7 @@ const Footer = () => {
       {/* Top area – logo + socials */}
       <div className="w-full px-[5vw] flex flex-col items-center flex-1 justify-end pb-[5vh]">
         <ScrollReveal>
-          <p className="font-black text-[clamp(2rem,calc(4*var(--vf)),4rem)] tracking-[0.2em] text-dark-fg mb-[5vh]">
+          <p className="font-black text-[calc(4*var(--vf))] tracking-[0.2em] text-dark-fg mb-[5vh]">
             UNCHAIN
           </p>
         </ScrollReveal>
@@ -43,7 +43,7 @@ const Footer = () => {
             <a
               key={link}
               href="#"
-              className="text-[clamp(0.6rem,calc(0.8*var(--vf)),0.875rem)] text-dark-muted hover:text-dark-fg transition-colors"
+              className="text-[calc(0.875*var(--vf))] text-dark-muted hover:text-dark-fg transition-colors"
             >
               {link}
             </a>
@@ -53,7 +53,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <div className="w-full px-[5vw] pb-[2vh] pt-[1vh] text-center">
-        <p className="text-[clamp(0.6rem,calc(0.8*var(--vf)),0.875rem)] text-dark-muted">
+        <p className="text-[calc(0.875*var(--vf))] text-dark-muted">
           Copyright {new Date().getFullYear()} UNCHAIN株式会社 All rights reserved.
         </p>
       </div>

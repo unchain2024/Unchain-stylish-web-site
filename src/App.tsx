@@ -9,6 +9,7 @@ import AboutPage from "./pages/AboutPage";
 import NewsPage from "./pages/NewsPage";
 import CareerPage from "./pages/CareerPage";
 import ContactPage from "./pages/ContactPage";
+import SolutionsPage from "./pages/SolutionsPage";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/news" element={<NewsPage />} />
             <Route path="/career" element={<CareerPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/solutions" element={<SolutionsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

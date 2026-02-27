@@ -36,7 +36,7 @@ const newsArticles = {
         "UNCHAIN CEO Christian Parkが日米協議会年次カンファレンス2025で登壇",
       excerpt:
         "共同創業者兼CEOのSunwoo \"Christian\" Parkが日米協議会の舞台に立ち、AIとスタートアップの未来について語りました。",
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
     },
     {
       date: "2025年11月12日",
@@ -45,23 +45,15 @@ const newsArticles = {
         "Microsoft for Startupsに公式採択 — クラウドの力でグローバル展開を加速",
       excerpt:
         "Microsoft for Startupsに公式採択され、Azureクラウドの力でグローバル展開を加速します。",
-      url: "#",
-    },
-    {
-      date: "2025年10月15日",
-      tags: [],
-      title: "AWS Startupsプログラムに採択",
-      excerpt:
-        "AWS Startupsプログラムに採択され、AWSのインフラストラクチャを活用した開発を推進しています。",
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
     },
     {
       date: "2025年9月1日",
       tags: [],
-      title: "NVIDIAインセプションプログラムに参加",
+      title: "NVIDIAインセプションプログラムに公式採択",
       excerpt:
         "NVIDIAインセプションプログラムへの参加が決定し、GPU技術を活用したAI開発を加速してまいります。",
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/unchain-officially-selected-for-the-nvidia-inception-program-2575d05568d8",
     },
   ],
   en: [
@@ -80,7 +72,7 @@ const newsArticles = {
         "UNCHAIN CEO Christian Park Takes the Stage at U.S.–Japan Council Annual Conference 2025",
       excerpt:
         'Sunwoo "Christian" Park, Co-founder and CEO of UNCHAIN, took the stage at the U.S.–Japan Council to discuss AI and the future of startups.',
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
     },
     {
       date: "NOV 12, 2025",
@@ -89,23 +81,15 @@ const newsArticles = {
         "Official Selection for Microsoft for Startups — Advancing Globally Through the Power of Cloud",
       excerpt:
         "UNCHAIN has been officially selected for Microsoft for Startups, leveraging Azure cloud to accelerate global expansion.",
-      url: "#",
-    },
-    {
-      date: "OCT 15, 2025",
-      tags: [],
-      title: "Selected for AWS Startups Program",
-      excerpt:
-        "UNCHAIN has been accepted into the AWS Startups program, leveraging AWS infrastructure for development.",
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
     },
     {
       date: "SEP 1, 2025",
       tags: [],
-      title: "Joining NVIDIA Inception Program",
+      title: "Officially Selected for NVIDIA Inception Program",
       excerpt:
         "UNCHAIN joins the NVIDIA Inception Program to accelerate AI development with GPU technology.",
-      url: "#",
+      url: "https://medium.com/@unchain_the_world/unchain-officially-selected-for-the-nvidia-inception-program-2575d05568d8",
     },
   ],
 };
@@ -147,8 +131,8 @@ const NewsPage = () => {
             <ScrollReveal key={i} delay={i * 0.08}>
               <a
                 href={article.url}
-                target={article.url !== "#" ? "_blank" : undefined}
-                rel={article.url !== "#" ? "noopener noreferrer" : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group block py-[4vh]"
               >
                 <div className="flex items-start gap-[3vw]">

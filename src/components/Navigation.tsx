@@ -3,16 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useLang } from "@/lib/language";
+import AnnouncementBar from "./AnnouncementBar";
 
 const navItems = {
   ja: [
     { label: "ABOUT US", href: "/about" },
+    { label: "SOLUTIONS", href: "/solutions" },
     { label: "NEWS", href: "/news" },
     { label: "CAREER", href: "/career" },
     { label: "CONTACT US", href: "/contact" },
   ],
   en: [
     { label: "ABOUT US", href: "/about" },
+    { label: "SOLUTIONS", href: "/solutions" },
     { label: "NEWS", href: "/news" },
     { label: "CAREER", href: "/career" },
     { label: "CONTACT US", href: "/contact" },
@@ -64,6 +67,7 @@ const Navigation = () => {
       className="fixed top-0 left-0 right-0 z-50 bg-transparent transition-transform duration-300"
       style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
     >
+      <AnnouncementBar />
       <div className="w-full px-[5vw] flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link

@@ -151,7 +151,7 @@ const ContactPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw]">
+        <div className="w-full px-[5vw] max-w-3xl mx-auto text-center">
           <ScrollReveal>
             <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
               {hero.label}
@@ -163,7 +163,7 @@ const ContactPage = () => {
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[45vw] leading-relaxed">
+            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -172,7 +172,7 @@ const ContactPage = () => {
 
       {/* Form */}
       <section data-nav-theme="light" className="bg-background pb-[10vh]">
-        <div className="w-full px-[5vw] max-w-3xl">
+        <div className="w-full px-[5vw] max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-[4vh]">
             {/* Name + Company */}
             <ScrollReveal>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
@@ -8,14 +9,12 @@ const solutions = {
       category: "AI SaaS",
       name: "NEURON",
       description: "PM Decision System of Record",
-      url: "https://neuron-website-self.vercel.app",
       cta: "Learn More",
     },
     {
       category: "AI DX",
       name: "AI Consulting",
       description: "実践的なAIトランスフォーメーション",
-      url: "https://the-aiadviser.com",
       cta: "Learn More",
     },
   ],
@@ -24,14 +23,12 @@ const solutions = {
       category: "AI SaaS",
       name: "NEURON",
       description: "PM Decision System of Record",
-      url: "https://neuron-website-self.vercel.app",
       cta: "Learn More",
     },
     {
       category: "AI DX",
       name: "AI Consulting",
       description: "Hands-on AI transformation",
-      url: "https://the-aiadviser.com",
       cta: "Learn More",
     },
   ],
@@ -85,15 +82,13 @@ const BusinessSection = () => {
                     </p>
                   </div>
 
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/solutions"
                     className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-foreground/20 text-foreground text-[calc(1*var(--vf))] font-medium hover:bg-foreground hover:text-background transition-all duration-300 flex-shrink-0"
                   >
                     {item.cta}
                     <ArrowRight className="w-[1em] h-[1em]" />
-                  </a>
+                  </Link>
                 </div>
               </div>
 

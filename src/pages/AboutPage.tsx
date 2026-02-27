@@ -47,8 +47,8 @@ const principlesData = {
 };
 
 const foundersText = {
-  ja: { label: "リーダーシップ", heading: "創業メンバー" },
-  en: { label: "LEADERSHIP", heading: "Meet our Founders" },
+  ja: { label: "リーダーシップ", heading: "私たちのチームを紹介します" },
+  en: { label: "LEADERSHIP", heading: "Meet our Team" },
 };
 
 const foundersData = {

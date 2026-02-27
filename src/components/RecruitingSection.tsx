@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import heroMain from "@/assets/hero-main.png";
@@ -7,47 +8,64 @@ import neuronVisual from "@/assets/neuron-visual.png";
 import tokyoBg from "@/assets/tokyo-bg.png";
 import heroBg from "@/assets/hero-bg.png";
 import ScrollReveal from "./ScrollReveal";
+import { useLang } from "@/lib/language";
 
 const leftPhotos = [heroMain, hero2, hero3, neuronVisual, heroMain, hero2];
 const rightPhotos = [hero3, neuronVisual, tokyoBg, heroBg, hero3, neuronVisual];
 
+const sectionText = {
+  ja: {
+    tag: "Join UNCHAIN",
+    heading: "未来を創る\nAIの先駆者になろう",
+    description:
+      "2030年に2,110億ドル規模になると予測される生成AIは、社会のあらゆるシーンを変革する可能性を秘めています。UNCHAINはプロフェッショナルな技術集団として、業務効率化を超えて社会に新たな価値を創出していきます。\n\nあなたの好奇心と可能性を、UNCHAINで開花させてみませんか？",
+    cta: "採用情報を見る",
+  },
+  en: {
+    tag: "Join UNCHAIN",
+    heading: "Become a Pioneer\nin AI Innovation",
+    description:
+      "Generative AI, projected to reach $211 billion by 2030, holds the potential to transform every aspect of society. UNCHAIN, as a professional tech collective, goes beyond operational efficiency to create new value for society.\n\nReady to unlock your curiosity and potential at UNCHAIN?",
+    cta: "View Careers",
+  },
+};
+
 const RecruitingSection = () => {
+  const { lang } = useLang();
+  const t = sectionText[lang];
+
   return (
     <section
-      data-nav-theme="dark"
-      className="relative overflow-hidden h-screen flex items-center"
-      style={{ backgroundColor: "hsl(207 30% 40%)" }}
+      id="career"
+      data-nav-theme="light"
+      className="relative overflow-hidden h-screen flex items-center bg-background"
     >
       <div className="w-full px-[5vw]">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-[4vw] items-center">
           {/* Left – copy */}
           <div>
             <ScrollReveal>
-              <p className="text-primary text-[calc(1*var(--vf))] font-semibold tracking-wider mb-[2vh]">
-                Join UNCHAIN
+              <p className="text-primary text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] uppercase mb-[2vh]">
+                {t.tag}
               </p>
             </ScrollReveal>
             <ScrollReveal>
-              <h2 className="text-[calc(4.5*var(--vf))] font-bold text-white leading-tight mb-[2vh]">
-                未来を創る
-                <br />
-                AIの先駆者になろう
+              <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground leading-tight mb-[2vh] whitespace-pre-line">
+                {t.heading}
               </h2>
             </ScrollReveal>
             <ScrollReveal>
-              <p className="text-white/70 text-[calc(1.125*var(--vf))] leading-relaxed mb-[3vh] max-w-[35vw]">
-                2030年に2,110億ドル規模になると予測される生成AIは、社会のあらゆるシーンを変革する可能性を秘めています。UNCHAINはプロフェッショナルな技術集団として、業務効率化を超えて社会に新たな価値を創出していきます。
-                <br /><br />
-                あなたの好奇心と可能性を、UNCHAINで開花させてみませんか？
+              <p className="text-muted-foreground text-[calc(1.15*var(--vf))] leading-relaxed mb-[3vh] max-w-[35vw] whitespace-pre-line">
+                {t.description}
               </p>
             </ScrollReveal>
             <ScrollReveal>
-              <a href="#" className="btn-cta inline-flex items-center gap-[0.5vw] text-[calc(1*var(--vf))]"
+              <Link to="/career" className="btn-cta inline-flex items-center gap-[0.5vw] text-[calc(1*var(--vf))]"
                 style={{ padding: "clamp(0.5rem, 1vh, 1rem) clamp(1rem, 2vw, 2.5rem)" }}
               >
-                採用情報を見る
+                {t.cta}
                 <ArrowRight size={18} />
-              </a>
+              </Link>
             </ScrollReveal>
           </div>
 

@@ -1,110 +1,108 @@
 import { ArrowRight } from "lucide-react";
-import neuronVisual from "@/assets/neuron-visual.png";
-import heroMain from "@/assets/hero-main.png";
-import hero2 from "@/assets/hero-2.png";
 import ScrollReveal from "./ScrollReveal";
+import { useLang } from "@/lib/language";
 
-const categories = [
-  {
-    category: "AI SaaS",
-    items: [
-      {
-        image: neuronVisual,
-        name: "NEURON",
-        description: "PM Decision System of Record",
-      },
-    ],
-  },
-  {
-    category: "AI Consulting",
-    items: [
-      {
-        image: heroMain,
-        name: "AI戦略コンサルティング",
-        description:
-          "ハイインパクトなAI機会の特定、戦略策定、プロダクション対応ソリューションの実装。",
-      },
-    ],
-  },
-  {
-    category: "AI Platform",
-    items: [
-      {
-        image: hero2,
-        name: "カスタムAIプラットフォーム開発",
-        description: "データパイプラインから意思決定支援システムまで。",
-      },
-    ],
-  },
-];
+const solutions = {
+  ja: [
+    {
+      category: "AI SaaS",
+      name: "NEURON",
+      description: "PM Decision System of Record",
+      url: "https://neuron-website-self.vercel.app",
+      cta: "Learn More",
+    },
+    {
+      category: "AI DX",
+      name: "AI Consulting",
+      description: "実践的なAIトランスフォーメーション",
+      url: "https://the-aiadviser.com",
+      cta: "Learn More",
+    },
+  ],
+  en: [
+    {
+      category: "AI SaaS",
+      name: "NEURON",
+      description: "PM Decision System of Record",
+      url: "https://neuron-website-self.vercel.app",
+      cta: "Learn More",
+    },
+    {
+      category: "AI DX",
+      name: "AI Consulting",
+      description: "Hands-on AI transformation",
+      url: "https://the-aiadviser.com",
+      cta: "Learn More",
+    },
+  ],
+};
+
+const sectionText = {
+  ja: { label: "BUSINESS", heading: "Solutions" },
+  en: { label: "BUSINESS", heading: "Solutions" },
+};
 
 const BusinessSection = () => {
+  const { lang } = useLang();
+  const items = solutions[lang];
+  const t = sectionText[lang];
+
   return (
-    <section id="solutions" data-nav-theme="light" className="bg-background h-screen flex items-center">
+    <section id="solutions" data-nav-theme="light" className="bg-background min-h-screen flex items-center">
       <div className="w-full px-[5vw]">
-        {/* Header */}
-        <ScrollReveal>
-          <h2 className="text-[calc(3.75*var(--vf))] font-bold text-foreground mb-[3vh]">
-            SOLUTIONS / SERVICES
-          </h2>
-        </ScrollReveal>
+        {/* Header — left aligned */}
+        <div className="mb-[6vh]">
+          <ScrollReveal>
+            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+              {t.label}
+            </span>
+          </ScrollReveal>
+          <ScrollReveal delay={0.05}>
+            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh]">
+              {t.heading}
+            </h2>
+          </ScrollReveal>
+        </div>
 
-        {/* Categories */}
-        <div className="space-y-[3vh]">
-          {categories.map((cat, ci) => (
-            <ScrollReveal key={cat.category} delay={ci * 0.05}>
-              <div className="flex flex-col md:flex-row md:items-center gap-[2vw] md:gap-[4vw]">
-                <h3 className="text-[calc(4.5*var(--vf))] font-black text-foreground tracking-tight w-[30vw] flex-shrink-0">
-                  {cat.category}
-                </h3>
+        {/* Solution items */}
+        <div>
+          {items.map((item, i) => (
+            <ScrollReveal key={item.name} delay={i * 0.1}>
+              <div className="py-[4vh]">
+                {/* Category label */}
+                <p className="text-[calc(1.5*var(--vf))] font-bold text-muted-foreground/40 mb-[1.5vh]">
+                  {item.category}
+                </p>
 
-                <div className="flex-1 space-y-[1.5vh]">
-                  {cat.items.map((item) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center justify-between gap-[2vw] group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-[1.5vw]">
-                        <div className="w-[6vw] h-[6vw] rounded-xl overflow-hidden bg-muted flex-shrink-0 shadow-sm">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <h4 className="text-[calc(2*var(--vf))] font-bold text-foreground">
-                          {item.name}
-                        </h4>
-                      </div>
+                {/* Item row */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground">
+                      {item.name}
+                    </h3>
+                    <p className="text-[calc(1.15*var(--vf))] text-muted-foreground mt-[0.3vh]">
+                      {item.description}
+                    </p>
+                  </div>
 
-                      <div className="hidden md:flex items-center gap-[1.5vw] flex-shrink-0">
-                        <p className="text-[calc(1*var(--vf))] text-muted-foreground max-w-[22vw]">
-                          {item.description}
-                        </p>
-                        <div className="w-[3vw] h-[3vw] min-w-[2rem] min-h-[2rem] rounded-full border border-border flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors">
-                          <ArrowRight size={20} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-foreground/20 text-foreground text-[calc(1*var(--vf))] font-medium hover:bg-foreground hover:text-background transition-all duration-300 flex-shrink-0"
+                  >
+                    {item.cta}
+                    <ArrowRight className="w-[1em] h-[1em]" />
+                  </a>
                 </div>
               </div>
 
-              {ci < categories.length - 1 && (
-                <div className="border-t border-border mt-[2vh]" />
+              {i < items.length - 1 && (
+                <div className="border-t border-border" />
               )}
             </ScrollReveal>
           ))}
         </div>
-
-        <ScrollReveal className="flex justify-end items-center gap-[1vw] mt-[3vh]">
-          <span className="text-[calc(1*var(--vf))] text-foreground font-medium">
-            事業内容へ
-          </span>
-          <div className="w-[3vw] h-[3vw] min-w-[2rem] min-h-[2rem] rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors cursor-pointer">
-            <ArrowRight size={20} />
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   );

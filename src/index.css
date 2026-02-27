@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --vf: calc(min(1vw, 1.5vh) * 0.73);
+    --vf: calc(min(1vw, 1.5vh) * 0.88);
 
     --background: 0 0% 100%;
     --foreground: 0 0% 8%;

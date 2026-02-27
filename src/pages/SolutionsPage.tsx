@@ -146,7 +146,7 @@ const SolutionsPage = () => {
       </section>
 
       {/* Products */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
+      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
         <div className="w-full px-[5vw]">
           {Object.entries(businessData).map(([group, items], gi) => (
             <div key={group} className="mb-[8vh] last:mb-0">
@@ -248,22 +248,22 @@ const SolutionsPage = () => {
       </section>
 
       {/* CTA */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
+      <section data-nav-theme="dark" className="bg-black py-[12vh]">
         <div className="w-full px-[5vw] text-center">
           <ScrollReveal>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mb-[2vh]">
+            <h2 className="text-[calc(3.5*var(--vf))] font-black text-white mb-[2vh]">
               {cta.heading}
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-xl mx-auto mb-[4vh]">
+            <p className="text-[calc(1.15*var(--vf))] text-white/60 max-w-xl mx-auto mb-[4vh]">
               {cta.description}
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white text-black text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
             >
               {cta.cta}
               <ArrowRight className="w-[1em] h-[1em]" />

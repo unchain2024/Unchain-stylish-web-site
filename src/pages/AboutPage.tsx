@@ -182,7 +182,7 @@ const AboutPage = () => {
       </section>
 
       {/* Principles */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
+      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
         <div className="w-full px-[5vw]">
           <ScrollReveal>
             <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
@@ -360,7 +360,7 @@ const AboutPage = () => {
       </section>
 
       {/* DE&I */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
+      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
         <div className="w-full px-[5vw]">
           <ScrollReveal>
             <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">

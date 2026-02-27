@@ -38,7 +38,7 @@ const PartnersSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section data-nav-theme="light" className="bg-background py-[10vh] overflow-hidden">
+    <section data-nav-theme="light" className="bg-secondary py-[10vh] overflow-hidden">
       <div className="w-full px-[5vw] mb-[6vh]">
         <ScrollReveal>
           <div className="text-center">

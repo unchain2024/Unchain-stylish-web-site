@@ -28,7 +28,7 @@ const ContactSection = () => {
     <section
       id="contact"
       data-nav-theme="light"
-      className="bg-background min-h-screen flex items-center"
+      className="bg-secondary min-h-screen flex items-center"
     >
       <div className="w-full px-[5vw]">
         <div className="text-center max-w-[60vw] mx-auto">

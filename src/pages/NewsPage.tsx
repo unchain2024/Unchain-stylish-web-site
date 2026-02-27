@@ -125,7 +125,7 @@ const NewsPage = () => {
       </section>
 
       {/* Articles */}
-      <section data-nav-theme="light" className="bg-background pb-[10vh]">
+      <section data-nav-theme="light" className="bg-secondary pb-[10vh] pt-[4vh]">
         <div className="w-full px-[5vw]">
           {articles.map((article, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>

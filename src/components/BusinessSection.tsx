@@ -45,7 +45,7 @@ const BusinessSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section id="solutions" data-nav-theme="light" className="bg-background min-h-screen flex items-center">
+    <section id="solutions" data-nav-theme="light" className="bg-secondary min-h-screen flex items-center">
       <div className="w-full px-[5vw]">
         {/* Header — left aligned */}
         <div className="mb-[6vh]">

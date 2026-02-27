@@ -272,19 +272,19 @@ const CareerPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw]">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {hero.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh] whitespace-pre-line leading-[1.1]">
+            <h1 className="heading-display text-light-heading mt-4 mb-6 whitespace-pre-line leading-[1.1]">
               {hero.heading}
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[45vw] leading-relaxed">
+            <p className="body-large text-light-body max-w-xl leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -292,27 +292,27 @@ const CareerPage = () => {
       </section>
 
       {/* Why UNCHAIN */}
-      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {why.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[6vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-12 lg:mb-16">
               {why.heading}
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {cards.map((card, i) => (
               <ScrollReveal key={card.title} delay={i * 0.15}>
-                <div className="rounded-2xl border border-border/50 p-[2vw] hover:border-border transition-colors duration-300">
-                  <h3 className="text-[calc(1.5*var(--vf))] font-bold text-foreground mb-[1.5vh]">
+                <div className="card border border-border/50 hover:border-border transition-colors duration-300">
+                  <h3 className="heading-3 text-light-heading mb-4">
                     {card.title}
                   </h3>
-                  <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed">
+                  <p className="body-large text-light-body leading-relaxed">
                     {card.desc}
                   </p>
                 </div>
@@ -323,30 +323,30 @@ const CareerPage = () => {
       </section>
 
       {/* Open Roles */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-background section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {roles.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[4vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-8">
               {roles.heading}
             </h2>
           </ScrollReveal>
 
           {/* Filters */}
           <ScrollReveal delay={0.1}>
-            <div className="flex flex-wrap gap-3 mb-[4vh]">
+            <div className="flex flex-wrap gap-3 mb-8">
               {(Object.keys(filters) as Department[]).map((key) => (
                 <button
                   key={key}
                   onClick={() => setFilter(key)}
-                  className={`px-5 py-2.5 rounded-full text-[calc(0.9*var(--vf))] font-medium transition-all duration-300 ${
+                  className={`px-5 py-2.5 rounded-full body font-medium transition-all duration-300 ${
                     filter === key
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted/50 text-muted-foreground hover:bg-muted border border-border/50"
+                      : "bg-muted/50 text-light-body hover:bg-muted border border-border/50"
                   }`}
                 >
                   {filters[key]}
@@ -366,25 +366,25 @@ const CareerPage = () => {
                     className="border border-border/50 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer hover:border-border"
                     onClick={() => setExpandedJob(isExpanded ? null : job.id)}
                   >
-                    <div className="p-[2vw] flex flex-col sm:flex-row sm:items-center gap-4">
-                      <span className="text-[calc(0.9*var(--vf))] font-bold text-muted-foreground/30 shrink-0">
+                    <div className="p-6 lg:p-8 flex flex-col sm:flex-row sm:items-center gap-4">
+                      <span className="body font-bold text-light-label shrink-0">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-3 mb-[0.3vh]">
-                          <h3 className="text-[calc(1.15*var(--vf))] font-bold text-foreground">
+                        <div className="flex flex-wrap items-center gap-3 mb-1">
+                          <h3 className="body-large font-bold text-light-heading">
                             {job.title}
                           </h3>
-                          <span className="px-2.5 py-0.5 rounded-full text-[calc(0.7*var(--vf))] font-medium bg-muted text-muted-foreground border border-border/50">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-light-body border border-border/50">
                             {job.department}
                           </span>
                           {job.japaneseRequired && (
-                            <span className="px-2.5 py-0.5 rounded-full text-[calc(0.7*var(--vf))] font-medium bg-primary/10 text-primary border border-primary/20">
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
                               {labels.jpRequired}
                             </span>
                           )}
                         </div>
-                        <div className="flex flex-wrap items-center gap-4 text-[calc(0.8*var(--vf))] text-muted-foreground/60">
+                        <div className="flex flex-wrap items-center gap-4 label text-light-label">
                           <span>{job.location}</span>
                           <span>{job.type}</span>
                           <span className="font-medium text-primary/70">{job.salary}</span>
@@ -395,7 +395,7 @@ const CareerPage = () => {
                         transition={{ duration: 0.3 }}
                         className="shrink-0"
                       >
-                        <svg className="w-5 h-5 text-muted-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-light-label" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </motion.div>
@@ -410,19 +410,19 @@ const CareerPage = () => {
                           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="px-[2vw] pb-[2vw] pt-0 border-t border-border">
-                            <div className="pt-[2vh] space-y-[3vh]">
-                              <p className="text-[calc(1*var(--vf))] text-muted-foreground leading-relaxed">
+                          <div className="px-6 lg:px-8 pb-6 lg:pb-8 pt-0 border-t border-border">
+                            <div className="pt-4 space-y-6">
+                              <p className="body text-light-body leading-relaxed">
                                 {job.description}
                               </p>
 
                               <div>
-                                <p className="text-[calc(0.8*var(--vf))] font-semibold tracking-[0.15em] uppercase text-primary/60 mb-[1vh]">
+                                <p className="label text-primary/60 mb-3">
                                   {labels.whatYoullDo}
                                 </p>
-                                <ul className="space-y-[0.5vh]">
+                                <ul className="space-y-1.5">
                                   {job.whatYoullDo.map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-2.5 text-[calc(0.9*var(--vf))] text-muted-foreground leading-relaxed">
+                                    <li key={idx} className="flex items-start gap-2.5 body text-light-body leading-relaxed">
                                       <span className="mt-[0.6em] w-1.5 h-1.5 rounded-full shrink-0 bg-primary/30" />
                                       {item}
                                     </li>
@@ -431,12 +431,12 @@ const CareerPage = () => {
                               </div>
 
                               <div>
-                                <p className="text-[calc(0.8*var(--vf))] font-semibold tracking-[0.15em] uppercase text-primary/60 mb-[1vh]">
+                                <p className="label text-primary/60 mb-3">
                                   {labels.mustHave}
                                 </p>
-                                <ul className="space-y-[0.5vh]">
+                                <ul className="space-y-1.5">
                                   {job.mustHave.map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-2.5 text-[calc(0.9*var(--vf))] text-muted-foreground leading-relaxed">
+                                    <li key={idx} className="flex items-start gap-2.5 body text-light-body leading-relaxed">
                                       <span className="mt-[0.6em] w-1.5 h-1.5 rounded-full shrink-0 bg-primary/30" />
                                       {item}
                                     </li>
@@ -445,12 +445,12 @@ const CareerPage = () => {
                               </div>
 
                               <div>
-                                <p className="text-[calc(0.8*var(--vf))] font-semibold tracking-[0.15em] uppercase text-muted-foreground/40 mb-[1vh]">
+                                <p className="label text-light-label mb-3">
                                   {labels.niceToHave}
                                 </p>
-                                <ul className="space-y-[0.5vh]">
+                                <ul className="space-y-1.5">
                                   {job.niceToHave.map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-2.5 text-[calc(0.9*var(--vf))] text-muted-foreground/60 leading-relaxed">
+                                    <li key={idx} className="flex items-start gap-2.5 body text-light-label leading-relaxed">
                                       <span className="mt-[0.6em] w-1.5 h-1.5 rounded-full shrink-0 bg-muted-foreground/20" />
                                       {item}
                                     </li>
@@ -460,7 +460,7 @@ const CareerPage = () => {
 
                               <button
                                 onClick={(e) => { e.stopPropagation(); openApplyForm(job); }}
-                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all mt-[1vh]"
+                                className="btn-primary inline-flex items-center gap-2 mt-3"
                               >
                                 {labels.apply}
                                 <ArrowRight className="w-[1em] h-[1em]" />
@@ -485,64 +485,64 @@ const CareerPage = () => {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden mt-[4vh]"
+                className="overflow-hidden mt-8"
               >
-                <div className="rounded-2xl border border-border p-[3vw]">
+                <div className="card border border-border">
                   {submitted ? (
-                    <div className="text-center py-[6vh]">
-                      <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-[3vh] bg-primary/10 border border-primary/20">
+                    <div className="text-center py-16">
+                      <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-primary/10 border border-primary/20">
                         <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground mb-[1vh]">
+                      <h3 className="heading-2 text-light-heading mb-3">
                         {lang === "ja" ? "応募を受け付けました" : "Application received"}
                       </h3>
-                      <p className="text-[calc(1.15*var(--vf))] text-muted-foreground">
+                      <p className="body-large text-light-body">
                         {lang === "ja" ? "ご応募ありがとうございます。5営業日以内に選考結果をご連絡いたします。" : "Thank you for applying. We'll review your application and get back to you within 5 business days."}
                       </p>
                     </div>
                   ) : (
                     <>
-                      <div className="flex items-center justify-between mb-[3vh]">
-                        <h3 className="text-[calc(1.5*var(--vf))] font-bold text-foreground">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="heading-3 text-light-heading">
                           {lang === "ja" ? "このポジションに応募" : "Apply for this position"}
                         </h3>
-                        <button onClick={() => setApplyingFor(null)} className="text-muted-foreground hover:text-foreground transition-colors">
+                        <button onClick={() => setApplyingFor(null)} className="text-light-body hover:text-light-heading transition-colors">
                           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
                       </div>
 
-                      <form onSubmit={handleSubmit} className="space-y-[3vh]">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[3vw]">
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
                           <div>
-                            <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                            <label className="block label text-light-label mb-3">
                               {lang === "ja" ? "氏名" : "Full Name"} <span className="text-primary">*</span>
                             </label>
                             <input
                               type="text" required value={form.name}
                               onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                               placeholder={lang === "ja" ? "お名前" : "Your full name"}
-                              className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
+                              className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
                             />
                           </div>
                           <div>
-                            <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                            <label className="block label text-light-label mb-3">
                               {lang === "ja" ? "メールアドレス" : "Email"} <span className="text-primary">*</span>
                             </label>
                             <input
                               type="email" required value={form.email}
                               onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                               placeholder="you@email.com"
-                              className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
+                              className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                          <label className="block label text-light-label mb-3">
                             {lang === "ja" ? "カバーレター" : "Cover Note"}
                           </label>
                           <textarea
@@ -550,11 +550,11 @@ const CareerPage = () => {
                             onChange={(e) => setForm((p) => ({ ...p, coverNote: e.target.value }))}
                             placeholder={lang === "ja" ? "このポジションに興味を持った理由をお聞かせください..." : "Tell us why you're interested in this role..."}
                             rows={4}
-                            className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/30 focus:border-primary"
+                            className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/30 focus:border-primary"
                           />
                         </div>
 
-                        <div className="space-y-[2vh]">
+                        <div className="space-y-4">
                           <label className="flex items-start gap-3 cursor-pointer group">
                             <div className="relative mt-0.5">
                               <input type="checkbox" required checked={form.privacy}
@@ -570,14 +570,14 @@ const CareerPage = () => {
                                 )}
                               </div>
                             </div>
-                            <span className="text-[calc(0.9*var(--vf))] text-muted-foreground/50 group-hover:text-muted-foreground transition-colors">
+                            <span className="body text-light-label group-hover:text-light-body transition-colors">
                               {lang === "ja" ? "個人情報の取り扱いに同意します" : "I agree to the handling of my personal information"}
                             </span>
                           </label>
 
                           <button
                             type="submit" disabled={sending}
-                            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all disabled:opacity-50"
+                            className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50"
                           >
                             {sending ? (
                               <>
@@ -603,30 +603,30 @@ const CareerPage = () => {
       </section>
 
       {/* Process */}
-      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {process.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[6vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-12 lg:mb-16">
               {process.heading}
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.15}>
                 <div className="relative">
-                  <div className="w-[4vw] min-w-[50px] h-[4vw] min-h-[50px] rounded-2xl flex items-center justify-center mb-[2vh] border border-border bg-muted/30">
-                    <span className="text-[calc(1.15*var(--vf))] font-bold text-primary">{step.step}</span>
+                  <div className="w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] rounded-2xl flex items-center justify-center mb-4 border border-border bg-muted/30">
+                    <span className="body-large font-bold text-primary">{step.step}</span>
                   </div>
-                  <h3 className="text-[calc(1.5*var(--vf))] font-bold text-foreground mb-[1vh]">
+                  <h3 className="heading-3 text-light-heading mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed">
+                  <p className="body-large text-light-body leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
@@ -637,22 +637,22 @@ const CareerPage = () => {
       </section>
 
       {/* CTA */}
-      <section data-nav-theme="dark" className="bg-black py-[12vh]">
-        <div className="w-full px-[5vw] text-center">
+      <section data-nav-theme="dark" className="bg-black section">
+        <div className="container-site text-center">
           <ScrollReveal>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-white mb-[2vh]">
+            <h2 className="heading-1 text-dark-heading mb-4">
               {cta.heading}
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <p className="text-[calc(1.15*var(--vf))] text-white/60 max-w-xl mx-auto mb-[4vh]">
+            <p className="body-large text-dark-body max-w-xl mx-auto mb-8">
               {cta.description}
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white text-black text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
+              className="btn-primary !bg-white !text-black inline-flex items-center gap-2"
             >
               {cta.cta}
               <ArrowRight className="w-[1em] h-[1em]" />

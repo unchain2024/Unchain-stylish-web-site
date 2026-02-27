@@ -75,7 +75,7 @@ const FeaturesSection = () => {
 
   return (
     <section data-nav-theme="light" className="bg-background h-screen flex items-center">
-      <div className="w-full px-[5vw]">
+      <div className="w-full px-[7vw]">
         {/* Intro text */}
         <div className="max-w-[60vw] mx-auto text-center mb-[4vh]">
           <ScrollReveal>

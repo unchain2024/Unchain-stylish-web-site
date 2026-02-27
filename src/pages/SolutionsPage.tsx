@@ -126,19 +126,19 @@ const SolutionsPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw]">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {hero.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh] whitespace-pre-line leading-[1.1]">
+            <h1 className="heading-display text-light-heading mt-4 mb-6 whitespace-pre-line leading-[1.1]">
               {hero.heading}
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[45vw] leading-relaxed">
+            <p className="body-large text-light-body max-w-xl leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -146,14 +146,14 @@ const SolutionsPage = () => {
       </section>
 
       {/* Products */}
-      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary section">
+        <div className="container-site">
           {Object.entries(businessData).map(([group, items], gi) => (
-            <div key={group} className="mb-[8vh] last:mb-0">
-              <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-[3vw] items-start">
+            <div key={group} className="mb-20 last:mb-0">
+              <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 lg:gap-8 items-start">
                 {/* Category label */}
                 <ScrollReveal delay={gi * 0.1}>
-                  <div className="md:sticky md:top-24 text-[calc(1.5*var(--vf))] font-bold text-muted-foreground/30">
+                  <div className="md:sticky md:top-24 heading-3 text-light-label">
                     {group}
                   </div>
                 </ScrollReveal>
@@ -166,13 +166,13 @@ const SolutionsPage = () => {
                         onClick={() => setActiveProduct(activeProduct === item.slug ? null : item.slug)}
                         className="w-full text-left"
                       >
-                        <div className="group flex items-center gap-[1.5vw] w-full border-b border-border py-[3vh] cursor-pointer">
+                        <div className="group flex items-center gap-4 w-full border-b border-border py-6 cursor-pointer">
                           {/* Text */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground group-hover:text-primary transition-colors">
+                            <h3 className="heading-2 text-light-heading group-hover:text-primary transition-colors">
                               {item.name}
                             </h3>
-                            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground mt-[0.3vh]">
+                            <p className="body-large text-light-body mt-1">
                               {item.tagline}
                             </p>
                           </div>
@@ -182,7 +182,7 @@ const SolutionsPage = () => {
                             className={`w-9 h-9 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
                               activeProduct === item.slug
                                 ? "border-primary/40 text-primary rotate-90"
-                                : "border-border text-muted-foreground/40 group-hover:border-primary/40 group-hover:text-primary group-hover:translate-x-1"
+                                : "border-border text-light-label group-hover:border-primary/40 group-hover:text-primary group-hover:translate-x-1"
                             }`}
                           >
                             <ArrowRight className="w-4 h-4" />
@@ -200,13 +200,13 @@ const SolutionsPage = () => {
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             className="overflow-hidden"
                           >
-                            <div className="py-[3vh] pl-0 md:pl-[2vw]">
-                              <div className="rounded-2xl border border-border/50 p-[2vw]">
-                                <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed mb-[3vh] max-w-2xl">
+                            <div className="py-6 pl-0 md:pl-8">
+                              <div className="card border border-border/50">
+                                <p className="body-large text-light-body leading-relaxed mb-6 max-w-2xl">
                                   {item.desc}
                                 </p>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-[2vw] mb-[3vh]">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                                   {item.features.map((f, fi) => (
                                     <motion.div
                                       key={fi}
@@ -214,10 +214,10 @@ const SolutionsPage = () => {
                                       animate={{ opacity: 1, y: 0 }}
                                       transition={{ delay: fi * 0.1 }}
                                     >
-                                      <h4 className="text-[calc(1*var(--vf))] font-bold text-foreground mb-[0.5vh]">
+                                      <h4 className="body font-bold text-light-heading mb-1">
                                         {f.title}
                                       </h4>
-                                      <p className="text-[calc(0.9*var(--vf))] text-muted-foreground leading-relaxed">
+                                      <p className="body text-light-body leading-relaxed">
                                         {f.desc}
                                       </p>
                                     </motion.div>
@@ -228,7 +228,7 @@ const SolutionsPage = () => {
                                   href={item.link}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all"
+                                  className="btn-primary inline-flex items-center gap-2"
                                 >
                                   {learnMore}
                                   <ArrowRight className="w-[1em] h-[1em]" />
@@ -248,22 +248,22 @@ const SolutionsPage = () => {
       </section>
 
       {/* CTA */}
-      <section data-nav-theme="dark" className="bg-black py-[12vh]">
-        <div className="w-full px-[5vw] text-center">
+      <section data-nav-theme="dark" className="bg-black section">
+        <div className="container-site text-center">
           <ScrollReveal>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-white mb-[2vh]">
+            <h2 className="heading-1 text-dark-heading mb-4">
               {cta.heading}
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <p className="text-[calc(1.15*var(--vf))] text-white/60 max-w-xl mx-auto mb-[4vh]">
+            <p className="body-large text-dark-body max-w-xl mx-auto mb-8">
               {cta.description}
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white text-black text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
+              className="btn-primary !bg-white !text-black inline-flex items-center gap-2"
             >
               {cta.cta}
               <ArrowRight className="w-[1em] h-[1em]" />

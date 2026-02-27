@@ -32,24 +32,24 @@ const AnnouncementBar = ({ onVisibilityChange }: { onVisibilityChange?: (visible
   };
 
   return (
-    <div className="relative bg-black">
+    <div className="relative bg-black h-10">
       <Link
         to="/news"
-        className="flex items-center justify-center py-3.5 px-12 hover:opacity-80 transition-opacity"
+        className="flex items-center justify-center h-full px-12 hover:opacity-80 transition-opacity"
       >
-        <span className="text-[calc(1.1*var(--vf))] font-semibold text-white tracking-wide">
+        <span className="text-sm font-semibold text-white tracking-wide">
           {t.message}
         </span>
-        <span className="text-[calc(1*var(--vf))] text-white/60 ml-4">
+        <span className="text-xs text-white/60 ml-4">
           {t.cta}
         </span>
       </Link>
       <button
         onClick={dismiss}
-        className="absolute right-[2vw] top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
         aria-label="Dismiss"
       >
-        <X className="w-[calc(1*var(--vf))] h-[calc(1*var(--vf))] min-w-[14px] min-h-[14px]" />
+        <X className="w-3.5 h-3.5" />
       </button>
     </div>
   );

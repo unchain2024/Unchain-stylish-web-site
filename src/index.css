@@ -6,8 +6,6 @@
 
 @layer base {
   :root {
-    --vf: calc(min(1vw, 1.5vh) * 0.88);
-
     --background: 0 0% 100%;
     --foreground: 0 0% 8%;
 
@@ -36,7 +34,7 @@
     --input: 0 0% 90%;
     --ring: 213 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Dark section tokens */
     --dark-bg: 0 0% 2%;
@@ -62,88 +60,198 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    line-height: 1.6;
   }
 }
 
+/* ─── Typography ────────────────────────────────────── */
+
 @layer components {
-  .section-dark {
-    background-color: hsl(var(--dark-bg));
-    color: hsl(var(--dark-fg));
+  .heading-display {
+    @apply font-bold tracking-tight;
+    font-size: 3rem;
+    line-height: 1.02;
+  }
+  @media (min-width: 640px) {
+    .heading-display { font-size: 3.75rem; }
+  }
+  @media (min-width: 1024px) {
+    .heading-display { font-size: 5.5rem; }
   }
 
-  .section-light {
-    background-color: hsl(var(--secondary));
+  .heading-1 {
+    @apply font-bold tracking-tight;
+    font-size: 2.25rem;
+    line-height: 1.08;
+  }
+  @media (min-width: 640px) {
+    .heading-1 { font-size: 3rem; }
+  }
+  @media (min-width: 1024px) {
+    .heading-1 { font-size: 3.75rem; }
+  }
+
+  .heading-2 {
+    @apply font-bold tracking-tight;
+    font-size: 1.875rem;
+    line-height: 1.1;
+  }
+  @media (min-width: 640px) {
+    .heading-2 { font-size: 2.25rem; }
+  }
+  @media (min-width: 1024px) {
+    .heading-2 { font-size: 3rem; }
+  }
+
+  .heading-3 {
+    @apply font-semibold leading-snug;
+    font-size: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .heading-3 { font-size: 1.5rem; }
+  }
+
+  .body-large {
+    @apply font-normal leading-relaxed;
+    font-size: 1.125rem;
+  }
+  @media (min-width: 640px) {
+    .body-large { font-size: 1.25rem; }
+  }
+
+  .body {
+    @apply font-normal leading-relaxed;
+    font-size: 1rem;
+  }
+
+  .label {
+    @apply font-semibold uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+  }
+}
+
+/* ─── Text colors ───────────────────────────────────── */
+
+@layer utilities {
+  /* Light section text */
+  .text-light-heading  { color: #000000; }
+  .text-light-body     { color: rgba(9, 9, 11, 0.55); }
+  .text-light-label    { color: rgba(9, 9, 11, 0.4); }
+
+  /* Dark section text */
+  .text-dark-heading   { color: #ffffff; }
+  .text-dark-body      { color: rgba(255, 255, 255, 0.55); }
+  .text-dark-label     { color: rgba(255, 255, 255, 0.35); }
+}
+
+/* ─── Section spacing ───────────────────────────────── */
+
+@layer components {
+  .section {
+    @apply py-24;
+  }
+  @media (min-width: 640px) {
+    .section { @apply py-32; }
+  }
+  @media (min-width: 1024px) {
+    .section { @apply py-40; }
+  }
+
+  .section-sm {
+    @apply py-16;
+  }
+  @media (min-width: 640px) {
+    .section-sm { @apply py-20; }
+  }
+  @media (min-width: 1024px) {
+    .section-sm { @apply py-24; }
+  }
+}
+
+/* ─── Container ─────────────────────────────────────── */
+
+@layer components {
+  .container-site {
+    @apply max-w-[1200px] mx-auto px-6;
+  }
+  @media (min-width: 640px) {
+    .container-site { @apply px-8; }
+  }
+  @media (min-width: 1024px) {
+    .container-site { @apply px-12; }
+  }
+}
+
+/* ─── Buttons ───────────────────────────────────────── */
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-full font-medium transition-all duration-300 gap-2.5;
+    font-size: 15px;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-full font-medium border transition-all duration-300 gap-2.5;
+    font-size: 15px;
   }
 
   .btn-cta {
-    @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm transition-all duration-300;
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-full font-medium transition-all duration-300 gap-2.5;
+    font-size: 15px;
     background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
   }
-
   .btn-cta:hover {
     opacity: 0.9;
-    transform: scale(1.02);
-  }
-
-  .btn-cta-nav {
-    @apply inline-flex items-center justify-center px-5 py-2 rounded-full font-medium text-xs transition-all duration-300;
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
   }
 
   .btn-outline-dark {
-    @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm border transition-all duration-300;
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-full font-medium border transition-all duration-300 gap-2.5;
+    font-size: 15px;
     border-color: hsl(var(--dark-fg));
     color: hsl(var(--dark-fg));
     background: transparent;
   }
-
   .btn-outline-dark:hover {
     background-color: hsl(var(--dark-fg));
     color: hsl(var(--dark-bg));
   }
 }
 
+/* ─── Cards ─────────────────────────────────────────── */
+
+@layer components {
+  .card {
+    @apply p-8 rounded-2xl;
+  }
+}
+
+/* ─── Form inputs ───────────────────────────────────── */
+
+@layer components {
+  .input-field {
+    @apply w-full h-14 px-5 rounded-xl text-base bg-transparent border-0 border-b-2 border-border outline-none transition-all duration-300;
+  }
+  .input-field::placeholder {
+    @apply text-muted-foreground/30;
+  }
+  .input-field:focus {
+    @apply border-primary;
+  }
+}
+
+/* ─── Legacy fluid utilities (kept for hero) ────────── */
+
 @layer utilities {
+  .text-fluid-hero { font-size: clamp(3rem, 1.5rem + 5vw, 5.5rem); }
+
   .hero-letter-spacing {
     letter-spacing: 0.08em;
   }
-
-  /* Fluid responsive utilities */
-  .text-fluid-xs { font-size: calc(0.875 * var(--vf)); }
-  .text-fluid-sm { font-size: calc(1 * var(--vf)); }
-  .text-fluid-base { font-size: calc(1.125 * var(--vf)); }
-  .text-fluid-lg { font-size: calc(1.25 * var(--vf)); }
-  .text-fluid-xl { font-size: calc(1.5 * var(--vf)); }
-  .text-fluid-2xl { font-size: calc(1.875 * var(--vf)); }
-  .text-fluid-3xl { font-size: calc(2.25 * var(--vf)); }
-  .text-fluid-4xl { font-size: calc(3 * var(--vf)); }
-  .text-fluid-5xl { font-size: calc(3.75 * var(--vf)); }
-  .text-fluid-6xl { font-size: calc(4.5 * var(--vf)); }
-  .text-fluid-hero { font-size: calc(6 * var(--vf)); }
-
-  .gap-fluid-sm { gap: clamp(0.5rem, 0.3rem + 0.5vw, 1rem); }
-  .gap-fluid-md { gap: clamp(1rem, 0.5rem + 1vw, 1.5rem); }
-  .gap-fluid-lg { gap: clamp(1.5rem, 0.75rem + 2vw, 3rem); }
-  .gap-fluid-xl { gap: clamp(2rem, 1rem + 3vw, 5rem); }
-
-  .p-fluid-sm { padding: clamp(0.75rem, 0.5rem + 0.5vw, 1.25rem); }
-  .p-fluid-md { padding: clamp(1rem, 0.5rem + 1vw, 2rem); }
-  .p-fluid-lg { padding: clamp(1.5rem, 0.75rem + 2vw, 3rem); }
-
-  .py-fluid-section { 
-    padding-top: clamp(3rem, 2rem + 4vw, 8rem);
-    padding-bottom: clamp(3rem, 2rem + 4vw, 8rem);
-  }
-
-  .mb-fluid-sm { margin-bottom: clamp(0.5rem, 0.3rem + 0.5vw, 1rem); }
-  .mb-fluid-md { margin-bottom: clamp(1rem, 0.5rem + 1.5vw, 2.5rem); }
-  .mb-fluid-lg { margin-bottom: clamp(1.5rem, 0.75rem + 2vw, 4rem); }
-  .mb-fluid-xl { margin-bottom: clamp(2rem, 1rem + 3vw, 5rem); }
-
-  .size-fluid-icon-sm { width: clamp(2.5rem, 2rem + 1vw, 3.5rem); height: clamp(2.5rem, 2rem + 1vw, 3.5rem); }
-  .size-fluid-icon { width: clamp(3rem, 2rem + 1.5vw, 4.5rem); height: clamp(3rem, 2rem + 1.5vw, 4.5rem); }
-  .size-fluid-thumb { width: clamp(4rem, 3rem + 2vw, 8rem); height: clamp(4rem, 3rem + 2vw, 8rem); }
-  .size-fluid-visual { width: clamp(6rem, 4rem + 3vw, 10rem); height: clamp(6rem, 4rem + 3vw, 10rem); }
 }

@@ -1,18 +1,43 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { useLang } from "@/lib/language";
+import AnnouncementBar from "./AnnouncementBar";
 
-const navItems = [
-  { label: "ABOUT US", href: "#about" },
-  { label: "NEWS", href: "#news" },
-  { label: "CAREER", href: "#career" },
-  { label: "CONTACT US", href: "#contact" },
-];
+const navItems = {
+  ja: [
+    { label: "ABOUT US", href: "/about" },
+    { label: "SOLUTIONS", href: "/solutions" },
+    { label: "NEWS", href: "/news" },
+    { label: "CAREER", href: "/career" },
+    { label: "CONTACT US", href: "/contact" },
+  ],
+  en: [
+    { label: "ABOUT US", href: "/about" },
+    { label: "SOLUTIONS", href: "/solutions" },
+    { label: "NEWS", href: "/news" },
+    { label: "CAREER", href: "/career" },
+    { label: "CONTACT US", href: "/contact" },
+  ],
+};
 
 const Navigation = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const { lang, toggleLang } = useLang();
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > 80 && y > lastScrollY.current);
+      lastScrollY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll<HTMLElement>("[data-nav-theme]");
@@ -20,7 +45,6 @@ const Navigation = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the entry that overlaps with the top of the viewport (where the nav is)
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const t = entry.target.getAttribute("data-nav-theme");
@@ -36,70 +60,52 @@ const Navigation = () => {
   }, []);
 
   const isLight = theme === "light";
+  const items = navItems[lang];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 bg-transparent transition-transform duration-300"
+      style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
+    >
+      <AnnouncementBar />
       <div className="w-full px-[5vw] flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <a
-          href="#"
-          className={`font-black text-[calc(1.125*var(--vf))] tracking-[0.15em] transition-colors duration-500 ${
+        <Link
+          to="/"
+          className={`font-black text-[calc(1.5*var(--vf))] tracking-[0.15em] transition-colors duration-500 ${
             isLight ? "text-foreground" : "text-white"
           }`}
         >
           UNCHAIN
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
-            <a
+          {items.map((item) => (
+            <Link
               key={item.href}
-              href={item.href}
-              className={`text-[calc(0.875*var(--vf))] font-medium transition-colors duration-500 ${
+              to={item.href}
+              className={`text-[calc(1.1*var(--vf))] font-medium transition-colors duration-500 ${
                 isLight
                   ? "text-foreground hover:text-primary"
                   : "text-white/90 hover:text-white"
               }`}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
 
-          {/* Language switcher */}
-          <div className="relative">
-            <button
-              onClick={() => setLangOpen(!langOpen)}
-              className={`transition-colors duration-500 ${
-                isLight ? "text-foreground" : "text-white/90"
-              }`}
-            >
-              <Globe size={18} />
-            </button>
-            <AnimatePresence>
-              {langOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  className="absolute right-0 top-8 bg-background rounded-lg shadow-lg border border-border py-2 min-w-[120px]"
-                >
-                  <button
-                    onClick={() => setLangOpen(false)}
-                    className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
-                  >
-                    English
-                  </button>
-                  <button
-                    onClick={() => setLangOpen(false)}
-                    className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
-                  >
-                    日本語
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Language toggle */}
+          <button
+            onClick={toggleLang}
+            className={`text-[calc(1*var(--vf))] font-medium px-3 py-1 rounded-full border transition-all duration-300 ${
+              isLight
+                ? "border-foreground/30 text-foreground hover:bg-foreground hover:text-background"
+                : "border-white/30 text-white/90 hover:bg-white hover:text-black"
+            }`}
+          >
+            {lang === "ja" ? "EN" : "JP"}
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -123,21 +129,22 @@ const Navigation = () => {
             className="md:hidden bg-background border-b border-border"
           >
             <div className="w-full px-[5vw] py-6 flex flex-col gap-4">
-              {navItems.map((item) => (
-                <a
+              {items.map((item) => (
+                <Link
                   key={item.href}
-                  href={item.href}
+                  to={item.href}
                   onClick={() => setMobileOpen(false)}
                   className="text-lg text-foreground"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
-              <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
-                <button className="hover:text-foreground transition-colors">English</button>
-                <span>|</span>
-                <button className="hover:text-foreground transition-colors">日本語</button>
-              </div>
+              <button
+                onClick={toggleLang}
+                className="self-start mt-2 text-sm font-medium px-4 py-1.5 rounded-full border border-foreground/30 text-foreground hover:bg-foreground hover:text-background transition-all"
+              >
+                {lang === "ja" ? "Switch to English" : "日本語に切替"}
+              </button>
             </div>
           </motion.div>
         )}

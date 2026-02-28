@@ -119,22 +119,22 @@ const ContactPage = () => {
       <div className="min-h-screen bg-background">
         <Navigation />
         <section data-nav-theme="light" className="bg-background min-h-[80vh] flex items-center">
-          <div className="w-full px-[5vw] text-center">
+          <div className="container-site text-center">
             <ScrollReveal>
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-[3vh] bg-primary/10 border border-primary/20"
+                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-primary/10 border border-primary/20"
               >
                 <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </motion.div>
-              <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mb-[1vh]">
+              <h1 className="heading-display text-light-heading mb-3">
                 {labels.successTitle}
               </h1>
-              <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-md mx-auto">
+              <p className="body-large text-light-body max-w-md mx-auto">
                 {labels.successMessage}
               </p>
             </ScrollReveal>
@@ -151,19 +151,19 @@ const ContactPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw] max-w-3xl mx-auto text-center">
+        <div className="container-site max-w-3xl text-center">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {hero.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh]">
+            <h1 className="heading-display text-light-heading mt-4 mb-6">
               {hero.heading}
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed">
+            <p className="body-large text-light-body leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -171,32 +171,32 @@ const ContactPage = () => {
       </section>
 
       {/* Form */}
-      <section data-nav-theme="light" className="bg-background pb-[10vh]">
-        <div className="w-full px-[5vw] max-w-3xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-[4vh]">
+      <section data-nav-theme="light" className="bg-background pb-24 lg:pb-32 xl:pb-40">
+        <div className="container-site max-w-3xl">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Name + Company */}
             <ScrollReveal>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-[3vw]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
                 <div>
-                  <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                  <label className="block label text-light-label mb-3">
                     {labels.name} <span className="text-primary">*</span>
                   </label>
                   <input
                     type="text" required value={form.name}
                     onChange={(e) => update("name", e.target.value)}
                     placeholder={labels.namePlaceholder}
-                    className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
+                    className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
                   />
                 </div>
                 <div>
-                  <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                  <label className="block label text-light-label mb-3">
                     {labels.company} <span className="text-primary">*</span>
                   </label>
                   <input
                     type="text" required value={form.company}
                     onChange={(e) => update("company", e.target.value)}
                     placeholder={labels.companyPlaceholder}
-                    className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
+                    className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
                   />
                 </div>
               </div>
@@ -205,14 +205,14 @@ const ContactPage = () => {
             {/* Email */}
             <ScrollReveal delay={0.05}>
               <div>
-                <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                <label className="block label text-light-label mb-3">
                   {labels.email} <span className="text-primary">*</span>
                 </label>
                 <input
                   type="email" required value={form.email}
                   onChange={(e) => update("email", e.target.value)}
                   placeholder={labels.emailPlaceholder}
-                  className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
+                  className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 placeholder:text-muted-foreground/30 focus:border-primary"
                 />
               </div>
             </ScrollReveal>
@@ -220,7 +220,7 @@ const ContactPage = () => {
             {/* Category */}
             <ScrollReveal delay={0.1}>
               <div>
-                <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1.5vh]">
+                <label className="block label text-light-label mb-4">
                   {labels.category} <span className="text-primary">*</span>
                 </label>
                 <div className="flex flex-wrap gap-3">
@@ -232,10 +232,10 @@ const ContactPage = () => {
                           checked={selected}
                           onChange={(e) => update("category", e.target.value)}
                           className="sr-only" required />
-                        <span className={`inline-block px-5 py-2.5 rounded-full text-[calc(0.9*var(--vf))] font-medium border transition-all duration-300 ${
+                        <span className={`inline-block px-5 py-2.5 rounded-full body font-medium border transition-all duration-300 ${
                           selected
                             ? "border-primary/50 bg-primary/10 text-primary"
-                            : "border-border text-muted-foreground/50 hover:border-foreground/20 hover:text-muted-foreground"
+                            : "border-border text-light-label hover:border-foreground/20 hover:text-light-body"
                         }`}>
                           {cat.label}
                         </span>
@@ -249,7 +249,7 @@ const ContactPage = () => {
             {/* Message */}
             <ScrollReveal delay={0.15}>
               <div>
-                <label className="block text-[calc(0.8*var(--vf))] font-semibold tracking-[0.2em] uppercase text-muted-foreground/50 mb-[1vh]">
+                <label className="block label text-light-label mb-3">
                   {labels.message} <span className="text-primary">*</span>
                 </label>
                 <textarea
@@ -257,14 +257,14 @@ const ContactPage = () => {
                   onChange={(e) => update("message", e.target.value)}
                   placeholder={labels.messagePlaceholder}
                   rows={5}
-                  className="w-full bg-transparent border-0 border-b-2 border-border pb-3 text-[calc(1.15*var(--vf))] text-foreground outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/30 focus:border-primary"
+                  className="w-full bg-transparent border-0 border-b-2 border-border pb-3 body-large text-light-heading outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/30 focus:border-primary"
                 />
               </div>
             </ScrollReveal>
 
             {/* Privacy + Submit */}
             <ScrollReveal delay={0.2}>
-              <div className="space-y-[2vh]">
+              <div className="space-y-4">
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <div className="relative mt-0.5">
                     <input type="checkbox" required checked={form.privacy}
@@ -280,14 +280,14 @@ const ContactPage = () => {
                       )}
                     </div>
                   </div>
-                  <span className="text-[calc(0.9*var(--vf))] text-muted-foreground/50 group-hover:text-muted-foreground transition-colors">
+                  <span className="body text-light-label group-hover:text-light-body transition-colors">
                     {labels.privacy}
                   </span>
                 </label>
 
                 <button
                   type="submit" disabled={sending}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all disabled:opacity-50"
+                  className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {sending ? (
                     <>

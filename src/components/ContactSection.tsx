@@ -5,10 +5,10 @@ import { useLang } from "@/lib/language";
 
 const sectionText = {
   ja: {
-    label: "CONTACT",
-    heading: "Ready to UNCHAIN your\norganization?",
+    label: "お問い合わせ",
+    heading: "UNCHAINで組織を\n解き放ちませんか？",
     subtitle: "AIがあなたのミッションにどう貢献できるか、お話ししましょう。",
-    ctaPrimary: "Contact Us",
+    ctaPrimary: "お問い合わせ",
     ctaSecondary: "私たちについて",
   },
   en: {
@@ -30,38 +30,38 @@ const ContactSection = () => {
       data-nav-theme="light"
       className="bg-secondary min-h-screen flex items-center"
     >
-      <div className="w-full px-[5vw]">
-        <div className="text-center max-w-[60vw] mx-auto">
+      <div className="container-site w-full">
+        <div className="text-center max-w-3xl mx-auto">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {t.label}
             </span>
           </ScrollReveal>
 
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh] whitespace-pre-line leading-[1.1]">
+            <h2 className="heading-1 text-light-heading mt-6 mb-8 whitespace-pre-line leading-[1.1]">
               {t.heading}
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground mb-[5vh]">
+            <p className="body-large text-light-body mb-12">
               {t.subtitle}
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={0.15}>
-            <div className="flex items-center justify-center gap-[1.5vw] flex-wrap">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
+                className="btn-primary"
               >
                 {t.ctaPrimary}
                 <ArrowRight className="w-[1em] h-[1em]" />
               </Link>
               <Link
                 to="/about"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-foreground/20 text-foreground text-[calc(1*var(--vf))] font-medium hover:bg-foreground hover:text-background transition-all duration-300"
+                className="btn-outline border-foreground/20 text-light-heading hover:bg-foreground hover:text-background"
               >
                 {t.ctaSecondary}
               </Link>

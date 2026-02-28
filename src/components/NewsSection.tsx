@@ -9,25 +9,21 @@ const newsItems = {
       date: "2026年2月24日",
       tags: ["プレスリリース", "注目"],
       title: "UNCHAINがプレシードラウンドで3,500万円を調達",
-      excerpt:
-        "East VenturesとANOBAKAが主導するプレシードラウンドで3,500万円を調達しました…",
+      excerpt: "East VenturesとANOBAKAが主導するプレシードラウンドで3,500万円を調達しました…",
       url: "https://prtimes.jp/main/html/rd/p/000000001.000177392.html",
     },
     {
       date: "2025年11月12日",
       tags: [],
       title: "UNCHAIN CEO Christian Parkが日米協議会年次カンファレンス2025で登壇",
-      excerpt:
-        "共同創業者兼CEOのSunwoo \"Christian\" Parkが日米協議会の舞台に立ちました…",
+      excerpt: "共同創業者兼CEOのSunwoo \"Christian\" Parkが日米協議会の舞台に立ちました…",
       url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
     },
     {
       date: "2025年11月12日",
       tags: [],
-      title:
-        "Microsoft for Startupsに公式採択 — クラウドの力でグローバル展開を加速",
-      excerpt:
-        "Microsoft for Startupsに公式採択され、クラウドの力でグローバル展開を加速します…",
+      title: "Microsoft for Startupsに公式採択 — クラウドの力でグローバル展開を加速",
+      excerpt: "Microsoft for Startupsに公式採択され、クラウドの力でグローバル展開を加速します…",
       url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
     },
   ],
@@ -36,33 +32,28 @@ const newsItems = {
       date: "FEB 24, 2026",
       tags: ["PRESS RELEASE", "FEATURED"],
       title: "UNCHAIN Raises ¥35 Million in Pre-Seed Round",
-      excerpt:
-        "UNCHAIN has raised ¥35 million in a pre-seed round led by East Ventures and ANOBAKA to...",
+      excerpt: "UNCHAIN has raised ¥35 million in a pre-seed round led by East Ventures and ANOBAKA to...",
       url: "https://prtimes.jp/main/html/rd/p/000000001.000177392.html",
     },
     {
       date: "NOV 12, 2025",
       tags: [],
-      title:
-        "UNCHAIN CEO Christian Park Takes the Stage at U.S.–Japan Council Annual Conference 2025",
-      excerpt:
-        'Sunwoo "Christian" Park, Co-founder and CEO of UNCHAIN, took the stage at the U.S.–Japan...',
+      title: "UNCHAIN CEO Christian Park Takes the Stage at U.S.–Japan Council Annual Conference 2025",
+      excerpt: 'Sunwoo "Christian" Park, Co-founder and CEO of UNCHAIN, took the stage at the U.S.–Japan...',
       url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
     },
     {
       date: "NOV 12, 2025",
       tags: [],
-      title:
-        "Official Selection for Microsoft for Startups — Advancing Globally Through the Power of Cloud",
-      excerpt:
-        "UNCHAIN has been officially selected for Microsoft for Startups, leveraging Azure cloud to accelerate global expansion.",
+      title: "Official Selection for Microsoft for Startups — Advancing Globally Through the Power of Cloud",
+      excerpt: "UNCHAIN has been officially selected for Microsoft for Startups, leveraging Azure cloud to accelerate global expansion.",
       url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
     },
   ],
 };
 
 const sectionText = {
-  ja: { label: "LATEST", heading: "News & Insights", viewAll: "すべてのニュース" },
+  ja: { label: "最新情報", heading: "ニュース", viewAll: "すべてのニュース" },
   en: { label: "LATEST", heading: "News & Insights", viewAll: "View All News" },
 };
 
@@ -72,39 +63,25 @@ const NewsSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section
-      id="news"
-      data-nav-theme="light"
-      className="bg-background min-h-screen flex items-center"
-    >
-      <div className="w-full px-[5vw]">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-[6vh]">
+    <section id="news" data-nav-theme="light" className="bg-background section flex items-center min-h-screen">
+      <div className="container-site w-full">
+        <div className="flex items-end justify-between mb-12 lg:mb-16">
           <div>
             <ScrollReveal>
-              <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-                {t.label}
-              </span>
+              <span className="label text-light-label">{t.label}</span>
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
-              <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh]">
-                {t.heading}
-              </h2>
+              <h2 className="heading-1 text-light-heading mt-3">{t.heading}</h2>
             </ScrollReveal>
           </div>
-
           <ScrollReveal>
-            <Link
-              to="/news"
-              className="hidden md:inline-flex items-center gap-2 text-[calc(1*var(--vf))] font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link to="/news" className="hidden md:inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
               {t.viewAll}
-              <ArrowRight className="w-[1em] h-[1em]" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </ScrollReveal>
         </div>
 
-        {/* News list */}
         <div>
           {items.map((item, i) => {
             const hasUrl = "url" in item && item.url;
@@ -112,67 +89,42 @@ const NewsSection = () => {
             const linkProps = hasUrl
               ? { href: item.url, target: "_blank", rel: "noopener noreferrer" }
               : { to: "/news" };
-
             return (
               <ScrollReveal key={i} delay={i * 0.08}>
-                <Wrapper {...(linkProps as any)} className="group block py-[4vh]">
-                  <div className="flex items-start gap-[3vw]">
-                    {/* Number */}
-                    <span className="text-[calc(3.5*var(--vf))] font-black text-muted-foreground/15 leading-none flex-shrink-0 w-[6vw]">
+                <Wrapper {...(linkProps as any)} className="group block py-8">
+                  <div className="flex items-start gap-6 lg:gap-10">
+                    <span className="heading-1 text-light-heading opacity-10 leading-none flex-shrink-0 w-16 lg:w-20">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-
-                    {/* Content */}
                     <div className="flex-1 min-w-0">
-                      {/* Date + tags */}
-                      <div className="flex items-center gap-[0.8vw] mb-[1vh] flex-wrap">
-                        <span className="text-[calc(0.9*var(--vf))] text-muted-foreground">
-                          {item.date}
-                        </span>
+                      <div className="flex items-center gap-3 mb-2 flex-wrap">
+                        <span className="body text-light-body">{item.date}</span>
                         {item.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="text-[calc(0.75*var(--vf))] font-medium text-muted-foreground border border-border rounded-full px-3 py-0.5"
-                          >
+                          <span key={tag} className="label text-light-label border border-border rounded-full px-3 py-0.5">
                             {tag}
                           </span>
                         ))}
                       </div>
-
-                      {/* Title */}
-                      <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground mb-[0.8vh] line-clamp-2 group-hover:text-primary transition-colors">
+                      <h3 className="heading-3 text-light-heading mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                         {item.title}
                       </h3>
-
-                      {/* Excerpt */}
-                      <p className="text-[calc(1.15*var(--vf))] text-muted-foreground line-clamp-1">
-                        {item.excerpt}
-                      </p>
+                      <p className="body text-light-body line-clamp-1">{item.excerpt}</p>
                     </div>
-
-                    {/* Arrow */}
-                    <div className="flex-shrink-0 pt-[3vh]">
-                      <ArrowRight className="w-[1.5vw] h-[1.5vw] min-w-[1.2rem] min-h-[1.2rem] text-muted-foreground group-hover:text-foreground transition-colors" />
+                    <div className="flex-shrink-0 pt-6">
+                      <ArrowRight className="w-5 h-5 text-light-body group-hover:text-foreground transition-colors" />
                     </div>
                   </div>
                 </Wrapper>
-
-                {i < items.length - 1 && (
-                  <div className="border-t border-border" />
-                )}
+                {i < items.length - 1 && <div className="border-t border-border" />}
               </ScrollReveal>
             );
           })}
         </div>
 
-        {/* Mobile view all */}
-        <ScrollReveal className="md:hidden text-center mt-[3vh]">
-          <Link
-            to="/news"
-            className="inline-flex items-center gap-2 text-[calc(1*var(--vf))] font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
+        <ScrollReveal className="md:hidden text-center mt-8">
+          <Link to="/news" className="inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
             {t.viewAll}
-            <ArrowRight className="w-[1em] h-[1em]" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </ScrollReveal>
       </div>

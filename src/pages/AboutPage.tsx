@@ -162,19 +162,19 @@ const AboutPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw]">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {hero.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh] whitespace-pre-line leading-[1.1]">
+            <h1 className="heading-display text-light-heading mt-4 mb-6 whitespace-pre-line leading-[1.1]">
               {hero.heading}
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[45vw] leading-relaxed">
+            <p className="body-large text-light-body max-w-xl leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -182,21 +182,21 @@ const AboutPage = () => {
       </section>
 
       {/* Principles */}
-      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {princ.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[6vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-12 lg:mb-16">
               {princ.heading}
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[4vw]">
-            {/* Left — Interactive list */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left -- Interactive list */}
             <div className="flex flex-col">
               {principles.map((p, i) => {
                 const isActive = activePrinciple === i;
@@ -207,7 +207,7 @@ const AboutPage = () => {
                       onMouseEnter={() => setActivePrinciple(i)}
                       onClick={() => setActivePrinciple(i)}
                     >
-                      <div className="relative py-[2.5vh] border-b border-border">
+                      <div className="relative py-5 border-b border-border">
                         <motion.div
                           className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full bg-primary"
                           initial={false}
@@ -217,15 +217,15 @@ const AboutPage = () => {
                         />
 
                         <div className={`pl-6 transition-all duration-500 ${isActive ? "translate-x-2" : ""}`}>
-                          <div className="flex items-center gap-4 mb-[0.5vh]">
+                          <div className="flex items-center gap-4 mb-1">
                             <span
-                              className="text-[calc(0.75*var(--vf))] font-bold tracking-[0.3em] transition-colors duration-500"
+                              className="label font-bold tracking-[0.3em] transition-colors duration-500"
                               style={{ color: isActive ? "hsl(var(--primary))" : "hsl(var(--muted-foreground) / 0.3)" }}
                             >
                               {p.num}
                             </span>
-                            <h3 className={`text-[calc(1.5*var(--vf))] font-bold transition-colors duration-500 ${
-                              isActive ? "text-foreground" : "text-muted-foreground/40"
+                            <h3 className={`heading-3 transition-colors duration-500 ${
+                              isActive ? "text-light-heading" : "text-light-label"
                             }`}>
                               {p.title}
                             </h3>
@@ -238,7 +238,7 @@ const AboutPage = () => {
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed overflow-hidden pl-[calc(0.3em*11+16px)]"
+                                className="body-large text-light-body leading-relaxed overflow-hidden pl-[calc(0.3em*11+16px)]"
                               >
                                 {p.desc}
                               </motion.p>
@@ -252,7 +252,7 @@ const AboutPage = () => {
               })}
             </div>
 
-            {/* Right — Large principle number */}
+            {/* Right -- Large principle number */}
             <ScrollReveal delay={0.2}>
               <div className="relative aspect-square max-w-md mx-auto flex items-center justify-center">
                 <AnimatePresence mode="wait">
@@ -264,10 +264,10 @@ const AboutPage = () => {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="text-center"
                   >
-                    <span className="text-[calc(12*var(--vf))] font-black text-muted-foreground/10 leading-none select-none">
+                    <span className="text-[12rem] lg:text-[16rem] font-black text-muted-foreground/10 leading-none select-none">
                       {principles[activePrinciple].num}
                     </span>
-                    <p className="text-[calc(1.75*var(--vf))] font-black text-foreground -mt-[4vh]">
+                    <p className="heading-2 text-light-heading -mt-16">
                       {principles[activePrinciple].title}
                     </p>
                   </motion.div>
@@ -279,20 +279,20 @@ const AboutPage = () => {
       </section>
 
       {/* Founders */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-background section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {fText.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[6vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-12 lg:mb-16">
               {fText.heading}
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {founders.map((f, i) => {
               const isActive = activeFounder === i;
               return (
@@ -317,18 +317,18 @@ const AboutPage = () => {
                         style={{ transformOrigin: "left" }}
                       />
 
-                      <div className="p-[2vw]">
-                        <div className="mb-[2vh]">
-                          <span className="text-[calc(2*var(--vf))] font-bold leading-none select-none text-muted-foreground/10">
+                      <div className="p-8">
+                        <div className="mb-4">
+                          <span className="text-3xl font-bold leading-none select-none text-muted-foreground/10">
                             {String(i + 1).padStart(2, "0")}
                           </span>
                         </div>
 
-                        <h3 className="text-[calc(1.5*var(--vf))] font-bold text-foreground">
+                        <h3 className="heading-3 text-light-heading">
                           {f.name}
                         </h3>
 
-                        <p className="text-[calc(0.75*var(--vf))] font-semibold tracking-[0.2em] uppercase mt-[0.5vh] text-muted-foreground/50">
+                        <p className="label mt-2 text-light-label">
                           {f.title}
                         </p>
 
@@ -341,8 +341,8 @@ const AboutPage = () => {
                               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                               className="overflow-hidden"
                             >
-                              <div className="mt-[2vh] pt-[2vh] border-t border-border">
-                                <p className="text-[calc(0.9*var(--vf))] text-muted-foreground leading-relaxed">
+                              <div className="mt-4 pt-4 border-t border-border">
+                                <p className="body text-light-body leading-relaxed">
                                   {f.bio}
                                 </p>
                               </div>
@@ -360,27 +360,27 @@ const AboutPage = () => {
       </section>
 
       {/* DE&I */}
-      <section data-nav-theme="light" className="bg-secondary py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {dei.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[1vh] whitespace-pre-line leading-[1.1]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-3 whitespace-pre-line leading-[1.1]">
               {dei.heading}
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[50vw] mb-[6vh]">
+            <p className="body-large text-light-body max-w-2xl mb-12 lg:mb-16">
               {dei.intro}
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={0.15}>
-            <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr] gap-[4vw]">
-              {/* Left — Tab list */}
+            <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr] gap-8 lg:gap-12">
+              {/* Left -- Tab list */}
               <div className="flex flex-col">
                 {deiItems.map((item, i) => {
                   const isActive = activeDei === i;
@@ -391,7 +391,7 @@ const AboutPage = () => {
                       onMouseEnter={() => setActiveDei(i)}
                       onClick={() => setActiveDei(i)}
                     >
-                      <div className="relative py-[1.5vh] border-b border-border">
+                      <div className="relative py-4 border-b border-border">
                         <motion.div
                           className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full bg-primary"
                           initial={false}
@@ -400,8 +400,8 @@ const AboutPage = () => {
                           style={{ transformOrigin: "top" }}
                         />
                         <div className={`pl-5 transition-transform duration-300 ${isActive ? "translate-x-1" : ""}`}>
-                          <span className={`text-[calc(1.15*var(--vf))] font-bold transition-colors duration-300 ${
-                            isActive ? "text-foreground" : "text-muted-foreground/40"
+                          <span className={`body-large font-bold transition-colors duration-300 ${
+                            isActive ? "text-light-heading" : "text-light-label"
                           }`}>
                             {item.title}
                           </span>
@@ -412,7 +412,7 @@ const AboutPage = () => {
                 })}
               </div>
 
-              {/* Right — Content panel */}
+              {/* Right -- Content panel */}
               <div className="relative min-h-[180px]">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -421,18 +421,18 @@ const AboutPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    className="md:pt-[1.5vh]"
+                    className="md:pt-4"
                   >
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: "3rem" }}
                       transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                      className="h-[2px] rounded-full bg-primary mb-[2vh]"
+                      className="h-[2px] rounded-full bg-primary mb-4"
                     />
-                    <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground mb-[1vh]">
+                    <h3 className="heading-2 text-light-heading mb-3">
                       {deiItems[activeDei].title}
                     </h3>
-                    <p className="text-[calc(1.15*var(--vf))] text-muted-foreground leading-relaxed max-w-xl">
+                    <p className="body-large text-light-body leading-relaxed max-w-xl">
                       {deiItems[activeDei].desc}
                     </p>
                   </motion.div>
@@ -444,15 +444,15 @@ const AboutPage = () => {
       </section>
 
       {/* Company Overview */}
-      <section data-nav-theme="light" className="bg-background py-[10vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-background section">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {comp.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh] mb-[6vh]">
+            <h2 className="heading-1 text-light-heading mt-3 mb-12 lg:mb-16">
               {comp.heading}
             </h2>
           </ScrollReveal>
@@ -460,11 +460,11 @@ const AboutPage = () => {
           <div className="max-w-4xl">
             {companyInfo.map((row, i) => (
               <ScrollReveal key={row.label} delay={i * 0.06}>
-                <div className="group grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-[3vw] py-[2vh] border-b border-border hover:border-foreground/20 transition-colors duration-300">
-                  <span className="sm:col-span-4 text-[calc(0.9*var(--vf))] font-medium tracking-wide text-muted-foreground/50 group-hover:text-primary transition-colors duration-300">
+                <div className="group grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 lg:gap-8 py-4 border-b border-border hover:border-foreground/20 transition-colors duration-300">
+                  <span className="sm:col-span-4 body font-medium tracking-wide text-light-label group-hover:text-primary transition-colors duration-300">
                     {row.label}
                   </span>
-                  <span className="sm:col-span-8 text-[calc(1.15*var(--vf))] text-foreground/80 group-hover:text-foreground transition-colors duration-300">
+                  <span className="sm:col-span-8 body-large text-light-body group-hover:text-light-heading transition-colors duration-300">
                     {row.value}
                   </span>
                 </div>

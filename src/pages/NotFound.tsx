@@ -32,12 +32,12 @@ const NotFound = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <section data-nav-theme="light" className="min-h-[80vh] flex items-center justify-center">
-        <div className="text-center px-[5vw]">
+        <div className="text-center container-site">
           <motion.h1
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[calc(12*var(--vf))] font-black leading-none text-muted-foreground/10 mb-[1vh] select-none"
+            className="text-[12rem] lg:text-[16rem] font-black leading-none text-muted-foreground/10 mb-3 select-none"
           >
             {t.heading}
           </motion.h1>
@@ -45,7 +45,7 @@ const NotFound = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-[calc(3.5*var(--vf))] font-black text-foreground mb-[1vh]"
+            className="heading-display text-light-heading mb-3"
           >
             {t.subheading}
           </motion.h2>
@@ -53,7 +53,7 @@ const NotFound = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-md mx-auto mb-[4vh]"
+            className="body-large text-light-body max-w-md mx-auto mb-8"
           >
             {t.description}
           </motion.p>
@@ -64,7 +64,7 @@ const NotFound = () => {
           >
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-[calc(1*var(--vf))] font-medium hover:opacity-90 transition-all duration-300"
+              className="btn-primary inline-flex items-center gap-2"
             >
               {t.cta}
             </Link>

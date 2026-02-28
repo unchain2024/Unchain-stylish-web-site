@@ -30,26 +30,26 @@ const Footer = () => {
   const links = footerLinks[lang];
 
   return (
-    <footer data-nav-theme="dark" className="bg-black flex flex-col justify-center py-[8vh]">
+    <footer data-nav-theme="dark" className="bg-black flex flex-col justify-center py-16 lg:py-20">
       {/* Top area – logo + socials */}
-      <div className="w-full px-[5vw] flex flex-col items-center pb-[4vh]">
+      <div className="container-site flex flex-col items-center pb-10">
         <ScrollReveal>
-          <p className="font-black text-[calc(3.5*var(--vf))] tracking-[0.2em] text-white mb-[5vh]">
+          <p className="heading-1 tracking-[0.2em] text-dark-heading mb-10">
             UNCHAIN
           </p>
         </ScrollReveal>
 
-        <div className="flex items-center gap-[2vw]">
-          <a href="#" className="text-white/40 hover:text-white transition-colors">
+        <div className="flex items-center gap-6">
+          <a href="#" className="text-dark-label hover:text-white transition-colors">
             <Twitter size={28} />
           </a>
-          <a href="#" className="text-white/40 hover:text-white transition-colors">
+          <a href="#" className="text-dark-label hover:text-white transition-colors">
             <Instagram size={28} />
           </a>
-          <a href="#" className="text-white/40 hover:text-white transition-colors">
+          <a href="#" className="text-dark-label hover:text-white transition-colors">
             <Youtube size={28} />
           </a>
-          <a href="#" className="text-white/40 hover:text-white transition-colors">
+          <a href="#" className="text-dark-label hover:text-white transition-colors">
             <Linkedin size={28} />
           </a>
         </div>
@@ -57,13 +57,13 @@ const Footer = () => {
 
       {/* Links row */}
       <div className="border-t border-white/10">
-        <div className="w-full px-[5vw] py-[2vh] flex flex-wrap justify-center gap-x-[2vw] gap-y-2">
+        <div className="container-site py-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
           {links.map((link) => (
             link.href.startsWith("/") ? (
               <Link
                 key={link.label}
                 to={link.href}
-                className="text-[calc(0.9*var(--vf))] text-white/40 hover:text-white transition-colors"
+                className="body text-dark-label hover:text-white transition-colors"
               >
                 {link.label}
               </Link>
@@ -71,7 +71,7 @@ const Footer = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-[calc(0.9*var(--vf))] text-white/40 hover:text-white transition-colors"
+                className="body text-dark-label hover:text-white transition-colors"
               >
                 {link.label}
               </a>
@@ -81,8 +81,8 @@ const Footer = () => {
       </div>
 
       {/* Copyright */}
-      <div className="w-full px-[5vw] pb-[2vh] pt-[1vh] text-center">
-        <p className="text-[calc(0.9*var(--vf))] text-white/30">
+      <div className="container-site pb-4 pt-2 text-center">
+        <p className="body text-dark-label">
           Copyright {new Date().getFullYear()} {copyrightText[lang]} All rights reserved.
         </p>
       </div>

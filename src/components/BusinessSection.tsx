@@ -8,14 +8,14 @@ const solutions = {
     {
       category: "AI SaaS",
       name: "NEURON",
-      description: "PM Decision System of Record",
-      cta: "Learn More",
+      description: "PM意思決定の記録システム",
+      cta: "詳しく見る",
     },
     {
       category: "AI DX",
       name: "AI Consulting",
       description: "実践的なAIトランスフォーメーション",
-      cta: "Learn More",
+      cta: "詳しく見る",
     },
   ],
   en: [
@@ -35,7 +35,7 @@ const solutions = {
 };
 
 const sectionText = {
-  ja: { label: "BUSINESS", heading: "Solutions" },
+  ja: { label: "事業内容", heading: "ソリューション" },
   en: { label: "BUSINESS", heading: "Solutions" },
 };
 
@@ -45,19 +45,15 @@ const BusinessSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section id="solutions" data-nav-theme="light" className="bg-secondary min-h-screen flex items-center">
-      <div className="w-full px-[5vw]">
-        {/* Header — left aligned */}
-        <div className="mb-[6vh]">
+    <section id="solutions" data-nav-theme="light" className="bg-secondary section flex items-center min-h-screen">
+      <div className="container-site w-full">
+        {/* Header */}
+        <div className="mb-12 lg:mb-16">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-              {t.label}
-            </span>
+            <span className="label text-light-label">{t.label}</span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh]">
-              {t.heading}
-            </h2>
+            <h2 className="heading-1 text-light-heading mt-3">{t.heading}</h2>
           </ScrollReveal>
         </div>
 
@@ -65,29 +61,25 @@ const BusinessSection = () => {
         <div>
           {items.map((item, i) => (
             <ScrollReveal key={item.name} delay={i * 0.1}>
-              <div className="py-[4vh]">
+              <div className="py-8 lg:py-10">
                 {/* Category label */}
-                <p className="text-[calc(1.5*var(--vf))] font-bold text-muted-foreground/40 mb-[1.5vh]">
+                <p className="heading-3 text-light-body opacity-50 mb-4">
                   {item.category}
                 </p>
 
                 {/* Item row */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground">
-                      {item.name}
-                    </h3>
-                    <p className="text-[calc(1.15*var(--vf))] text-muted-foreground mt-[0.3vh]">
-                      {item.description}
-                    </p>
+                    <h3 className="heading-2 text-light-heading">{item.name}</h3>
+                    <p className="body-large text-light-body mt-1">{item.description}</p>
                   </div>
 
                   <Link
                     to="/solutions"
-                    className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-foreground/20 text-foreground text-[calc(1*var(--vf))] font-medium hover:bg-foreground hover:text-background transition-all duration-300 flex-shrink-0"
+                    className="hidden md:inline-flex btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background flex-shrink-0"
                   >
                     {item.cta}
-                    <ArrowRight className="w-[1em] h-[1em]" />
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>

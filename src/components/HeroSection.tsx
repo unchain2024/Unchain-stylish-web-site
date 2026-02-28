@@ -1,30 +1,48 @@
 import { motion } from "framer-motion";
 import { useRef, useCallback, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { useLang } from "@/lib/language";
 
 const videos = ["/hero-bg.mp4", "/hero-bg-2.mp4", "/hero-bg-3.mp4", "/hero-bg-4.mp4"];
+
+const heroText = {
+  ja: {
+    subtitle:
+      "すべての組織には解放すべき重要な使命があると信じています。\n技術はその使命に仕えるべきであり — 置き換えるべきではありません。",
+    ctaPrimary: "お問い合わせ",
+    ctaSecondary: "ソリューション",
+  },
+  en: {
+    subtitle:
+      "We believe every organization has a crucial mission to unchain.\nTechnology should serve that mission — not replace it.",
+    ctaPrimary: "Get in Touch",
+    ctaSecondary: "Solutions",
+  },
+};
 
 const HeroSection = () => {
   const frontRef = useRef<HTMLVideoElement>(null);
   const backRef = useRef<HTMLVideoElement>(null);
   const indexRef = useRef(0);
   const [frontVisible, setFrontVisible] = useState(true);
+  const { lang } = useLang();
+  const t = heroText[lang];
 
   const handleEnded = useCallback(() => {
     const nextIndex = (indexRef.current + 1) % videos.length;
-    // Load next video into the hidden (back) layer
     const back = frontVisible ? backRef.current : frontRef.current;
     if (back) {
       back.src = videos[nextIndex];
       back.play();
     }
-    // Crossfade: swap which layer is visible
     setFrontVisible((prev) => !prev);
     indexRef.current = nextIndex;
   }, [frontVisible]);
 
   return (
     <section data-nav-theme="dark" className="relative h-screen w-full overflow-hidden">
-      {/* Background videos – two layers for crossfade */}
+      {/* Background videos */}
       <div className="absolute inset-0">
         <video
           ref={frontRef}
@@ -44,19 +62,49 @@ const HeroSection = () => {
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
           style={{ opacity: frontVisible ? 0 : 1 }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
       </div>
 
       {/* Center content */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-10 px-6">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 2, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-fluid-hero font-black text-background hero-letter-spacing text-center"
+          className="text-fluid-hero font-black text-white hero-letter-spacing text-center"
         >
           UNCHAIN THE WORLD
         </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+          className="body-large text-white/55 text-center mt-6 max-w-2xl whitespace-pre-line"
+        >
+          {t.subtitle}
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          className="flex items-center gap-4 mt-10"
+        >
+          <Link
+            to="/contact"
+            className="btn-primary"
+          >
+            {t.ctaPrimary}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            to="/solutions"
+            className="btn-outline border-white/25 text-white hover:bg-white hover:text-black"
+          >
+            {t.ctaSecondary}
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

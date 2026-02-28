@@ -21,13 +21,13 @@ const partnersRow2 = [
 ];
 
 const sectionText = {
-  ja: { label: "ECOSYSTEM", heading: "世界トップクラスのパートナー" },
+  ja: { label: "エコシステム", heading: "世界トップクラスのパートナー" },
   en: { label: "ECOSYSTEM", heading: "Backed by world-class partners" },
 };
 
 const PartnerCard = ({ name }: { name: string }) => (
   <div className="flex-shrink-0 w-[14vw] min-w-[160px] h-[5vw] min-h-[60px] rounded-xl bg-muted/50 border border-border/50 flex items-center justify-center px-4">
-    <span className="text-[calc(0.9*var(--vf))] font-semibold text-muted-foreground text-center leading-tight">
+    <span className="body font-semibold text-light-body text-center leading-tight">
       {name}
     </span>
   </div>
@@ -38,14 +38,14 @@ const PartnersSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section data-nav-theme="light" className="bg-secondary py-[10vh] overflow-hidden">
-      <div className="w-full px-[5vw] mb-[6vh]">
+    <section data-nav-theme="light" className="bg-secondary section overflow-hidden">
+      <div className="container-site mb-12 lg:mb-16">
         <ScrollReveal>
           <div className="text-center">
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {t.label}
             </span>
-            <h2 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[1vh]">
+            <h2 className="heading-1 text-light-heading mt-3">
               {t.heading}
             </h2>
           </div>
@@ -53,9 +53,9 @@ const PartnersSection = () => {
       </div>
 
       {/* Row 1 — scrolls left */}
-      <div className="mb-[1.5vw]">
+      <div className="mb-4">
         <motion.div
-          className="flex gap-[1.5vw]"
+          className="flex gap-4"
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
@@ -68,7 +68,7 @@ const PartnersSection = () => {
       {/* Row 2 — scrolls right */}
       <div>
         <motion.div
-          className="flex gap-[1.5vw]"
+          className="flex gap-4"
           animate={{ x: ["-50%", "0%"] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >

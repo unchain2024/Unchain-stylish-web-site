@@ -105,19 +105,19 @@ const NewsPage = () => {
 
       {/* Hero */}
       <section data-nav-theme="light" className="bg-background pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <div className="w-full px-[5vw]">
+        <div className="container-site">
           <ScrollReveal>
-            <span className="text-[calc(1*var(--vf))] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="label text-light-label">
               {hero.label}
             </span>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h1 className="text-[calc(3.5*var(--vf))] font-black text-foreground mt-[2vh] mb-[3vh]">
+            <h1 className="heading-display text-light-heading mt-4 mb-6">
               {hero.heading}
             </h1>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <p className="text-[calc(1.15*var(--vf))] text-muted-foreground max-w-[45vw] leading-relaxed">
+            <p className="body-large text-light-body max-w-xl leading-relaxed">
               {hero.description}
             </p>
           </ScrollReveal>
@@ -125,50 +125,50 @@ const NewsPage = () => {
       </section>
 
       {/* Articles */}
-      <section data-nav-theme="light" className="bg-secondary pb-[10vh] pt-[4vh]">
-        <div className="w-full px-[5vw]">
+      <section data-nav-theme="light" className="bg-secondary pb-24 lg:pb-32 xl:pb-40 pt-8">
+        <div className="container-site">
           {articles.map((article, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>
               <a
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block py-[4vh]"
+                className="group block py-8"
               >
-                <div className="flex items-start gap-[3vw]">
+                <div className="flex items-start gap-6 lg:gap-8">
                   {/* Number */}
-                  <span className="text-[calc(3.5*var(--vf))] font-black text-muted-foreground/15 leading-none flex-shrink-0 w-[6vw]">
+                  <span className="heading-1 text-muted-foreground/15 leading-none flex-shrink-0 w-16 lg:w-20">
                     {String(i + 1).padStart(2, "0")}
                   </span>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-[0.8vw] mb-[1vh] flex-wrap">
-                      <span className="text-[calc(0.9*var(--vf))] text-muted-foreground">
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
+                      <span className="body text-light-body">
                         {article.date}
                       </span>
                       {article.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-[calc(0.75*var(--vf))] font-medium text-muted-foreground border border-border rounded-full px-3 py-0.5"
+                          className="label text-light-body border border-border rounded-full px-3 py-0.5"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
 
-                    <h3 className="text-[calc(1.75*var(--vf))] font-black text-foreground mb-[0.8vh] line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="heading-2 text-light-heading mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                       {article.title}
                     </h3>
 
-                    <p className="text-[calc(1.15*var(--vf))] text-muted-foreground line-clamp-2">
+                    <p className="body-large text-light-body line-clamp-2">
                       {article.excerpt}
                     </p>
                   </div>
 
                   {/* Arrow */}
-                  <div className="flex-shrink-0 pt-[3vh]">
-                    <ArrowRight className="w-[1.5vw] h-[1.5vw] min-w-[1.2rem] min-h-[1.2rem] text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <div className="flex-shrink-0 pt-6">
+                    <ArrowRight className="w-5 h-5 text-light-body group-hover:text-light-heading transition-colors" />
                   </div>
                 </div>
               </a>

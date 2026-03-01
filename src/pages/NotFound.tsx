@@ -21,7 +21,7 @@ const text = {
 
 const NotFound = () => {
   const location = useLocation();
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = text[lang];
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const NotFound = () => {
             transition={{ delay: 0.7, duration: 0.6 }}
           >
             <Link
-              to="/"
+              to={localePath("/")}
               className="btn-primary inline-flex items-center gap-2"
             >
               {t.cta}

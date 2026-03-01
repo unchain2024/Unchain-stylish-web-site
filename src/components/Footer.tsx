@@ -27,7 +27,7 @@ const copyrightText = {
 };
 
 const Footer = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const links = footerLinks[lang];
 
   return (
@@ -65,7 +65,7 @@ const Footer = () => {
             link.href.startsWith("/") ? (
               <Link
                 key={link.label}
-                to={link.href}
+                to={localePath(link.href)}
                 className="body text-dark-label hover:text-white transition-colors"
               >
                 {link.label}

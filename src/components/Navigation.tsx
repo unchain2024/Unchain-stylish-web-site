@@ -29,7 +29,7 @@ const Navigation = () => {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
-  const { lang, toggleLang } = useLang();
+  const { lang, toggleLang, localePath } = useLang();
 
   useEffect(() => {
     const onScroll = () => {
@@ -72,7 +72,7 @@ const Navigation = () => {
       <AnnouncementBar />
       <div className="w-full px-6 sm:px-8 lg:px-12 flex items-center justify-between h-[72px]">
         {/* Logo */}
-        <Link to="/">
+        <Link to={localePath("/")}>
           <img
             src={isLight ? logoBlack : logoWhite}
             alt="UNCHAIN"
@@ -85,7 +85,7 @@ const Navigation = () => {
           {items.map((item) => (
             <Link
               key={item.href}
-              to={item.href}
+              to={localePath(item.href)}
               className={`text-[15px] font-medium transition-colors duration-500 ${
                 isLight
                   ? "text-foreground hover:text-primary"
@@ -133,7 +133,7 @@ const Navigation = () => {
               {items.map((item) => (
                 <Link
                   key={item.href}
-                  to={item.href}
+                  to={localePath(item.href)}
                   onClick={() => setMobileOpen(false)}
                   className="text-lg text-foreground"
                 >

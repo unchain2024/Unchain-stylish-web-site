@@ -19,7 +19,7 @@ const heroText = {
 };
 
 const HeroSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = heroText[lang];
 
   return (
@@ -64,14 +64,14 @@ const HeroSection = () => {
           className="flex items-center gap-4 mt-10"
         >
           <Link
-            to="/contact"
+            to={localePath("/contact")}
             className="btn-primary"
           >
             {t.ctaPrimary}
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            to="/solutions"
+            to={localePath("/solutions")}
             className="btn-outline border-white/25 text-white hover:bg-white hover:text-black"
           >
             {t.ctaSecondary}

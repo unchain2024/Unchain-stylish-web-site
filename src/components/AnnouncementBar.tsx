@@ -15,7 +15,7 @@ const barText = {
 };
 
 const AnnouncementBar = ({ onVisibilityChange }: { onVisibilityChange?: (visible: boolean) => void }) => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = barText[lang];
   const [dismissed, setDismissed] = useState(() =>
     sessionStorage.getItem("announcement-dismissed") === "true"
@@ -34,7 +34,7 @@ const AnnouncementBar = ({ onVisibilityChange }: { onVisibilityChange?: (visible
   return (
     <div className="relative bg-black h-10">
       <Link
-        to="/news"
+        to={localePath("/news")}
         className="flex items-center justify-center h-full px-12 hover:opacity-80 transition-opacity"
       >
         <span className="text-sm font-semibold text-white tracking-wide">

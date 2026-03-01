@@ -21,7 +21,7 @@ const sectionText = {
 };
 
 const ContactSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = sectionText[lang];
 
   return (
@@ -53,14 +53,14 @@ const ContactSection = () => {
           <ScrollReveal delay={0.15}>
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link
-                to="/contact"
+                to={localePath("/contact")}
                 className="btn-primary"
               >
                 {t.ctaPrimary}
                 <ArrowRight className="w-[1em] h-[1em]" />
               </Link>
               <Link
-                to="/about"
+                to={localePath("/about")}
                 className="btn-outline border-foreground/20 text-light-heading hover:bg-foreground hover:text-background"
               >
                 {t.ctaSecondary}

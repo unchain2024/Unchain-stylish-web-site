@@ -33,7 +33,7 @@ const sectionText = {
 };
 
 const RecruitingSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = sectionText[lang];
 
   return (
@@ -62,7 +62,7 @@ const RecruitingSection = () => {
               </p>
             </ScrollReveal>
             <ScrollReveal>
-              <Link to="/career" className="btn-primary">
+              <Link to={localePath("/career")} className="btn-primary">
                 {t.cta}
                 <ArrowRight size={18} />
               </Link>

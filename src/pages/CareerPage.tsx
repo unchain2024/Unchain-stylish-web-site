@@ -207,7 +207,7 @@ const detailLabels = {
 };
 
 const CareerPage = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const hero = heroText[lang];
   const why = whyText[lang];
   const cards = whyCards[lang];
@@ -651,7 +651,7 @@ const CareerPage = () => {
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <Link
-              to="/contact"
+              to={localePath("/contact")}
               className="btn-primary !bg-white !text-black inline-flex items-center gap-2"
             >
               {cta.cta}

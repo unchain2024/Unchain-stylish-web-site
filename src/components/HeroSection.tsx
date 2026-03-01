@@ -1,10 +1,7 @@
 import { motion } from "framer-motion";
-import { useRef, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLang } from "@/lib/language";
-
-const videos = ["/hero-bg.mp4", "/hero-bg-2.mp4", "/hero-bg-3.mp4", "/hero-bg-4.mp4"];
 
 const heroText = {
   ja: {
@@ -22,45 +19,20 @@ const heroText = {
 };
 
 const HeroSection = () => {
-  const frontRef = useRef<HTMLVideoElement>(null);
-  const backRef = useRef<HTMLVideoElement>(null);
-  const indexRef = useRef(0);
-  const [frontVisible, setFrontVisible] = useState(true);
   const { lang } = useLang();
   const t = heroText[lang];
 
-  const handleEnded = useCallback(() => {
-    const nextIndex = (indexRef.current + 1) % videos.length;
-    const back = frontVisible ? backRef.current : frontRef.current;
-    if (back) {
-      back.src = videos[nextIndex];
-      back.play();
-    }
-    setFrontVisible((prev) => !prev);
-    indexRef.current = nextIndex;
-  }, [frontVisible]);
-
   return (
     <section data-nav-theme="dark" className="relative h-screen w-full overflow-hidden">
-      {/* Background videos */}
+      {/* Background video */}
       <div className="absolute inset-0">
         <video
-          ref={frontRef}
           autoPlay
           muted
+          loop
           playsInline
-          onEnded={frontVisible ? handleEnded : undefined}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
-          style={{ opacity: frontVisible ? 1 : 0 }}
-          src={videos[0]}
-        />
-        <video
-          ref={backRef}
-          muted
-          playsInline
-          onEnded={!frontVisible ? handleEnded : undefined}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
-          style={{ opacity: frontVisible ? 0 : 1 }}
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/hero-bg-merged.mp4"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
       </div>

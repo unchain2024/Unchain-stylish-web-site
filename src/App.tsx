@@ -10,6 +10,8 @@ import NewsPage from "./pages/NewsPage";
 import CareerPage from "./pages/CareerPage";
 import ContactPage from "./pages/ContactPage";
 import SolutionsPage from "./pages/SolutionsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfUsePage from "./pages/TermsOfUsePage";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/career" element={<CareerPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/solutions" element={<SolutionsPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-of-use" element={<TermsOfUsePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

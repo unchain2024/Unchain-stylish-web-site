@@ -9,15 +9,15 @@ const footerLinks = {
     { label: "会社概要", href: "/about" },
     { label: "採用情報", href: "/career" },
     { label: "お問い合わせ", href: "/contact" },
-    { label: "プライバシーポリシー", href: "#" },
-    { label: "利用規約", href: "#" },
+    { label: "プライバシーポリシー", href: "/privacy-policy" },
+    { label: "利用規約", href: "/terms-of-use" },
   ],
   en: [
     { label: "About Us", href: "/about" },
     { label: "Careers", href: "/career" },
     { label: "Contact", href: "/contact" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Use", href: "#" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Use", href: "/terms-of-use" },
   ],
 };
 

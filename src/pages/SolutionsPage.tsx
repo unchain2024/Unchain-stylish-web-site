@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
@@ -118,7 +118,20 @@ const SolutionsPage = () => {
   const cta = ctaText[lang];
   const learnMore = learnMoreText[lang];
 
-  const [activeProduct, setActiveProduct] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [activeProduct, setActiveProduct] = useState<string | null>(
+    searchParams.get("product")
+  );
+
+  useEffect(() => {
+    const product = searchParams.get("product");
+    if (product) {
+      setActiveProduct(product);
+      setTimeout(() => {
+        document.getElementById(`product-${product}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -163,6 +176,7 @@ const SolutionsPage = () => {
                   {items.map((item, i) => (
                     <ScrollReveal key={item.slug} delay={gi * 0.1 + i * 0.1}>
                       <button
+                        id={`product-${item.slug}`}
                         onClick={() => setActiveProduct(activeProduct === item.slug ? null : item.slug)}
                         className="w-full text-left"
                       >

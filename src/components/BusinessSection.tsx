@@ -6,12 +6,14 @@ import { useLang } from "@/lib/language";
 const solutions = {
   ja: [
     {
+      slug: "neuron",
       category: "AI SaaS",
       name: "NEURON",
       description: "PM意思決定の記録システム",
       cta: "詳しく見る",
     },
     {
+      slug: "consulting",
       category: "AI DX",
       name: "AI Consulting",
       description: "実践的なAIトランスフォーメーション",
@@ -20,12 +22,14 @@ const solutions = {
   ],
   en: [
     {
+      slug: "neuron",
       category: "AI SaaS",
       name: "NEURON",
       description: "PM Decision System of Record",
       cta: "Learn More",
     },
     {
+      slug: "consulting",
       category: "AI DX",
       name: "AI Consulting",
       description: "Hands-on AI transformation",
@@ -75,7 +79,7 @@ const BusinessSection = () => {
                   </div>
 
                   <Link
-                    to="/solutions"
+                    to={`/solutions?product=${item.slug}`}
                     className="hidden md:inline-flex btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background flex-shrink-0"
                   >
                     {item.cta}

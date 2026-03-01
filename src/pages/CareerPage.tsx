@@ -308,7 +308,7 @@ const CareerPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {cards.map((card, i) => (
               <ScrollReveal key={card.title} delay={i * 0.15}>
-                <div className="card border border-border/50 hover:border-border transition-colors duration-300">
+                <div className="card h-full border border-border/50 hover:border-border transition-colors duration-300">
                   <h3 className="heading-3 text-light-heading mb-4">
                     {card.title}
                   </h3>

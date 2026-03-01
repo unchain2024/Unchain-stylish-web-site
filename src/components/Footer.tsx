@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
+import logoWhite from "@/assets/logo-white.png";
 
 const footerLinks = {
   ja: [
@@ -34,9 +35,7 @@ const Footer = () => {
       {/* Top area – logo + socials */}
       <div className="container-site flex flex-col items-center pb-10">
         <ScrollReveal>
-          <p className="heading-1 tracking-[0.2em] text-dark-heading mb-10">
-            UNCHAIN
-          </p>
+          <img src={logoWhite} alt="UNCHAIN" className="h-14 w-auto mb-10" />
         </ScrollReveal>
 
         <div className="flex items-center gap-6">

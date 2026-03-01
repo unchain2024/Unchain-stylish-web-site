@@ -62,16 +62,16 @@ const BusinessSection = () => {
           {items.map((item, i) => (
             <ScrollReveal key={item.name} delay={i * 0.1}>
               <div className="py-8 lg:py-10">
-                {/* Category label */}
-                <p className="heading-3 text-light-body opacity-50 mb-4">
-                  {item.category}
-                </p>
-
-                {/* Item row */}
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="heading-2 text-light-heading">{item.name}</h3>
-                    <p className="body-large text-light-body mt-1">{item.description}</p>
+                  {/* Left – category + name + description */}
+                  <div className="flex items-start gap-8 lg:gap-14">
+                    <p className="heading-3 text-light-body opacity-50 flex-shrink-0 pt-2 w-[120px] lg:w-[160px]">
+                      {item.category}
+                    </p>
+                    <div>
+                      <h3 className="heading-3 text-light-heading">{item.name}</h3>
+                      <p className="body-large text-light-body mt-1">{item.description}</p>
+                    </div>
                   </div>
 
                   <Link

@@ -71,7 +71,7 @@ const foundersData = {
   ],
   en: [
     {
-      name: "Sunwoo Christian Park",
+      name: "Sunwoo Park",
       title: "Co-Founder & CEO",
       bio: "Seasoned entrepreneur with a strong background in artificial intelligence. Co-founded an AI startup recognized by Forbes as one of Japan's Top 50 AI companies and was among the earliest to demonstrate prompt hacking techniques. Previously worked with the Matsuo Lab at the University of Tokyo and served as a panelist for the U.S.–Japan Council.",
     },

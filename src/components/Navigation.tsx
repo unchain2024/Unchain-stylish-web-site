@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useLang } from "@/lib/language";
 import AnnouncementBar from "./AnnouncementBar";
+import logoBlack from "@/assets/logo-black.png";
+import logoWhite from "@/assets/logo-white.png";
 
 const navItems = {
   ja: [
@@ -70,13 +72,12 @@ const Navigation = () => {
       <AnnouncementBar />
       <div className="w-full px-6 sm:px-8 lg:px-12 flex items-center justify-between h-[72px]">
         {/* Logo */}
-        <Link
-          to="/"
-          className={`text-xl font-black tracking-[0.15em] transition-colors duration-500 ${
-            isLight ? "text-foreground" : "text-white"
-          }`}
-        >
-          UNCHAIN
+        <Link to="/">
+          <img
+            src={isLight ? logoBlack : logoWhite}
+            alt="UNCHAIN"
+            className="h-10 w-auto transition-opacity duration-500"
+          />
         </Link>
 
         {/* Desktop nav */}

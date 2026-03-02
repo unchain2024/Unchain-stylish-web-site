@@ -12,13 +12,13 @@ const heroText = {
     label: "採用情報",
     heading: "私たちと未来を創ろう",
     description:
-      "私たちは傭兵ではなく、宣教師のチームを構築しています。見た目よりもインパクトを重視する方、ぜひご連絡ください。",
+      "人々が本当に成し遂げたいことをUNCHAINするテクノロジーを作る、そんな志を持つチームを構築しています。",
   },
   en: {
     label: "CAREER",
     heading: "Build the future\nwith us",
     description:
-      "We're assembling a team of missionaries, not mercenaries. If you're driven by impact over optics, we want to hear from you.",
+      "We are building a team committed to making technology that UNCHAIN what people truly want to achieve.",
   },
 };
 

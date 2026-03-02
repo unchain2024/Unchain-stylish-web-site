@@ -12,13 +12,13 @@ const heroText = {
     label: "ソリューション",
     heading: "ミッションに仕えるAI",
     description:
-      "フラッグシッププロダクトからハンズオンコンサルティングまで、組織がより良い意思決定をより速く行うためのAI活用を支援します。",
+      "AIが人に寄り添うとき、組織も個人も、本当に成し遂げたいことをUNCHAINできるようになります。",
   },
   en: {
     label: "SOLUTIONS",
     heading: "AI that serves\nyour mission",
     description:
-      "From flagship products to hands-on consulting, we help organizations harness AI to make better decisions, faster.",
+      "When AI stands by people, it enables organizations and individuals to UNCHAIN what they truly set out to achieve.",
   },
 };
 

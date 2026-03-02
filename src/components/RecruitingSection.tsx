@@ -17,12 +17,14 @@ const rightPhotos = [r5, r6, r7, r8];
 
 const sectionText = {
   ja: {
+    label: "採用情報",
     heading: "一緒にUNCHAIN\nTHE WORLDしよう",
     description:
       "UNCHAINのミッションは「UNCHAIN THE WORLD」です。世界中の人々や組織が、それぞれのミッションを解き放つためのテクノロジーを構築しています。\n\n私たちはテクノロジーのためにテクノロジーを作るのではありません。新たな発明、発見、そして創造の波を生み出し、より多くの可能性がある世界を形作るために構築しています。",
     cta: "採用情報を見る",
   },
   en: {
+    label: "JOIN US",
     heading: "Let's UNCHAIN\nTHE WORLD together",
     description:
       "At UNCHAIN, our mission is \"UNCHAIN THE WORLD.\" We are building technology that enables people and organizations around the globe to unchain their own missions.\n\nWe do not create technology for its own sake. We build it to unlock new inventions, discoveries, and waves of creativity — and to help shape a world where more is possible.",
@@ -45,6 +47,7 @@ const RecruitingSection = () => {
           {/* Left – copy */}
           <div>
             <ScrollReveal>
+              <span className="label text-light-label mb-4 block">{t.label}</span>
               <h2 className="heading-1 text-light-heading mb-6 whitespace-pre-line">
                 {t.heading}
               </h2>
@@ -73,8 +76,8 @@ const RecruitingSection = () => {
                     transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                   >
                     {[...leftPhotos, ...leftPhotos].map((src, i) => (
-                      <div key={i} className="aspect-[3/4] rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover" />
+                      <div key={i} className="aspect-[4/4.5] rounded-xl overflow-hidden flex-shrink-0">
+                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover object-top" />
                       </div>
                     ))}
                   </motion.div>
@@ -88,8 +91,8 @@ const RecruitingSection = () => {
                     transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                   >
                     {[...rightPhotos, ...rightPhotos].map((src, i) => (
-                      <div key={i} className="aspect-[3/4] rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover" />
+                      <div key={i} className="aspect-[4/4.5] rounded-xl overflow-hidden flex-shrink-0">
+                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover object-top" />
                       </div>
                     ))}
                   </motion.div>

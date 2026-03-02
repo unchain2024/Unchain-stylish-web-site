@@ -36,7 +36,7 @@ const sectionText = {
 };
 
 const PartnerCard = ({ name, logo }: { name: string; logo: string }) => (
-  <div className="flex-shrink-0 w-[14vw] min-w-[160px] h-[5vw] min-h-[60px] rounded-xl bg-muted/50 border border-border/50 flex items-center justify-center px-6">
+  <div className="flex-shrink-0 w-[40vw] sm:w-[14vw] min-w-[130px] sm:min-w-[160px] h-[12vw] sm:h-[5vw] min-h-[50px] sm:min-h-[60px] rounded-xl bg-muted/50 border border-border/50 flex items-center justify-center px-6">
     <img src={logo} alt={name} className="max-h-[70%] max-w-[80%] object-contain" />
   </div>
 );

@@ -305,7 +305,7 @@ const CareerPage = () => {
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {cards.map((card, i) => (
               <ScrollReveal key={card.title} delay={i * 0.15}>
                 <div className="card h-full border border-border/50 hover:border-border transition-colors duration-300">
@@ -616,7 +616,7 @@ const CareerPage = () => {
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.15}>
                 <div className="relative">

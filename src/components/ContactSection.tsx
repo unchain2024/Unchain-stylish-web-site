@@ -28,7 +28,7 @@ const ContactSection = () => {
     <section
       id="contact"
       data-nav-theme="light"
-      className="bg-secondary min-h-screen flex items-center"
+      className="bg-secondary section min-h-0 md:min-h-screen flex items-center"
     >
       <div className="container-site w-full">
         <div className="text-center max-w-3xl mx-auto">
@@ -54,14 +54,14 @@ const ContactSection = () => {
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link
                 to={localePath("/contact")}
-                className="btn-primary"
+                className="btn-primary w-full sm:w-auto"
               >
                 {t.ctaPrimary}
                 <ArrowRight className="w-[1em] h-[1em]" />
               </Link>
               <Link
                 to={localePath("/about")}
-                className="btn-outline border-foreground/20 text-light-heading hover:bg-foreground hover:text-background"
+                className="btn-outline border-foreground/20 text-light-heading hover:bg-foreground hover:text-background w-full sm:w-auto"
               >
                 {t.ctaSecondary}
               </Link>

@@ -63,7 +63,7 @@ const NewsSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section id="news" data-nav-theme="light" className="bg-background section flex items-center min-h-screen">
+    <section id="news" data-nav-theme="light" className="bg-background section flex items-center min-h-0 md:min-h-screen">
       <div className="container-site w-full">
         <div className="flex items-end justify-between mb-12 lg:mb-16">
           <div>
@@ -93,7 +93,7 @@ const NewsSection = () => {
               <ScrollReveal key={i} delay={i * 0.08}>
                 <Wrapper {...(linkProps as any)} className="group block py-8">
                   <div className="flex items-start gap-6 lg:gap-10">
-                    <span className="heading-1 text-light-heading opacity-10 leading-none flex-shrink-0 w-16 lg:w-20">
+                    <span className="heading-1 text-light-heading opacity-10 leading-none flex-shrink-0 hidden sm:block w-16 lg:w-20">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="flex-1 min-w-0">
@@ -110,7 +110,7 @@ const NewsSection = () => {
                       </h3>
                       <p className="body text-light-body line-clamp-1">{item.excerpt}</p>
                     </div>
-                    <div className="flex-shrink-0 pt-6">
+                    <div className="hidden sm:block flex-shrink-0 pt-6">
                       <ArrowRight className="w-5 h-5 text-light-body group-hover:text-foreground transition-colors" />
                     </div>
                   </div>

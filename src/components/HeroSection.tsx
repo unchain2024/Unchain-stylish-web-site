@@ -106,15 +106,15 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5, delay: revealDone + 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-          className="flex items-center gap-4 mt-10"
+          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mt-10"
         >
-          <Link to={localePath("/contact")} className="btn-primary !bg-white !text-black">
+          <Link to={localePath("/contact")} className="btn-primary !bg-white !text-black w-full sm:w-auto">
             {t.ctaPrimary}
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             to={localePath("/solutions")}
-            className="btn-outline border-white/25 text-white hover:bg-white hover:text-black"
+            className="btn-outline border-white/25 text-white hover:bg-white hover:text-black w-full sm:w-auto"
           >
             {t.ctaSecondary}
           </Link>

@@ -28,7 +28,7 @@ const MissionSection = () => {
     <section
       id="mission"
       data-nav-theme="light"
-      className="bg-background section flex items-center min-h-screen"
+      className="bg-background section flex items-center min-h-0 md:min-h-screen"
     >
       <div className="container-site w-full">
         <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">

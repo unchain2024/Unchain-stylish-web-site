@@ -40,7 +40,7 @@ const RecruitingSection = () => {
     <section
       id="career"
       data-nav-theme="light"
-      className="relative overflow-hidden h-screen flex items-center bg-background"
+      className="relative overflow-hidden py-16 sm:py-24 lg:py-0 lg:h-screen lg:flex lg:items-center bg-background"
     >
       <div className="container-site w-full">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center">
@@ -67,7 +67,7 @@ const RecruitingSection = () => {
 
           {/* Right – two columns scrolling */}
           <ScrollReveal y={80} duration={1.4}>
-            <div className="relative overflow-hidden rounded-xl h-[70vh]">
+            <div className="relative overflow-hidden rounded-xl h-[50vh] lg:h-[70vh]">
               <div className="flex gap-2 h-full">
                 <div className="flex-1 overflow-hidden relative">
                   <motion.div

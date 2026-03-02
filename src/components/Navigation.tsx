@@ -135,7 +135,7 @@ const Navigation = () => {
                   key={item.href}
                   to={localePath(item.href)}
                   onClick={() => setMobileOpen(false)}
-                  className="text-lg text-foreground"
+                  className="text-lg text-foreground py-2"
                 >
                   {item.label}
                 </Link>

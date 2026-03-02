@@ -74,24 +74,24 @@ const FeaturesSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section data-nav-theme="light" className="bg-background h-screen flex items-center">
-      <div className="w-full px-[7vw]">
+    <section data-nav-theme="light" className="bg-background py-16 sm:py-24 lg:py-32 flex items-center">
+      <div className="w-full px-6 sm:px-[7vw]">
         {/* Intro text */}
-        <div className="max-w-[60vw] mx-auto text-center mb-[4vh]">
+        <div className="max-w-full sm:max-w-[80vw] lg:max-w-[60vw] mx-auto text-center mb-[4vh]">
           <ScrollReveal>
-            <p className="text-[calc(1.25*var(--vf))] text-muted-foreground leading-relaxed mb-[2vh]">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-[2vh]">
               {t.intro1}
             </p>
           </ScrollReveal>
           <ScrollReveal>
-            <p className="text-[calc(1.25*var(--vf))] text-muted-foreground leading-relaxed mb-[3vh]">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-[3vh]">
               {t.intro2}
             </p>
           </ScrollReveal>
           <ScrollReveal>
             <a
               href="#"
-              className="text-primary font-medium text-[calc(1*var(--vf))] inline-flex items-center gap-2 hover:underline"
+              className="text-primary font-medium text-sm sm:text-base inline-flex items-center gap-2 hover:underline"
             >
               {t.videoLink}
             </a>
@@ -100,22 +100,21 @@ const FeaturesSection = () => {
 
         {/* Features heading */}
         <ScrollReveal>
-          <h3 className="text-[calc(2*var(--vf))] font-bold text-foreground mt-[4vh] mb-[3vh]">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mt-[4vh] mb-[3vh]">
             {t.heading}
           </h3>
         </ScrollReveal>
 
         {/* Feature cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5vw]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-[1.5vw]">
           {feats.map((feature, i) => {
             const Icon = featureIcons[i];
             return (
               <ScrollReveal key={feature.num} delay={i * 0.1}>
                 <div
-                  className="border border-border rounded-xl p-[1.5vw] flex flex-col"
-                  style={{ minHeight: "clamp(220px, 28vh, 420px)" }}
+                  className="border border-border rounded-xl p-4 sm:p-[1.5vw] flex flex-col min-h-[180px] sm:min-h-[clamp(220px,28vh,420px)]"
                 >
-                  <span className="text-[calc(1*var(--vf))] font-bold text-foreground mb-[2vh]">
+                  <span className="text-sm sm:text-base font-bold text-foreground mb-[2vh]">
                     {feature.num}
                   </span>
 
@@ -130,10 +129,10 @@ const FeaturesSection = () => {
                     </div>
                   </div>
 
-                  <h4 className="text-[calc(1*var(--vf))] font-bold text-foreground mb-[0.5vh] whitespace-pre-line text-center">
+                  <h4 className="text-sm sm:text-base font-bold text-foreground mb-[0.5vh] whitespace-pre-line text-center">
                     {feature.title}
                   </h4>
-                  <p className="text-[calc(0.875*var(--vf))] text-muted-foreground leading-relaxed text-center">
+                  <p className="text-sm text-muted-foreground leading-relaxed text-center">
                     {feature.desc}
                   </p>
                 </div>

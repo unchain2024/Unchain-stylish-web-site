@@ -264,7 +264,7 @@ const AboutPage = () => {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="text-center"
                   >
-                    <span className="text-[12rem] lg:text-[16rem] font-black text-muted-foreground/10 leading-none select-none">
+                    <span className="text-[8rem] sm:text-[12rem] lg:text-[16rem] font-black text-muted-foreground/10 leading-none select-none">
                       {principles[activePrinciple].num}
                     </span>
                     <p className="heading-2 text-light-heading -mt-16">
@@ -292,7 +292,7 @@ const AboutPage = () => {
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {founders.map((f, i) => {
               const isActive = activeFounder === i;
               return (

@@ -49,7 +49,7 @@ const BusinessSection = () => {
   const t = sectionText[lang];
 
   return (
-    <section id="solutions" data-nav-theme="light" className="bg-secondary section flex items-center min-h-screen">
+    <section id="solutions" data-nav-theme="light" className="bg-secondary section flex items-center min-h-0 md:min-h-screen">
       <div className="container-site w-full">
         {/* Header */}
         <div className="mb-12 lg:mb-16">
@@ -68,13 +68,20 @@ const BusinessSection = () => {
               <div className="py-8 lg:py-10">
                 <div className="flex items-center justify-between">
                   {/* Left – category + name + description */}
-                  <div className="flex items-start gap-8 lg:gap-14">
-                    <p className="heading-3 text-light-body opacity-50 flex-shrink-0 pt-2 w-[120px] lg:w-[160px]">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-8 lg:gap-14">
+                    <p className="heading-3 text-light-body opacity-50 flex-shrink-0 pt-0 sm:pt-2 w-auto sm:w-[120px] lg:w-[160px]">
                       {item.category}
                     </p>
                     <div>
                       <h3 className="heading-3 text-light-heading">{item.name}</h3>
                       <p className="body-large text-light-body mt-1">{item.description}</p>
+                      <Link
+                        to={`${localePath("/solutions")}?product=${item.slug}`}
+                        className="sm:hidden inline-flex items-center gap-1 text-primary text-sm font-medium mt-2 hover:underline"
+                      >
+                        {item.cta}
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
                     </div>
                   </div>
 

@@ -112,7 +112,7 @@ const ctaText = {
 const learnMoreText = { ja: "詳しく見る", en: "Learn More" };
 
 const SolutionsPage = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const hero = heroText[lang];
   const businessData = productsData[lang];
   const cta = ctaText[lang];
@@ -276,7 +276,7 @@ const SolutionsPage = () => {
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <Link
-              to="/contact"
+              to={localePath("/contact")}
               className="btn-primary !bg-white !text-black inline-flex items-center gap-2"
             >
               {cta.cta}

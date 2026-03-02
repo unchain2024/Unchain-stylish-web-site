@@ -21,7 +21,7 @@ const content = {
 };
 
 const MissionSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = content[lang];
 
   return (
@@ -46,7 +46,7 @@ const MissionSection = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.3}>
               <Link
-                to="/about"
+                to={localePath("/about")}
                 className="btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background"
               >
                 {t.cta}

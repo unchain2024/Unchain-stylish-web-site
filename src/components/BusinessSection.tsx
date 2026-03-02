@@ -44,7 +44,7 @@ const sectionText = {
 };
 
 const BusinessSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const items = solutions[lang];
   const t = sectionText[lang];
 
@@ -79,7 +79,7 @@ const BusinessSection = () => {
                   </div>
 
                   <Link
-                    to={`/solutions?product=${item.slug}`}
+                    to={`${localePath("/solutions")}?product=${item.slug}`}
                     className="hidden md:inline-flex btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background flex-shrink-0"
                   >
                     {item.cta}

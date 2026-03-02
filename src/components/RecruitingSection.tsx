@@ -17,23 +17,21 @@ const rightPhotos = [r5, r6, r7, r8];
 
 const sectionText = {
   ja: {
-    tag: "UNCHAINに参加する",
-    heading: "未来を創る\nAIの先駆者になろう",
+    heading: "一緒にUNCHAIN\nTHE WORLDしよう",
     description:
-      "2030年に2,110億ドル規模になると予測される生成AIは、社会のあらゆるシーンを変革する可能性を秘めています。UNCHAINはプロフェッショナルな技術集団として、業務効率化を超えて社会に新たな価値を創出していきます。\n\nあなたの好奇心と可能性を、UNCHAINで開花させてみませんか？",
+      "UNCHAINのミッションは「UNCHAIN THE WORLD」です。世界中の人々や組織が、それぞれのミッションを解き放つためのテクノロジーを構築しています。\n\n私たちはテクノロジーのためにテクノロジーを作るのではありません。新たな発明、発見、そして創造の波を生み出し、より多くの可能性がある世界を形作るために構築しています。",
     cta: "採用情報を見る",
   },
   en: {
-    tag: "Join UNCHAIN",
-    heading: "Become a Pioneer\nin AI Innovation",
+    heading: "Let's UNCHAIN\nTHE WORLD together",
     description:
-      "Generative AI, projected to reach $211 billion by 2030, holds the potential to transform every aspect of society. UNCHAIN, as a professional tech collective, goes beyond operational efficiency to create new value for society.\n\nReady to unlock your curiosity and potential at UNCHAIN?",
+      "At UNCHAIN, our mission is \"UNCHAIN THE WORLD.\" We are building technology that enables people and organizations around the globe to unchain their own missions.\n\nWe do not create technology for its own sake. We build it to unlock new inventions, discoveries, and waves of creativity — and to help shape a world where more is possible.",
     cta: "View Careers",
   },
 };
 
 const RecruitingSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const t = sectionText[lang];
 
   return (
@@ -47,11 +45,6 @@ const RecruitingSection = () => {
           {/* Left – copy */}
           <div>
             <ScrollReveal>
-              <p className="label text-primary mb-6">
-                {t.tag}
-              </p>
-            </ScrollReveal>
-            <ScrollReveal>
               <h2 className="heading-1 text-light-heading mb-6 whitespace-pre-line">
                 {t.heading}
               </h2>
@@ -62,7 +55,7 @@ const RecruitingSection = () => {
               </p>
             </ScrollReveal>
             <ScrollReveal>
-              <Link to="/career" className="btn-primary">
+              <Link to={localePath("/career")} className="btn-primary">
                 {t.cta}
                 <ArrowRight size={18} />
               </Link>

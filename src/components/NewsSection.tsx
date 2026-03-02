@@ -58,7 +58,7 @@ const sectionText = {
 };
 
 const NewsSection = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
   const items = newsItems[lang];
   const t = sectionText[lang];
 
@@ -75,7 +75,7 @@ const NewsSection = () => {
             </ScrollReveal>
           </div>
           <ScrollReveal>
-            <Link to="/news" className="hidden md:inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
+            <Link to={localePath("/news")} className="hidden md:inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
               {t.viewAll}
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -88,7 +88,7 @@ const NewsSection = () => {
             const Wrapper = hasUrl ? "a" : Link;
             const linkProps = hasUrl
               ? { href: item.url, target: "_blank", rel: "noopener noreferrer" }
-              : { to: "/news" };
+              : { to: localePath("/news") };
             return (
               <ScrollReveal key={i} delay={i * 0.08}>
                 <Wrapper {...(linkProps as any)} className="group block py-8">
@@ -122,7 +122,7 @@ const NewsSection = () => {
         </div>
 
         <ScrollReveal className="md:hidden text-center mt-8">
-          <Link to="/news" className="inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
+          <Link to={localePath("/news")} className="inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors">
             {t.viewAll}
             <ArrowRight className="w-4 h-4" />
           </Link>

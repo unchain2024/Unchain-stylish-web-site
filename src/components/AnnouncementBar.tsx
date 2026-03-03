@@ -35,12 +35,12 @@ const AnnouncementBar = ({ onVisibilityChange }: { onVisibilityChange?: (visible
     <div className="relative bg-black h-10">
       <Link
         to={localePath("/news")}
-        className="flex items-center justify-center h-full px-12 hover:opacity-80 transition-opacity"
+        className="flex items-center justify-center h-full px-8 sm:px-12 hover:opacity-80 transition-opacity"
       >
-        <span className="text-sm font-semibold text-white tracking-wide">
+        <span className="text-[11px] sm:text-sm font-semibold text-white tracking-wide">
           {t.message}
         </span>
-        <span className="text-xs text-white/60 ml-4">
+        <span className="text-[10px] sm:text-xs text-white/60 ml-2 sm:ml-4">
           {t.cta}
         </span>
       </Link>

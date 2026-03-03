@@ -5,6 +5,16 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 
+import founderSunwoo from "@/assets/founder-sunwoo.jpeg";
+import founderLui from "@/assets/founder-lui.png";
+import founderTaizo from "@/assets/founder-taizo.png";
+
+const founderPhotos = [
+  { src: founderSunwoo, className: "w-full h-full object-cover object-top" },
+  { src: founderLui, className: "w-full h-full object-cover object-top" },
+  { src: founderTaizo, className: "w-full h-full object-cover object-[center_20%]" },
+];
+
 const heroText = {
   ja: {
     label: "UNCHAINについて",
@@ -56,34 +66,34 @@ const foundersData = {
     {
       name: "朴善優",
       title: "共同創業者 & CEO",
-      bio: "人工知能分野における豊富な経験を持つ起業家。Forbesが選出した「日本のAI企業トップ50」に選ばれたAIスタートアップを共同創業し、国内でいち早くプロンプトハッキングの手法を実証。東京大学松尾研究室にてAI研究プロジェクトに携わったほか、米日カウンシルのパネリストとしても登壇経験を持つ。",
+      bio: "Forbesが選出した「日本のAI企業トップ50」に選出されたAIスタートアップを共同創業。国内でいち早くプロンプトハッキングの手法を実証し、AIセキュリティに関する研究成果がForbesに掲載された。現在は東京大学松尾研究室の社長室にてAI研究プロジェクトに従事している。さらに、孫正義氏の後継者育成機関であるソフトバンクアカデミアに最年少の18歳で採択。米日カウンシルのパネリストとしても登壇経験を持つ。",
     },
     {
       name: "蛯名瑠偉",
       title: "共同創業者 & CTO",
-      bio: "卓越した技術力とリーダーシップで数々のプロジェクトを牽引してきたエンジニアリングリーダー。中学卒業後すぐに業界にスカウトされ、ゼロから大規模データプラットフォームを構築。NTT西日本の全国規模データパイプラインや、政府記録をデジタル化するB2Bプラットフォームの開発を主導。",
+      bio: "中学卒業後すぐにIT業界へスカウトされ、ゼロから大規模データプラットフォームを構築。NTT西日本の全国規模データパイプラインや、政府記録のデジタル化を推進するB2Bプラットフォーム開発を主導した。現在はMachine LearningおよびLLM領域の研究にも取り組んでいる。",
     },
     {
       name: "原田大蔵",
       title: "共同創業者 & COO",
-      bio: "15歳でアウトドア用品会社を設立し、4年間でM&Aにより売却。高校時代に渡米し、複数の奨学金を獲得。Fortune 500企業開催のビジネスピッチコンテストで複数回優勝。大学在学中にはProtivitiでのインターンシップを経験。",
+      bio: "15歳でアウトドア用品会社を共同設立し、4年間で販売網を400店舗以上に拡大。加えて、大手企業CMの作曲・プロデュースも手掛けるなど、クリエイティブとマーケティング双方の実務経験を有する。Fortune 500企業主催のビジネスピッチコンテストでは複数回優勝し、賞金総額1万ドルを獲得。Protivitiでのインターンシップ経験も持つ。",
     },
   ],
   en: [
     {
       name: "Sunwoo Park",
       title: "Co-Founder & CEO",
-      bio: "Seasoned entrepreneur with a strong background in artificial intelligence. Co-founded an AI startup recognized by Forbes as one of Japan's Top 50 AI companies and was among the earliest to demonstrate prompt hacking techniques. Previously worked with the Matsuo Lab at the University of Tokyo and served as a panelist for the U.S.–Japan Council.",
+      bio: "Co-founded an AI startup recognized by Forbes as one of Japan's Top 50 AI companies. Among the earliest to demonstrate prompt hacking techniques in Japan, with AI security research featured in Forbes. Currently engaged in AI research projects at the University of Tokyo's Matsuo Lab. Additionally, accepted into SoftBank Academia — Masayoshi Son's successor development program — at the youngest age of 18. Also served as a panelist for the U.S.–Japan Council.",
     },
     {
       name: "Lui Ebina",
       title: "Co-Founder & CTO",
-      bio: "Brilliant technologist and engineering leader who was recruited into the industry straight out of high school. Built large-scale data platforms from the ground up, including a nationwide data pipeline system for NTT West Japan and a B2B platform digitizing government records.",
+      bio: "Recruited into the IT industry straight out of middle school, building large-scale data platforms from the ground up. Led the development of a nationwide data pipeline system for NTT West Japan and a B2B platform driving the digitization of government records. Currently also pursuing research in Machine Learning and LLMs.",
     },
     {
       name: "Taizo Harada",
       title: "Co-Founder & COO",
-      bio: "Founded an outdoor goods company in Japan at 15 and exited after four years. Moved to the United States during high school, earning multiple scholarships and winning several business pitch competitions hosted by Fortune 500 companies.",
+      bio: "Co-founded an outdoor goods company at 15, expanding its retail network to over 400 stores within four years. Also composed and produced commercials for major corporations, bringing hands-on experience in both creative and marketing disciplines. Won multiple business pitch competitions hosted by Fortune 500 companies, earning over $10,000 in total prize money. Also completed an internship at Protiviti.",
     },
   ],
 };
@@ -317,13 +327,16 @@ const AboutPage = () => {
                         style={{ transformOrigin: "left" }}
                       />
 
-                      <div className="p-8">
-                        <div className="mb-4">
-                          <span className="text-3xl font-bold leading-none select-none text-muted-foreground/10">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                        </div>
+                      {/* Headshot */}
+                      <div className="aspect-[4/3] overflow-hidden bg-muted/20">
+                        <img
+                          src={founderPhotos[i].src}
+                          alt={f.name}
+                          className={founderPhotos[i].className}
+                        />
+                      </div>
 
+                      <div className="p-6 sm:p-8">
                         <h3 className="heading-3 text-light-heading">
                           {f.name}
                         </h3>

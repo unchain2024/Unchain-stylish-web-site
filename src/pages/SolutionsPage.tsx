@@ -45,7 +45,7 @@ const productsData: Record<string, Record<string, Product[]>> = {
           { title: "エンタープライズセキュリティ", desc: "SOC 2準拠を念頭に構築。保存時と転送時の完全な暗号化で、データの所有権を保証します。" },
           { title: "シームレスな統合", desc: "Slack、Jira、Notion、Google Workspaceなどと接続。ワークフローを中断することなく導入できます。" },
         ],
-        link: "https://neuron-website-self.vercel.app/",
+        link: "https://www.the-neuron.com/ja",
       },
     ],
     "AI DX": [
@@ -76,7 +76,7 @@ const productsData: Record<string, Record<string, Product[]>> = {
           { title: "Enterprise Security", desc: "Built with SOC 2 compliance in mind. Your data stays yours with full encryption at rest and in transit." },
           { title: "Seamless Integration", desc: "Connects with Slack, Jira, Notion, Google Workspace, and more — with zero workflow disruption." },
         ],
-        link: "https://neuron-website-self.vercel.app/",
+        link: "https://www.the-neuron.com/en",
       },
     ],
     "AI DX": [

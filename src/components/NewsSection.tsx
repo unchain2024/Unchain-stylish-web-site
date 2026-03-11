@@ -91,27 +91,29 @@ const NewsSection = () => {
               : { to: localePath("/news") };
             return (
               <ScrollReveal key={i} delay={i * 0.08}>
-                <Wrapper {...(linkProps as any)} className="group block py-8">
-                  <div className="flex items-start gap-6 lg:gap-10">
-                    <span className="heading-1 text-light-heading opacity-10 leading-none flex-shrink-0 hidden sm:block w-16 lg:w-20">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                <Wrapper {...(linkProps as any)} className="group block py-6">
+                  <div className="flex items-start gap-6 lg:gap-8">
+                    <div className="flex-shrink-0 w-12 lg:w-16 pt-1">
+                      <span className="text-5xl md:text-6xl font-black text-light-heading opacity-10 leading-none hidden sm:block">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <span className="body text-light-body">{item.date}</span>
+                        <span className="text-xs text-light-body">{item.date}</span>
                         {item.tags.map((tag) => (
-                          <span key={tag} className="label text-light-label border border-border rounded-full px-3 py-0.5">
+                          <span key={tag} className="text-[10px] text-light-label border border-border rounded-full px-2 py-0.5 whitespace-nowrap">
                             {tag}
                           </span>
                         ))}
                       </div>
-                      <h3 className="heading-3 text-light-heading mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-bold text-light-heading mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                         {item.title}
                       </h3>
-                      <p className="body text-light-body line-clamp-1">{item.excerpt}</p>
+                      <p className="text-sm text-light-body line-clamp-1">{item.excerpt}</p>
                     </div>
-                    <div className="hidden sm:block flex-shrink-0 pt-6">
-                      <ArrowRight className="w-5 h-5 text-light-body group-hover:text-foreground transition-colors" />
+                    <div className="hidden sm:block flex-shrink-0 pt-4">
+                      <ArrowRight className="w-4 h-4 text-light-body group-hover:text-foreground transition-colors" />
                     </div>
                   </div>
                 </Wrapper>

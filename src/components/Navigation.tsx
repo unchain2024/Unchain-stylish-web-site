@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useLang } from "@/lib/language";
 import AnnouncementBar from "./AnnouncementBar";
 import logoBlack from "@/assets/logo-black.png";
 import logoWhite from "@/assets/logo-white.png";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 const navItems = {
   ja: [
@@ -25,9 +27,11 @@ const navItems = {
 };
 
 const Navigation = () => {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [hidden, setHidden] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const lastScrollY = useRef(0);
   const { lang, toggleLang, localePath } = useLang();
 
@@ -38,7 +42,20 @@ const Navigation = () => {
       lastScrollY.current = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    
+    // Auth Listener
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -63,6 +80,11 @@ const Navigation = () => {
 
   const isLight = theme === "light";
   const items = navItems[lang];
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
 
   return (
     <nav
@@ -95,6 +117,27 @@ const Navigation = () => {
               {item.label}
             </Link>
           ))}
+
+          {user && (
+            <>
+              <Link
+                to="/edit"
+                className={`text-[15px] font-bold transition-colors duration-500 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-300 hover:bg-emerald-200`}
+              >
+                ADMIN
+              </Link>
+              <button
+                onClick={handleLogout}
+                className={`text-[15px] font-medium transition-colors duration-500 ${
+                  isLight
+                    ? "text-foreground hover:text-destructive"
+                    : "text-white/90 hover:text-red-400"
+                }`}
+              >
+                Logout
+              </button>
+            </>
+          )}
 
           {/* Language toggle */}
           <button
@@ -140,6 +183,28 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
+              
+              {user && (
+                <>
+                  <Link
+                    to="/edit"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg text-emerald-600 font-bold py-2"
+                  >
+                    Admin Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileOpen(false);
+                    }}
+                    className="text-lg text-destructive text-left py-2"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+
               <button
                 onClick={toggleLang}
                 className="self-start mt-2 text-sm font-medium px-4 py-1.5 rounded-full border border-foreground/30 text-foreground hover:bg-foreground hover:text-background transition-all"

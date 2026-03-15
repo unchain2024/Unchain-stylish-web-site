@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ArrowLeft, ArrowRight, Loader2, Search, Filter } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Search, Filter, ExternalLink } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -16,6 +16,10 @@ const heroText = {
     searchPlaceholder: "キーワードで記事を検索...",
     allCategories: "すべてのカテゴリ",
     noResults: "条件に一致する記事が見つかりませんでした。",
+    externalBadge: "外部サイト",
+    allLanguages: "すべての言語",
+    langJapanese: "日本語のみ",
+    langEnglish: "英語のみ",
   },
   en: {
     label: "NEWS & INSIGHTS",
@@ -25,6 +29,10 @@ const heroText = {
     searchPlaceholder: "Search articles by keyword...",
     allCategories: "All Categories",
     noResults: "No articles found matching your criteria.",
+    externalBadge: "External",
+    allLanguages: "All Languages",
+    langJapanese: "Japanese Only",
+    langEnglish: "English Only",
   },
 };
 
@@ -42,20 +50,37 @@ interface Article {
   author_last_name: string;
   created_at: string;
   is_draft: boolean;
+  content_type?: string;
+  custom_html?: string;
+  custom_html_en?: string;
+  additional_media?: { url: string; type: string }[];
+  is_external?: boolean;
+  external_url?: string;
 }
 
 const getLocalized = (article: Article | null, field: "title" | "description" | "content", lang: "ja" | "en") => {
   if (!article) return "";
-  if (lang === "en" && article[`${field}_en` as keyof Article]) {
-    return article[`${field}_en` as keyof Article] as string;
+  
+  const valCurrent = lang === "en" ? article[`${field}_en` as keyof Article] : article[field];
+  if (valCurrent && typeof valCurrent === "string" && valCurrent.trim() !== "") {
+    return valCurrent;
   }
-  return article[field];
+  
+  // Fallback to the other language
+  const valOther = lang === "en" ? article[field] : article[`${field}_en` as keyof Article];
+  return (valOther as string) || "";
+};
+
+const getLocalizedCustomHtml = (article: Article, lang: "ja" | "en") => {
+  if (lang === "en" && article.custom_html_en) return article.custom_html_en;
+  return article.custom_html || "";
 };
 
 // Generate a deterministic pastel color based on a string
 export const getCategoryColor = (category: string) => {
   if (!category) return "bg-gray-100 text-gray-700 border-gray-200";
-  
+  if (category.toLowerCase() === "external") return "bg-amber-50 text-amber-700 border-amber-200";
+
   const colors = [
     "bg-red-50 text-red-700 border-red-200",
     "bg-orange-50 text-orange-700 border-orange-200",
@@ -72,12 +97,12 @@ export const getCategoryColor = (category: string) => {
     "bg-pink-50 text-pink-700 border-pink-200",
     "bg-rose-50 text-rose-700 border-rose-200",
   ];
-  
+
   let hash = 0;
   for (let i = 0; i < category.length; i++) {
     hash = category.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   const i = Math.abs(hash) % colors.length;
   return colors[i];
 };
@@ -96,6 +121,7 @@ const NewsPage = () => {
   // Filters State
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<"all" | "ja" | "en">("all");
 
   useEffect(() => {
     fetchArticles();
@@ -121,6 +147,12 @@ const NewsPage = () => {
   };
 
   const handleArticleClick = (article: Article) => {
+    // External articles open in a new tab directly
+    if (article.is_external && article.external_url) {
+      window.open(article.external_url, "_blank", "noopener,noreferrer");
+      return;
+    }
+
     setIsTransitioning(true);
     setTimeout(() => {
       setSelectedArticle(article);
@@ -143,33 +175,35 @@ const NewsPage = () => {
     if (lang === "ja") {
       return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
     }
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }).toUpperCase();
+    return date
+      .toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+      .toUpperCase();
   };
 
   // Derive unique categories from articles
   const availableCategories = useMemo(() => {
     const cats = new Set<string>();
-    articles.forEach(article => {
+    articles.forEach((article) => {
       if (article.category) {
-        article.category.split(",").forEach(c => cats.add(c.trim()));
+        article.category.split(",").forEach((c) => cats.add(c.trim()));
       }
     });
     return Array.from(cats).sort();
   }, [articles]);
 
   const toggleCategory = (cat: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    setSelectedCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
     );
   };
 
   // Apply filters to articles
   const filteredArticles = useMemo(() => {
-    return articles.filter(article => {
+    return articles.filter((article) => {
       // Check keyword
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -183,15 +217,18 @@ const NewsPage = () => {
       // Check categories
       if (selectedCategories.length > 0) {
         if (!article.category) return false;
-        const articleCats = article.category.split(",").map(c => c.trim());
-        const matchesCat = selectedCategories.some(cat => articleCats.includes(cat));
+        const articleCats = article.category.split(",").map((c) => c.trim());
+        const matchesCat = selectedCategories.some((cat) => articleCats.includes(cat));
         if (!matchesCat) return false;
       }
 
+      // Check language filter
+      if (selectedLanguage === "ja" && (!article.title || article.title.trim() === "")) return false;
+      if (selectedLanguage === "en" && (!article.title_en || article.title_en.trim() === "")) return false;
+
       return true;
     });
-  }, [articles, searchQuery, selectedCategories, lang]);
-
+  }, [articles, searchQuery, selectedCategories, selectedLanguage, lang]);
 
   const currentTitle = selectedArticle
     ? `${getLocalized(selectedArticle, "title", lang)} | UNCHAIN`
@@ -210,16 +247,12 @@ const NewsPage = () => {
             <section data-nav-theme="light" className="bg-background pt-32 pb-4 sm:pt-40 sm:pb-8">
               <div className="container-site">
                 <ScrollReveal>
-                  <span className="label text-light-label">
-                    {hero.label}
-                  </span>
+                  <span className="label text-light-label">{hero.label}</span>
                 </ScrollReveal>
                 <ScrollReveal delay={0.05}>
-                  <h1 className="heading-1 text-light-heading mt-3">
-                    {hero.heading}
-                  </h1>
+                  <h1 className="heading-1 text-light-heading mt-3">{hero.heading}</h1>
                 </ScrollReveal>
-                
+
                 {/* Search and Filters */}
                 {!loading && !error && articles.length > 0 && (
                   <ScrollReveal delay={0.1} className="mt-12 space-y-6">
@@ -236,39 +269,64 @@ const NewsPage = () => {
                       />
                     </div>
 
-                    {availableCategories.length > 0 && (
+                    <div className="space-y-4">
+                      {/* Language Filter */}
                       <div className="flex flex-wrap gap-2 items-center">
                         <Filter className="w-4 h-4 text-light-body mr-1 hidden sm:block" />
-                        <button
-                          onClick={() => setSelectedCategories([])}
-                          className={`text-xs sm:text-sm px-4 py-2 rounded-full border transition-all ${
-                            selectedCategories.length === 0 
-                              ? "bg-primary text-primary-foreground border-primary font-medium" 
-                              : "bg-secondary/50 text-light-heading border-border/50 hover:bg-secondary hover:border-border"
-                          }`}
-                        >
-                          {hero.allCategories}
-                        </button>
-                        <div className="w-px h-6 bg-border mx-1 hidden sm:block"></div>
-                        {availableCategories.map(cat => {
-                          const isSelected = selectedCategories.includes(cat);
-                          const colorClasses = getCategoryColor(cat);
-                          return (
-                            <button
-                              key={cat}
-                              onClick={() => toggleCategory(cat)}
-                              className={`text-xs sm:text-sm px-4 py-2 rounded-full border transition-all duration-300 uppercase ${
-                                isSelected
-                                  ? `${colorClasses} ring-2 ring-primary/20 shadow-sm font-semibold`
-                                  : "bg-secondary/50 text-light-body border-border/50 hover:bg-secondary hover:border-border"
-                              }`}
-                            >
-                              {cat}
-                            </button>
-                          );
-                        })}
+                        {[
+                          { id: "all", label: hero.allLanguages },
+                          { id: "ja", label: hero.langJapanese },
+                          { id: "en", label: hero.langEnglish },
+                        ].map((lOpt) => (
+                          <button
+                            key={lOpt.id}
+                            onClick={() => setSelectedLanguage(lOpt.id as "all" | "ja" | "en")}
+                            className={`text-xs sm:text-sm px-4 py-2 rounded-full border transition-all ${
+                              selectedLanguage === lOpt.id
+                                ? "bg-primary text-primary-foreground border-primary font-medium"
+                                : "bg-secondary/50 text-light-heading border-border/50 hover:bg-secondary hover:border-border"
+                            }`}
+                          >
+                            {lOpt.label}
+                          </button>
+                        ))}
                       </div>
-                    )}
+
+                      {/* Categories Filter */}
+                      {availableCategories.length > 0 && (
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <Filter className="w-4 h-4 text-light-body mr-1 hidden sm:block opacity-0" />
+                          <button
+                            onClick={() => setSelectedCategories([])}
+                            className={`text-xs sm:text-sm px-4 py-2 rounded-full border transition-all ${
+                              selectedCategories.length === 0
+                                ? "bg-primary text-primary-foreground border-primary font-medium"
+                                : "bg-secondary/50 text-light-heading border-border/50 hover:bg-secondary hover:border-border"
+                            }`}
+                          >
+                            {hero.allCategories}
+                          </button>
+                          <div className="w-px h-6 bg-border mx-1 hidden sm:block"></div>
+                          {availableCategories.map((cat) => {
+                            const isSelected = selectedCategories.includes(cat);
+                            const colorClasses = getCategoryColor(cat);
+                            return (
+                              <button
+                                key={cat}
+                                onClick={() => toggleCategory(cat)}
+                                className={`text-xs sm:text-sm px-4 py-2 rounded-full border transition-all duration-300 uppercase ${
+                                  isSelected
+                                    ? `${colorClasses} ring-2 ring-primary/20 shadow-sm font-semibold`
+                                    : "bg-secondary/50 text-light-body border-border/50 hover:bg-secondary hover:border-border"
+                                }`}
+                              >
+                                {cat}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </ScrollReveal>
                 )}
               </div>
@@ -291,11 +349,11 @@ const NewsPage = () => {
                     <p className="body text-light-body">Check back later for updates.</p>
                   </div>
                 ) : filteredArticles.length === 0 ? (
-                   <div className="text-center py-24 border border-border/50 border-dashed rounded-2xl bg-secondary/30">
+                  <div className="text-center py-24 border border-border/50 border-dashed rounded-2xl bg-secondary/30">
                     <Search className="w-10 h-10 text-light-body/30 mx-auto mb-4" />
                     <p className="heading-3 text-light-heading mb-2">{hero.noResults}</p>
-                    <button 
-                      onClick={() => { setSearchQuery(""); setSelectedCategories([]); }}
+                    <button
+                      onClick={() => { setSearchQuery(""); setSelectedCategories([]); setSelectedLanguage("all"); }}
                       className="text-primary hover:underline font-medium text-sm mt-2"
                     >
                       Clear filters
@@ -303,13 +361,18 @@ const NewsPage = () => {
                   </div>
                 ) : (
                   filteredArticles.map((article, i) => {
-                    const articleCats = article.category ? article.category.split(",").map(c => c.trim()) : ["NEW"];
-                    
+                    // Filter out "external" since we render a custom badge for it
+                    const articleCats = article.category
+                      ? article.category.split(",").map((c) => c.trim()).filter(c => c.toLowerCase() !== "external")
+                      : ["NEW"];
+                    const isExternal = article.is_external && !!article.external_url;
+
                     return (
                       <ScrollReveal key={article.id} delay={i * 0.08}>
                         <button
                           onClick={() => handleArticleClick(article)}
                           className="group block py-6 w-full text-left focus:outline-none"
+                          title={isExternal ? `Opens ${article.external_url} in a new tab` : undefined}
                         >
                           <div className="flex items-start gap-6 lg:gap-8">
                             <div className="flex-shrink-0 w-12 lg:w-16 pt-1">
@@ -323,12 +386,22 @@ const NewsPage = () => {
                                 <span className="text-xs text-light-body font-medium">
                                   {formatDate(article.created_at)}
                                 </span>
-                                <div className="flex gap-1.5 flex-wrap">
+                                <div className="flex gap-1.5 flex-wrap items-center">
                                   {articleCats.map((cat, idx) => (
-                                    <span key={idx} className={`text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase ${getCategoryColor(cat)}`}>
+                                    <span
+                                      key={idx}
+                                      className={`text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase ${getCategoryColor(cat)}`}
+                                    >
                                       {cat}
                                     </span>
                                   ))}
+                                  {/* External badge */}
+                                  {isExternal && (
+                                    <span className="text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
+                                      <ExternalLink className="w-2.5 h-2.5" />
+                                      {hero.externalBadge}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
 
@@ -341,10 +414,22 @@ const NewsPage = () => {
                                   {getLocalized(article, "description", lang)}
                                 </p>
                               )}
+
+                              {/* External redirect hint */}
+                              {isExternal && (
+                                <p className="text-xs text-amber-600 mt-2 flex items-center gap-1">
+                                  <ExternalLink className="w-3 h-3" />
+                                  {lang === "ja" ? "外部サイトへ移動します" : "Redirects to external site"}
+                                </p>
+                              )}
                             </div>
 
                             <div className="hidden sm:block flex-shrink-0 pt-4">
-                              <ArrowRight className="w-4 h-4 text-light-body group-hover:text-foreground transition-colors" />
+                              {isExternal ? (
+                                <ExternalLink className="w-4 h-4 text-amber-500 group-hover:text-amber-600 transition-colors" />
+                              ) : (
+                                <ArrowRight className="w-4 h-4 text-light-body group-hover:text-foreground transition-colors" />
+                              )}
                             </div>
                           </div>
                         </button>
@@ -370,56 +455,69 @@ const NewsPage = () => {
             </button>
 
             <div className="mb-12 relative">
-               <div className="flex items-center gap-4 mb-5 flex-wrap">
-                 <span className="body text-light-body font-medium">
-                   {formatDate(selectedArticle.created_at)}
-                 </span>
-                 <div className="flex gap-2 flex-wrap">
-                   {(selectedArticle.category ? selectedArticle.category.split(",") : ["NEW"]).map((cat, idx) => (
-                     <span key={idx} className={`text-[11px] font-bold border rounded-full px-2.5 py-1 whitespace-nowrap uppercase shadow-sm ${getCategoryColor(cat.trim())}`}>
-                       {cat.trim()}
-                     </span>
-                   ))}
-                 </div>
-               </div>
+              <div className="flex items-center gap-4 mb-5 flex-wrap">
+                <span className="body text-light-body font-medium">
+                  {formatDate(selectedArticle.created_at)}
+                </span>
+                <div className="flex gap-2 flex-wrap">
+                  {(selectedArticle.category ? selectedArticle.category.split(",") : ["NEW"]).map((cat, idx) => (
+                    <span
+                      key={idx}
+                      className={`text-[11px] font-bold border rounded-full px-2.5 py-1 whitespace-nowrap uppercase shadow-sm ${getCategoryColor(cat.trim())}`}
+                    >
+                      {cat.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-               <h1 className="heading-display text-light-heading mb-8">
-                 {getLocalized(selectedArticle, "title", lang)}
-               </h1>
+              <h1 className="heading-display text-light-heading mb-8">
+                {getLocalized(selectedArticle, "title", lang)}
+              </h1>
 
-               {getLocalized(selectedArticle, "description", lang) && (
-                 <p className="body-large text-light-body mb-8 border-l-2 border-primary pl-4">
-                   {getLocalized(selectedArticle, "description", lang)}
-                 </p>
-               )}
-               
-               <div className="mt-8 flex items-center gap-4">
-                 <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center heading-4 text-light-heading">
-                   {selectedArticle.author_first_name?.charAt(0) || "U"}
-                 </div>
-                 <div className="body text-light-body">
-                   <div className="text-light-heading font-bold">{selectedArticle.author_first_name} {selectedArticle.author_last_name}</div>
-                   <div className="text-sm">Writer</div>
-                 </div>
-               </div>
+              {getLocalized(selectedArticle, "description", lang) && (
+                <p className="body-large text-light-body mb-8 border-l-2 border-primary pl-4">
+                  {getLocalized(selectedArticle, "description", lang)}
+                </p>
+              )}
+
+              <div className="mt-8 flex items-center gap-4">
+                <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center heading-4 text-light-heading">
+                  {selectedArticle.author_first_name?.charAt(0) || "U"}
+                </div>
+                <div className="body text-light-body">
+                  <div className="text-light-heading font-bold">
+                    {selectedArticle.author_first_name} {selectedArticle.author_last_name}
+                  </div>
+                  <div className="text-sm">Writer</div>
+                </div>
+              </div>
             </div>
 
-            {selectedArticle.image_url && (
+            {/* Standard: header image */}
+            {selectedArticle.content_type !== "custom_html" && selectedArticle.image_url && (
               <div className="w-full mb-12 rounded-xl overflow-hidden bg-secondary shadow-sm border border-border/50">
                 {selectedArticle.image_url.match(/\.(mp4|webm|ogg)$/i) ? (
-                   <video src={selectedArticle.image_url} className="w-full h-full max-h-[60vh] object-contain bg-black/5" controls />
+                  <video src={selectedArticle.image_url} className="w-full h-full max-h-[60vh] object-contain bg-black/5" controls />
                 ) : (
-                   <img src={selectedArticle.image_url} alt={selectedArticle.title} className="w-full h-full max-h-[60vh] object-contain bg-black/5" />
+                  <img src={selectedArticle.image_url} alt={selectedArticle.title} className="w-full h-full max-h-[60vh] object-contain bg-black/5" />
                 )}
               </div>
             )}
 
-            <div className="body-large text-light-body leading-loose">
-              {getLocalized(selectedArticle, "content", lang).split("\n").map((paragraph, idx) => (
-                <p key={idx} className="mb-8 whitespace-pre-wrap">{paragraph}</p>
-              ))}
-            </div>
-
+            {/* Content — standard text or custom HTML */}
+            {selectedArticle.content_type === "custom_html" ? (
+              <div
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: getLocalizedCustomHtml(selectedArticle, lang) || "<p><em>No content available.</em></p>" }}
+              />
+            ) : (
+              <div className="body-large text-light-body leading-loose">
+                {getLocalized(selectedArticle, "content", lang).split("\n").map((paragraph, idx) => (
+                  <p key={idx} className="mb-8 whitespace-pre-wrap">{paragraph}</p>
+                ))}
+              </div>
+            )}
           </article>
         )}
       </div>

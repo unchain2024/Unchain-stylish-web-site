@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Edit3, Calendar, FileText, Trash2 } from "lucide-react";
+import { Loader2, Edit3, Calendar, FileText, Trash2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -166,6 +166,11 @@ const EditNewsListPage = () => {
                             Draft
                           </div>
                         )}
+                        {article.is_external && (
+                          <div className="absolute top-4 right-4 bg-amber-50 border border-amber-200 px-3 py-1 font-semibold text-amber-700 text-xs rounded-full shadow-sm uppercase tracking-wider flex items-center gap-1">
+                            <ExternalLink className="w-3 h-3" /> External
+                          </div>
+                        )}
                       </div>
                       
                       <div className="p-6 flex flex-col flex-grow">
@@ -176,11 +181,19 @@ const EditNewsListPage = () => {
 
                         {articleCats.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mb-3">
-                            {articleCats.map((cat: string) => (
+                            {articleCats
+                              .filter((cat: string) => cat.toLowerCase() !== "external")
+                              .slice(0, 2)
+                              .map((cat: string) => (
                               <span key={cat} className={`text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase ${getCategoryColor(cat)}`}>
                                 {cat}
                               </span>
                             ))}
+                            {articleCats.filter((cat: string) => cat.toLowerCase() !== "external").length > 2 && (
+                              <span className="text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase bg-secondary text-light-body border-border/50">
+                                +{articleCats.filter((cat: string) => cat.toLowerCase() !== "external").length - 2}
+                              </span>
+                            )}
                           </div>
                         )}
 

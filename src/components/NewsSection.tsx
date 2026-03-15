@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
 
@@ -59,8 +60,63 @@ const sectionText = {
 
 const NewsSection = () => {
   const { lang, localePath } = useLang();
-  const items = newsItems[lang];
+  const [items, setItems] = useState(newsItems[lang]);
+  const [loading, setLoading] = useState(false);
   const t = sectionText[lang];
+
+  useEffect(() => {
+    let isMounted = true;
+    setItems(newsItems[lang]);
+    setLoading(true);
+
+    const fetchMeta = async () => {
+      const updatedItems = await Promise.all(
+        newsItems[lang].map(async (item) => {
+          if (!("url" in item) || !item.url) return item;
+          try {
+            const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(item.url as string)}`;
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            
+            if (data.status === "success" && data.data) {
+              
+              // Map microlink date to a localized format if available
+              let localizedDate = item.date;
+              if (data.data.date) {
+                const dateObj = new Date(data.data.date);
+                if (!isNaN(dateObj.getTime())) {
+                   localizedDate = lang === "ja" 
+                     ? `${dateObj.getFullYear()}年${dateObj.getMonth() + 1}月${dateObj.getDate()}日`
+                     : dateObj.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }).toUpperCase();
+                }
+              }
+
+              return {
+                ...item,
+                title: data.data.title || item.title,
+                excerpt: data.data.description || item.excerpt,
+                date: localizedDate
+              };
+            }
+            return item;
+          } catch (err) {
+            console.error("Failed to fetch metadata for", item.url, err);
+            return item;
+          }
+        })
+      );
+      if (isMounted) {
+        setItems(updatedItems);
+        setLoading(false);
+      }
+    };
+
+    fetchMeta();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [lang]);
 
   return (
     <section id="news" data-nav-theme="light" className="bg-background section flex items-center min-h-0 md:min-h-screen">
@@ -82,7 +138,12 @@ const NewsSection = () => {
           </ScrollReveal>
         </div>
 
-        <div>
+        <div className="relative min-h-[200px]">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10 backdrop-blur-[1px]">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          )}
           {items.map((item, i) => {
             const hasUrl = "url" in item && item.url;
             const Wrapper = hasUrl ? "a" : Link;

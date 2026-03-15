@@ -1,15 +1,22 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { Loader2, FileImage, X, FileText, ArrowLeft, Eye, CheckCircle2, Plus } from "lucide-react";
+import {
+  Loader2, FileImage, X, FileText, ArrowLeft, Eye, CheckCircle2, Plus,
+  Link2, Download, Code2, LayoutTemplate, ExternalLink, Upload, Copy, Check
+} from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import ArticlePreviewModal from "@/components/ArticlePreviewModal";
-import { getCategoryColor } from "./NewsPage"; // Reusing the color generator
+import { getCategoryColor } from "./NewsPage";
+import { useLang } from "@/lib/language";
+
+type ContentMode = "standard" | "custom_html" | "external";
 
 const PublishNewsPage = () => {
+  const { lang } = useLang();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -19,26 +26,44 @@ const PublishNewsPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
+  const [contentMode, setContentMode] = useState<ContentMode>("standard");
+
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [newCategoryInput, setNewCategoryInput] = useState("");
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
-  
+
+  // Standard + Custom HTML shared fields
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
-
   const [titleEn, setTitleEn] = useState("");
   const [descriptionEn, setDescriptionEn] = useState("");
   const [contentEn, setContentEn] = useState("");
 
+  // Custom HTML fields
+  const [customHtml, setCustomHtml] = useState("");
+  const [customHtmlEn, setCustomHtmlEn] = useState("");
+  const [additionalMedia, setAdditionalMedia] = useState<{ url: string; type: string }[]>([]);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+
+  // Standard header image
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
+  // External article fields
+  const [externalUrl, setExternalUrl] = useState("");
+  const [fetchingMeta, setFetchingMeta] = useState(false);
+  const [externalPublishedDate, setExternalPublishedDate] = useState<string | null>(null);
+
   const [activeTab, setActiveTab] = useState<"ja" | "en">("ja");
   const [showPreview, setShowPreview] = useState(false);
-  
+  const [externalLanguage, setExternalLanguage] = useState<"ja" | "en">("ja");
+
   const [draftId, setDraftId] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+
+  const additionalMediaRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const checkUserAndProfile = async () => {
@@ -61,24 +86,36 @@ const PublishNewsPage = () => {
           setFirstName(emailPrefix);
           setLastName("");
         }
-        
-        // Fetch existing categories
+
+        // Fetch existing categories and ensure "external" is present
         const { data: articles } = await supabase.from("articles").select("category");
+        const cats = new Set<string>(["external"]);
         if (articles) {
-           const cats = new Set<string>();
-           articles.forEach(a => {
-             if (a.category) {
-               a.category.split(",").forEach((c: string) => cats.add(c.trim()));
-             }
-           });
-           setAvailableCategories(Array.from(cats).sort());
+          articles.forEach((a) => {
+            if (a.category) {
+              a.category.split(",").forEach((c: string) => cats.add(c.trim()));
+            }
+          });
         }
+        setAvailableCategories(Array.from(cats).sort());
 
         setLoading(false);
       }
     };
     checkUserAndProfile();
   }, [navigate]);
+
+  // Manage 'external' category: auto-add when in external mode, auto-remove when leaving it
+  useEffect(() => {
+    if (contentMode === "external") {
+      setSelectedCategories((prev) =>
+        prev.includes("external") ? prev : [...prev, "external"]
+      );
+    } else {
+      // Remove 'external' category automatically when not in external mode
+      setSelectedCategories((prev) => prev.filter((c) => c !== "external"));
+    }
+  }, [contentMode]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -93,19 +130,19 @@ const PublishNewsPage = () => {
 
   // Auto-save debounce effect
   useEffect(() => {
-    if (!title && !titleEn) return; // Only start auto-saving once there's at least a title
+    if (!title && !titleEn && contentMode !== "external") return;
     const delayDebounceFn = setTimeout(() => {
       if (!submitting) {
         performSave(false);
       }
     }, 2500);
     return () => clearTimeout(delayDebounceFn);
-  }, [title, description, content, selectedCategories, titleEn, descriptionEn, contentEn, mediaFile]);
+  }, [title, description, content, selectedCategories, titleEn, descriptionEn, contentEn, mediaFile, customHtml, customHtmlEn, externalUrl]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setMediaFile(e.target.files[0]);
-      setUploadedImageUrl(null); // Reset uploaded URL when new file is chosen
+      setUploadedImageUrl(null);
     }
   };
 
@@ -114,37 +151,130 @@ const PublishNewsPage = () => {
     setUploadedImageUrl(null);
   };
 
+  const handleAdditionalMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user || !e.target.files || e.target.files.length === 0) return;
+    setUploadingMedia(true);
+    const files = Array.from(e.target.files);
+    const results: { url: string; type: string }[] = [];
+
+    for (const file of files) {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("article-media")
+        .upload(filePath, file);
+
+      if (!uploadError) {
+        const { data: urlData } = supabase.storage
+          .from("article-media")
+          .getPublicUrl(filePath);
+        results.push({ url: urlData.publicUrl, type: file.type });
+      }
+    }
+    setAdditionalMedia((prev) => [...prev, ...results]);
+    setUploadingMedia(false);
+    if (additionalMediaRef.current) additionalMediaRef.current.value = "";
+  };
+
+  const removeAdditionalMedia = (idx: number) => {
+    setAdditionalMedia((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const copyToClipboard = async (url: string) => {
+    await navigator.clipboard.writeText(url);
+    setCopiedUrl(url);
+    setTimeout(() => setCopiedUrl(null), 1500);
+  };
+
+  const fetchExternalMeta = async () => {
+    if (!externalUrl) return;
+    setFetchingMeta(true);
+    try {
+      const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(externalUrl)}`;
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+
+      if (data.status === "success" && data.data) {
+        const ogTitle = data.data.title || "";
+        const ogDesc = data.data.description || "";
+        const ogDate = data.data.date || null;
+
+        if (externalLanguage === "ja") {
+          if (ogTitle) setTitle(ogTitle);
+          if (ogDesc) setDescription(ogDesc);
+        } else {
+          if (ogTitle) setTitleEn(ogTitle);
+          if (ogDesc) setDescriptionEn(ogDesc);
+        }
+        
+        if (ogDate) {
+          try {
+            const parsedDate = new Date(ogDate);
+            if (!isNaN(parsedDate.getTime())) {
+              setExternalPublishedDate(parsedDate.toISOString());
+            }
+          } catch (e) {
+            console.error("Failed to parse date", e);
+          }
+        }
+        
+        toast.success("Metadata fetched successfully!");
+      } else {
+        throw new Error("Failed to parse metadata");
+      }
+    } catch {
+      toast.error("Could not fetch metadata from that URL. Please fill in the title and description manually.");
+    } finally {
+      setFetchingMeta(false);
+    }
+  };
+
   const handleAddCategory = () => {
     const trimmed = newCategoryInput.trim();
     if (trimmed && !selectedCategories.includes(trimmed)) {
-       setSelectedCategories([...selectedCategories, trimmed]);
-       
-       if (!availableCategories.includes(trimmed)) {
-          setAvailableCategories([...availableCategories, trimmed].sort());
-       }
+      setSelectedCategories([...selectedCategories, trimmed]);
+      if (!availableCategories.includes(trimmed)) {
+        setAvailableCategories([...availableCategories, trimmed].sort());
+      }
     }
     setNewCategoryInput("");
   };
 
   const toggleCategory = (cat: string) => {
     if (selectedCategories.includes(cat)) {
-      setSelectedCategories(selectedCategories.filter(c => c !== cat));
+      setSelectedCategories(selectedCategories.filter((c) => c !== cat));
     } else {
       setSelectedCategories([...selectedCategories, cat]);
     }
   };
 
   const removeCategory = (cat: string) => {
-     setSelectedCategories(selectedCategories.filter(c => c !== cat));
+    setSelectedCategories(selectedCategories.filter((c) => c !== cat));
   };
-
 
   const performSave = async (isExplicitPublish: boolean) => {
     if (!user) return false;
 
-    if (isExplicitPublish && !title && !titleEn) {
+    if (isExplicitPublish && contentMode !== "external" && !title && !titleEn) {
       toast.error(activeTab === "ja" ? "タイトルを入力してください。" : "Please provide at least a title to publish.");
       return false;
+    }
+
+    if (isExplicitPublish && contentMode === "external") {
+      if (!externalUrl) {
+        toast.error("Please enter an external URL.");
+        return false;
+      }
+      if (externalLanguage === "ja" && !title) {
+        toast.error("タイトルを入力してください。(Title required)");
+        return false;
+      }
+      if (externalLanguage === "en" && !titleEn) {
+        toast.error("Please provide a title.");
+        return false;
+      }
     }
 
     if (isExplicitPublish) setSubmitting(true);
@@ -153,7 +283,7 @@ const PublishNewsPage = () => {
     let mediaUrl = uploadedImageUrl;
 
     try {
-      if (mediaFile && !uploadedImageUrl) {
+      if (mediaFile && !uploadedImageUrl && contentMode === "standard") {
         const fileExt = mediaFile.name.split(".").pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `${user.id}/${fileName}`;
@@ -172,20 +302,36 @@ const PublishNewsPage = () => {
         setUploadedImageUrl(mediaUrl);
       }
 
-      const payload = {
+      // If external mode, only save the selected language fields
+      const finalTitle = contentMode === "external" ? (externalLanguage === "ja" ? title : "") : title;
+      const finalDesc = contentMode === "external" ? (externalLanguage === "ja" ? description : "") : description;
+      const finalTitleEn = contentMode === "external" ? (externalLanguage === "en" ? titleEn : "") : titleEn;
+      const finalDescEn = contentMode === "external" ? (externalLanguage === "en" ? descriptionEn : "") : descriptionEn;
+
+      const payload: Record<string, any> = {
         category: selectedCategories.join(", "),
-        title,
-        description,
-        content,
-        title_en: titleEn,
-        description_en: descriptionEn,
-        content_en: contentEn,
+        title: finalTitle,
+        description: finalDesc,
+        content: contentMode === "external" ? "" : content,
+        title_en: finalTitleEn,
+        description_en: finalDescEn,
+        content_en: contentMode === "external" ? "" : contentEn,
         image_url: mediaUrl,
         author_first_name: firstName,
         author_last_name: lastName,
         author_id: user.id,
         is_draft: !isExplicitPublish,
+        content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+        custom_html: contentMode === "custom_html" ? customHtml : null,
+        custom_html_en: contentMode === "custom_html" ? customHtmlEn : null,
+        additional_media: contentMode === "custom_html" ? additionalMedia : [],
+        is_external: contentMode === "external",
+        external_url: contentMode === "external" ? externalUrl : null,
       };
+
+      if (contentMode === "external" && externalPublishedDate) {
+        payload.created_at = externalPublishedDate;
+      }
 
       if (draftId) {
         const { error: updateError } = await supabase
@@ -229,13 +375,15 @@ const PublishNewsPage = () => {
     if (!mediaFile && uploadedImageUrl) previewUrl = uploadedImageUrl;
 
     return {
-      title: activeTab === "ja" ? title : (titleEn || title),
-      description: activeTab === "ja" ? description : (descriptionEn || description),
-      content: activeTab === "ja" ? content : (contentEn || content),
+      title: activeTab === "ja" ? title : titleEn || title,
+      description: activeTab === "ja" ? description : descriptionEn || description,
+      content: activeTab === "ja" ? content : contentEn || content,
       category: selectedCategories.join(", "),
       image_url: previewUrl,
       author_first_name: firstName,
       author_last_name: lastName,
+      content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+      custom_html: activeTab === "ja" ? customHtml : customHtmlEn || customHtml,
     };
   };
 
@@ -247,7 +395,6 @@ const PublishNewsPage = () => {
     );
   }
 
-  // Localized Labels Mapping
   const labels = {
     ja: {
       back: "リストに戻る",
@@ -264,14 +411,22 @@ const PublishNewsPage = () => {
       suggestedCats: "既存のカテゴリから選択:",
       titleLabel: "タイトル (必須)",
       titlePlaceholder: "記事のタイトル",
-      descLabel: "概要 / 簡単な説明 (必須)",
+      descLabel: "概要 / 簡単な説明",
       descPlaceholder: "概要や短い説明...",
-      contentLabel: "本文 (必須)",
+      contentLabel: "本文",
       contentPlaceholder: "記事の本文をここに書きます...",
       mediaLabel: "ヘッダーメディア（画像・動画）",
       dragDrop: "ファイルをドロップするか",
       clickBrowse: "クリックして選択",
-      mediaDesc: "JPEG、PNG、または50MB以下の動画"
+      mediaDesc: "JPEG、PNG、または50MB以下の動画",
+      customHtmlLabel: "カスタム HTML（日本語）",
+      customHtmlPlaceholder: "<h2>見出し</h2>\n<p>ここに本文のHTMLを貼り付けてください...</p>",
+      additionalMediaLabel: "追加メディア（複数アップロード可）",
+      uploadedUrls: "アップロード済みURL（HTMLに貼り付けて使用）",
+      externalUrlLabel: "外部記事のURL",
+      externalUrlPlaceholder: "https://medium.com/...",
+      fetchMetaBtn: "メタ情報を取得",
+      externalNote: "この記事は外部サイトへのリンクとして表示されます。",
     },
     en: {
       back: "Back to List",
@@ -286,21 +441,49 @@ const PublishNewsPage = () => {
       categoryPlaceholder: "Type new category...",
       addBtn: "Add",
       suggestedCats: "Suggested:",
-      titleLabel: "Headline / Title (Optional)",
+      titleLabel: "Title (Required)",
       titlePlaceholder: "Article Title",
-      descLabel: "Description / Summary (Optional)",
+      descLabel: "Description / Summary",
       descPlaceholder: "Short description or summary...",
-      contentLabel: "Full Story / Content (Optional)",
+      contentLabel: "Full Story / Content",
       contentPlaceholder: "Write the full story here...",
       mediaLabel: "Header Media (Image/Video)",
       dragDrop: "Drop a file here or",
       clickBrowse: "click to browse",
-      mediaDesc: "Images (JPG, PNG) or Videos up to 50MB"
-    }
+      mediaDesc: "Images (JPG, PNG) or Videos up to 50MB",
+      customHtmlLabel: "Custom HTML (Japanese)",
+      customHtmlPlaceholder: "<h2>Heading</h2>\n<p>Paste your article HTML here...</p>",
+      additionalMediaLabel: "Additional Media (Multiple uploads)",
+      uploadedUrls: "Uploaded URLs (paste into your HTML)",
+      externalUrlLabel: "External Article URL",
+      externalUrlPlaceholder: "https://medium.com/...",
+      fetchMetaBtn: "Fetch Metadata",
+      externalNote: "This article will appear in the news list as an external link and redirect visitors to the source.",
+    },
   };
 
-  const l = labels[activeTab];
+  const l = labels[lang];
 
+  const modeOptions: { value: ContentMode; label: string; icon: React.ReactNode; desc: string }[] = [
+    {
+      value: "standard",
+      icon: <LayoutTemplate className="w-5 h-5" />,
+      label: lang === "ja" ? "標準テンプレート" : "Standard Template",
+      desc: lang === "ja" ? "テキストと1枚の画像" : "Text content with one header image",
+    },
+    {
+      value: "custom_html",
+      icon: <Code2 className="w-5 h-5" />,
+      label: lang === "ja" ? "カスタム HTML" : "Custom HTML",
+      desc: lang === "ja" ? "独自のHTMLレイアウト" : "Paste your own HTML layout",
+    },
+    {
+      value: "external",
+      icon: <ExternalLink className="w-5 h-5" />,
+      label: lang === "ja" ? "外部リンク" : "External Link",
+      desc: lang === "ja" ? "外部サイトへのリンク" : "Link to an article on another site",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
@@ -318,16 +501,10 @@ const PublishNewsPage = () => {
 
             <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-border/50">
               <div>
-                <span className="label text-light-label mb-3 block">
-                  {l.pubHeaderLabel}
-                </span>
-                <h1 className="heading-1 text-light-heading mb-4">
-                  {l.pubHeaderTitle}
-                </h1>
-                <div className="flex items-center gap-3">
-                  <p className="body text-light-body max-w-lg">
-                    {l.pubHeaderDesc}
-                  </p>
+                <span className="label text-light-label mb-3 block">{l.pubHeaderLabel}</span>
+                <h1 className="heading-1 text-light-heading mb-4">{l.pubHeaderTitle}</h1>
+                <div className="flex items-center flex-wrap gap-3">
+                  <p className="body text-light-body max-w-lg">{l.pubHeaderDesc}</p>
                   {isAutoSaving && (
                     <span className="flex items-center gap-1 text-xs text-light-body/60 bg-white/50 px-2 py-1 rounded-full">
                       <Loader2 className="w-3 h-3 animate-spin" /> {l.saving}
@@ -335,25 +512,27 @@ const PublishNewsPage = () => {
                   )}
                   {lastSavedAt && !isAutoSaving && (
                     <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full border border-green-100 whitespace-nowrap">
-                      <CheckCircle2 className="w-3 h-3" /> 
-                      {l.savedAt} {lastSavedAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      <CheckCircle2 className="w-3 h-3" />
+                      {l.savedAt} {lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   )}
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => setShowPreview(true)}
-                  className="btn-outline border-border/50 hover:bg-secondary py-3 px-6 h-auto whitespace-nowrap"
-                >
-                  <Eye size={18} /> {l.previewBtn}
-                </button>
+                {contentMode !== "external" && (
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview(true)}
+                    className="btn-outline border-border/50 hover:bg-secondary py-3 px-6 h-auto whitespace-nowrap"
+                  >
+                    <Eye size={18} /> {l.previewBtn}
+                  </button>
+                )}
                 <button
                   type="submit"
                   form="publish-form"
-                  disabled={submitting || (!title && !titleEn)}
+                  disabled={submitting || (!title && !titleEn && contentMode !== "external")}
                   className="btn-primary py-3 px-6 h-auto disabled:opacity-50 whitespace-nowrap"
                 >
                   {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText size={18} />} {l.publishBtn}
@@ -362,12 +541,44 @@ const PublishNewsPage = () => {
             </div>
 
             <form id="publish-form" onSubmit={handleSubmit} className="space-y-10 bg-white rounded-2xl p-8 sm:p-12 relative shadow-sm">
+
+              {/* Content Mode Selector */}
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-light-heading ml-1">
+                  {lang === "ja" ? "記事の種類" : "Article Type"}
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {modeOptions.map((mode) => (
+                    <button
+                      key={mode.value}
+                      type="button"
+                      onClick={() => setContentMode(mode.value)}
+                      className={`flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all ${contentMode === mode.value
+                          ? "border-primary bg-primary/5 ring-2 ring-primary/10"
+                          : "border-border/40 hover:border-border hover:bg-secondary/30"
+                        }`}
+                    >
+                      <span className={`mt-0.5 flex-shrink-0 ${contentMode === mode.value ? "text-primary" : "text-light-body"}`}>
+                        {mode.icon}
+                      </span>
+                      <div>
+                        <p className={`text-sm font-semibold ${contentMode === mode.value ? "text-primary" : "text-light-heading"}`}>
+                          {mode.label}
+                        </p>
+                        <p className="text-xs text-light-body mt-0.5">{mode.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Category */}
               <div className="space-y-4">
                 <label className="text-sm font-semibold text-light-heading ml-1">{l.categoryHead}</label>
-                
+
                 {selectedCategories.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {selectedCategories.map(cat => (
+                    {selectedCategories.map((cat) => (
                       <span key={cat} className={`flex items-center gap-1 text-xs font-bold border rounded-full px-3 py-1.5 uppercase ${getCategoryColor(cat)}`}>
                         {cat}
                         <button type="button" onClick={() => removeCategory(cat)} className="hover:bg-black/10 rounded-full p-0.5 ml-1 transition-colors">
@@ -377,62 +588,115 @@ const PublishNewsPage = () => {
                     ))}
                   </div>
                 )}
-                
+
                 <div className="flex gap-2">
                   <input
                     type="text"
                     placeholder={l.categoryPlaceholder}
                     value={newCategoryInput}
                     onChange={(e) => setNewCategoryInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCategory())}
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddCategory())}
                     className="flex-grow bg-secondary/30 rounded-xl px-4 py-3 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium border border-transparent focus:border-border/30 placeholder-light-body/40"
                   />
-                  <button type="button" onClick={handleAddCategory} className="btn-outline px-4 py-3 h-auto"><Plus size={18}/></button>
+                  <button type="button" onClick={handleAddCategory} className="btn-outline px-4 py-3 h-auto">
+                    <Plus size={18} />
+                  </button>
                 </div>
 
                 {availableCategories.length > 0 && (
-                   <div className="mt-3">
-                     <p className="text-xs text-light-body mb-2 ml-1">{l.suggestedCats}</p>
-                     <div className="flex flex-wrap gap-2">
-                       {availableCategories.map(cat => {
-                         const isSelected = selectedCategories.includes(cat);
-                         return (
-                           <button
-                             key={cat}
-                             type="button"
-                             onClick={() => toggleCategory(cat)}
-                             className={`text-xs font-bold border rounded-full px-3 py-1.5 uppercase transition-all ${
-                               isSelected ? `${getCategoryColor(cat)} ring-2 ring-primary/20` : "bg-transparent text-light-body hover:bg-secondary"
-                             }`}
-                           >
-                             {cat}
-                           </button>
-                         )
-                       })}
-                     </div>
-                   </div>
+                  <div className="mt-3">
+                    <p className="text-xs text-light-body mb-2 ml-1">{l.suggestedCats}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {availableCategories.map((cat) => {
+                        const isSelected = selectedCategories.includes(cat);
+                        return (
+                          <button
+                            key={cat}
+                            type="button"
+                            onClick={() => toggleCategory(cat)}
+                            className={`text-xs font-bold border rounded-full px-3 py-1.5 uppercase transition-all ${isSelected ? `${getCategoryColor(cat)} ring-2 ring-primary/20` : "bg-transparent text-light-body hover:bg-secondary"
+                              }`}
+                          >
+                            {cat}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
               </div>
 
+              {/* Language Tabs / External Language Selector */}
               <div className="border border-border/50 rounded-xl overflow-hidden p-1">
-                <div className="flex gap-2 p-1 bg-secondary/20 rounded-lg mb-4 mx-4 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("ja")}
-                    className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === "ja" ? "bg-white text-primary shadow-sm" : "text-light-body hover:text-light-heading hover:bg-white/50"}`}
-                  >
-                    Japanese (日本語)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("en")}
-                    className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === "en" ? "bg-white text-primary shadow-sm" : "text-light-body hover:text-light-heading hover:bg-white/50"}`}
-                  >
-                    English (Optional)
-                  </button>
-                </div>
+                {contentMode !== "external" ? (
+                  <div className="flex gap-2 p-1 bg-secondary/20 rounded-lg mb-4 mx-4 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("ja")}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === "ja" ? "bg-white text-primary shadow-sm" : "text-light-body hover:text-light-heading hover:bg-white/50"}`}
+                    >
+                      Japanese (日本語)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("en")}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === "en" ? "bg-white text-primary shadow-sm" : "text-light-body hover:text-light-heading hover:bg-white/50"}`}
+                    >
+                      English (Optional)
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mx-5 mt-5 mb-2 space-y-3">
+                    <label className="text-sm font-semibold text-light-heading">
+                      {lang === "ja" ? "記事の言語" : "Article Language"}
+                    </label>
+                    <div className="flex gap-4 border-b border-border/50 pb-5">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="ext_lang" value="ja" checked={externalLanguage === "ja"} onChange={() => setExternalLanguage("ja")} className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-medium">Japanese (日本語)</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="ext_lang" value="en" checked={externalLanguage === "en"} onChange={() => setExternalLanguage("en")} className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-medium">English</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
 
                 <div className="px-5 pb-5 space-y-8">
+                  {/* External: URL field */}
+                  {contentMode === "external" && (
+                    <div className="space-y-4 pt-2">
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 flex items-start gap-3">
+                        <ExternalLink className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <p>{l.externalNote}</p>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-light-heading ml-1">{l.externalUrlLabel}</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="url"
+                            placeholder={l.externalUrlPlaceholder}
+                            value={externalUrl}
+                            onChange={(e) => setExternalUrl(e.target.value)}
+                            required
+                            className="flex-grow bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium placeholder-light-body/40"
+                          />
+                          <button
+                            type="button"
+                            onClick={fetchExternalMeta}
+                            disabled={fetchingMeta || !externalUrl}
+                            className="btn-outline px-5 py-3 h-auto whitespace-nowrap disabled:opacity-50"
+                          >
+                            {fetchingMeta ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                            {l.fetchMetaBtn}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Title */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
                       {l.titleLabel}
@@ -440,90 +704,187 @@ const PublishNewsPage = () => {
                     <input
                       type="text"
                       placeholder={l.titlePlaceholder}
-                      required={activeTab === "ja"}
-                      value={activeTab === "ja" ? title : titleEn}
-                      onChange={(e) => activeTab === "ja" ? setTitle(e.target.value) : setTitleEn(e.target.value)}
+                      required={contentMode !== "external" ? (activeTab === "ja") : true}
+                      value={contentMode === "external" ? (externalLanguage === "ja" ? title : titleEn) : (activeTab === "ja" ? title : titleEn)}
+                      onChange={(e) => contentMode === "external" 
+                        ? (externalLanguage === "ja" ? setTitle(e.target.value) : setTitleEn(e.target.value))
+                        : (activeTab === "ja" ? setTitle(e.target.value) : setTitleEn(e.target.value))}
                       className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium text-lg placeholder-light-body/40"
                     />
                   </div>
 
+                  {/* Description */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
                       {l.descLabel}
                     </label>
                     <textarea
                       placeholder={l.descPlaceholder}
-                      required={activeTab === "ja"}
-                      value={activeTab === "ja" ? description : descriptionEn}
-                      onChange={(e) => activeTab === "ja" ? setDescription(e.target.value) : setDescriptionEn(e.target.value)}
+                      value={contentMode === "external" ? (externalLanguage === "ja" ? description : descriptionEn) : (activeTab === "ja" ? description : descriptionEn)}
+                      onChange={(e) => contentMode === "external"
+                        ? (externalLanguage === "ja" ? setDescription(e.target.value) : setDescriptionEn(e.target.value))
+                        : (activeTab === "ja" ? setDescription(e.target.value) : setDescriptionEn(e.target.value))}
                       rows={3}
                       className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-none placeholder-light-body/40"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-light-heading ml-1">
-                      {l.contentLabel}
-                    </label>
-                    <textarea
-                      placeholder={l.contentPlaceholder}
-                      required={activeTab === "ja"}
-                      value={activeTab === "ja" ? content : contentEn}
-                      onChange={(e) => activeTab === "ja" ? setContent(e.target.value) : setContentEn(e.target.value)}
-                      rows={12}
-                      className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-y leading-relaxed placeholder-light-body/40"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-light-heading ml-1">{l.mediaLabel}</label>
-                <div className="border-2 border-dashed border-border/80 rounded-xl p-10 flex flex-col items-center justify-center hover:border-primary/50 hover:bg-primary/5 transition-colors relative overflow-hidden min-h-[240px]">
-                  {mediaFile ? (
-                    <div className="flex flex-col items-center w-full z-10">
-                      {mediaFile.type.startsWith("video/") ? (
-                        <video src={URL.createObjectURL(mediaFile)} className="max-h-56 object-contain rounded-lg mb-4 shadow-sm" controls />
-                      ) : (
-                        <img src={URL.createObjectURL(mediaFile)} alt="Preview" className="max-h-56 object-contain rounded-lg mb-4 shadow-sm" />
-                       )}
-                      <p className="font-medium text-sm text-light-body bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/50 truncate max-w-xs">{mediaFile.name}</p>
-                      <button
-                        type="button"
-                        onClick={clearFile}
-                        className="absolute top-4 right-4 p-2 bg-white/90 border border-border/50 text-red-500 rounded-full hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shadow-sm"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <FileImage className="w-12 h-12 text-light-label mb-4" />
-                      <p className="font-medium text-light-heading text-center mb-1">
-                        {l.dragDrop} <span className="text-primary hover:underline cursor-pointer">{l.clickBrowse}</span>
-                      </p>
-                      <p className="text-xs text-light-body text-center">{l.mediaDesc}</p>
-                      <input
-                        type="file"
-                        accept="image/*,video/*"
-                        onChange={handleFileChange}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  {/* Standard: content textarea */}
+                  {contentMode === "standard" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-light-heading ml-1">{l.contentLabel}</label>
+                      <textarea
+                        placeholder={l.contentPlaceholder}
+                        required={activeTab === "ja"}
+                        value={activeTab === "ja" ? content : contentEn}
+                        onChange={(e) => activeTab === "ja" ? setContent(e.target.value) : setContentEn(e.target.value)}
+                        rows={12}
+                        className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-y leading-relaxed placeholder-light-body/40"
                       />
-                    </>
+                    </div>
+                  )}
+
+                  {/* Custom HTML: HTML textarea */}
+                  {contentMode === "custom_html" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-light-heading ml-1 flex items-center gap-2">
+                        <Code2 className="w-4 h-4 text-primary" />
+                        {activeTab === "ja"
+                          ? "カスタム HTML（日本語）"
+                          : "Custom HTML (English)"}
+                      </label>
+                      <textarea
+                        placeholder={activeTab === "ja"
+                          ? "<h2>見出し</h2>\n<p>HTMLをここに貼り付けてください...</p>"
+                          : "<h2>Heading</h2>\n<p>Paste your HTML here...</p>"}
+                        required={activeTab === "ja"}
+                        value={activeTab === "ja" ? customHtml : customHtmlEn}
+                        onChange={(e) => activeTab === "ja" ? setCustomHtml(e.target.value) : setCustomHtmlEn(e.target.value)}
+                        rows={16}
+                        className="w-full bg-gray-950 text-green-400 font-mono text-sm rounded-xl px-5 py-4 focus:outline-none transition-colors resize-y leading-relaxed placeholder-gray-600"
+                      />
+                    </div>
                   )}
                 </div>
               </div>
+
+              {/* Standard: header image */}
+              {contentMode === "standard" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-light-heading ml-1">{l.mediaLabel}</label>
+                  <div className="border-2 border-dashed border-border/80 rounded-xl p-10 flex flex-col items-center justify-center hover:border-primary/50 hover:bg-primary/5 transition-colors relative overflow-hidden min-h-[240px]">
+                    {mediaFile ? (
+                      <div className="flex flex-col items-center w-full z-10">
+                        {mediaFile.type.startsWith("video/") ? (
+                          <video src={URL.createObjectURL(mediaFile)} className="max-h-56 object-contain rounded-lg mb-4 shadow-sm" controls />
+                        ) : (
+                          <img src={URL.createObjectURL(mediaFile)} alt="Preview" className="max-h-56 object-contain rounded-lg mb-4 shadow-sm" />
+                        )}
+                        <p className="font-medium text-sm text-light-body bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/50 truncate max-w-xs">
+                          {mediaFile.name}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={clearFile}
+                          className="absolute top-4 right-4 p-2 bg-white/90 border border-border/50 text-red-500 rounded-full hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shadow-sm"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <FileImage className="w-12 h-12 text-light-label mb-4" />
+                        <p className="font-medium text-light-heading text-center mb-1">
+                          {l.dragDrop} <span className="text-primary hover:underline cursor-pointer">{l.clickBrowse}</span>
+                        </p>
+                        <p className="text-xs text-light-body text-center">{l.mediaDesc}</p>
+                        <input
+                          type="file"
+                          accept="image/*,video/*"
+                          onChange={handleFileChange}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Custom HTML: additional media uploader */}
+              {contentMode === "custom_html" && (
+                <div className="space-y-4">
+                  <label className="text-sm font-semibold text-light-heading ml-1">{l.additionalMediaLabel}</label>
+
+                  <label className="flex items-center justify-center gap-3 border-2 border-dashed border-border/80 rounded-xl p-6 hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer">
+                    {uploadingMedia ? (
+                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                    ) : (
+                      <Upload className="w-5 h-5 text-light-body" />
+                    )}
+                    <span className="text-sm font-medium text-light-heading">
+                      {uploadingMedia
+                        ? (activeTab === "ja" ? "アップロード中..." : "Uploading...")
+                        : (activeTab === "ja" ? "画像・動画をアップロード（複数可）" : "Upload images or videos (multiple)")}
+                    </span>
+                    <input
+                      ref={additionalMediaRef}
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      onChange={handleAdditionalMediaUpload}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {additionalMedia.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-light-body ml-1">{l.uploadedUrls}:</p>
+                      <div className="border border-border/50 rounded-xl divide-y divide-border/30 overflow-hidden">
+                        {additionalMedia.map((m, idx) => (
+                          <div key={idx} className="flex items-center gap-3 px-4 py-3 bg-white">
+                            <div className="w-10 h-10 rounded-lg bg-secondary flex-shrink-0 overflow-hidden">
+                              {m.type.startsWith("video/") ? (
+                                <video src={m.url} className="w-full h-full object-cover" />
+                              ) : (
+                                <img src={m.url} alt="" className="w-full h-full object-cover" />
+                              )}
+                            </div>
+                            <p className="flex-1 text-xs text-light-body truncate font-mono">{m.url}</p>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(m.url)}
+                                title="Copy URL"
+                                className="p-1.5 hover:bg-secondary rounded-lg transition-colors text-light-body hover:text-foreground"
+                              >
+                                {copiedUrl === m.url ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeAdditionalMedia(idx)}
+                                className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-light-body hover:text-red-600"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </form>
           </ScrollReveal>
         </div>
       </section>
 
       <Footer />
-      
-      <ArticlePreviewModal 
-        isOpen={showPreview} 
-        onClose={() => setShowPreview(false)} 
-        article={getPreviewArticle()} 
+
+      <ArticlePreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        article={getPreviewArticle()}
       />
     </div>
   );

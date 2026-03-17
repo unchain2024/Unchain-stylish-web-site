@@ -139,6 +139,7 @@ const companyData = {
     { label: "従業員数", value: "6名（業務委託含む）" },
     { label: "主要取引銀行", value: "住信SBIネット銀行" },
     { label: "住所", value: "東京都渋谷区道玄坂１丁目１０番８号渋谷道玄坂東急ビル２Ｆ－Ｃ" },
+    { label: "顧問弁護士", value: "AZX総合法律事務所" },
   ],
   en: [
     { label: "Company Name", value: "UNCHAIN Co., Ltd." },
@@ -147,6 +148,7 @@ const companyData = {
     { label: "Employees", value: "6 people (including business contractors)" },
     { label: "Main Bank", value: "SBI Sumishin Net Bank" },
     { label: "Address", value: "2F-C Shibuya Dogenzaka Tokyu Building, 1-10-8 Dogenzaka, Shibuya-ku, Tokyo" },
+    { label: "Legal Advisor", value: "AZX Sogо Law Office" },
   ],
 };
 

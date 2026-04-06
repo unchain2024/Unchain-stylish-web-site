@@ -13,6 +13,13 @@ const solutions = {
       cta: "詳しく見る",
     },
     {
+      slug: "asguard",
+      category: "AI SaaS",
+      name: "ASGUARD",
+      description: "AIセキュリティ",
+      cta: "詳しく見る",
+    },
+    {
       slug: "consulting",
       category: "AI DX",
       name: "AI Consulting",
@@ -26,6 +33,13 @@ const solutions = {
       category: "AI SaaS",
       name: "NEURON",
       description: "PM Decision System of Record",
+      cta: "Learn More",
+    },
+    {
+      slug: "asguard",
+      category: "AI SaaS",
+      name: "ASGUARD",
+      description: "AI Security",
       cta: "Learn More",
     },
     {

@@ -189,10 +189,10 @@ const SolutionsPage = () => {
         <div className="container-site">
           {Object.entries(businessData).map(([group, items], gi) => (
             <div key={group} className="mb-20 last:mb-0">
-              <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 lg:gap-8 items-start">
-                {/* Category label */}
+              <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 lg:gap-8 items-center">
+                {/* Category label – vertically centered */}
                 <ScrollReveal delay={gi * 0.1}>
-                  <div className="md:sticky md:top-24 heading-3 text-light-label">
+                  <div className="heading-3 text-light-label">
                     {group}
                   </div>
                 </ScrollReveal>

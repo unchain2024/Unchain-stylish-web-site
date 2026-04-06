@@ -75,44 +75,65 @@ const BusinessSection = () => {
           </ScrollReveal>
         </div>
 
-        {/* Solution items */}
+        {/* Solution items grouped by category */}
         <div>
-          {items.map((item, i) => (
-            <ScrollReveal key={item.name} delay={i * 0.1}>
-              <div className="py-8 lg:py-10">
-                <div className="flex items-center justify-between">
-                  {/* Left – category + name + description */}
-                  <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-8 lg:gap-14">
-                    <p className="heading-3 text-light-body opacity-50 flex-shrink-0 pt-0 sm:pt-2 w-auto sm:w-[120px] lg:w-[160px]">
-                      {item.category}
+          {Object.entries(
+            items.reduce<Record<string, typeof items>>((groups, item) => {
+              (groups[item.category] ??= []).push(item);
+              return groups;
+            }, {})
+          ).map(([category, groupItems], gi, groupArr) => (
+            <div key={category}>
+              <div className="flex flex-col sm:flex-row sm:items-stretch gap-0 sm:gap-8 lg:gap-14">
+                {/* Category label – vertically centered across all items in the group */}
+                <div className="flex items-center flex-shrink-0 w-auto sm:w-[120px] lg:w-[160px] pb-0 sm:pb-0">
+                  <ScrollReveal delay={gi * 0.2}>
+                    <p className="heading-3 text-light-body opacity-50 pt-6 sm:pt-0">
+                      {category}
                     </p>
-                    <div>
-                      <h3 className="heading-3 text-light-heading">{item.name}</h3>
-                      <p className="body-large text-light-body mt-1">{item.description}</p>
-                      <Link
-                        to={`${localePath("/solutions")}?product=${item.slug}`}
-                        className="sm:hidden inline-flex items-center gap-1 text-primary text-sm font-medium mt-2 hover:underline"
-                      >
-                        {item.cta}
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
+                  </ScrollReveal>
+                </div>
 
-                  <Link
-                    to={`${localePath("/solutions")}?product=${item.slug}`}
-                    className="hidden md:inline-flex btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background flex-shrink-0"
-                  >
-                    {item.cta}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                {/* Product rows */}
+                <div className="flex-1">
+                  {groupItems.map((item, i) => (
+                    <ScrollReveal key={item.name} delay={gi * 0.2 + (i + 1) * 0.1}>
+                      <div className="py-8 lg:py-10">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="heading-3 text-light-heading">{item.name}</h3>
+                            <p className="body-large text-light-body mt-1">{item.description}</p>
+                            <Link
+                              to={`${localePath("/solutions")}?product=${item.slug}`}
+                              className="sm:hidden inline-flex items-center gap-1 text-primary text-sm font-medium mt-2 hover:underline"
+                            >
+                              {item.cta}
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
+
+                          <Link
+                            to={`${localePath("/solutions")}?product=${item.slug}`}
+                            className="hidden md:inline-flex btn-outline border-foreground/20 text-foreground hover:bg-foreground hover:text-background flex-shrink-0"
+                          >
+                            {item.cta}
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      {i < groupItems.length - 1 && (
+                        <div className="border-t border-border" />
+                      )}
+                    </ScrollReveal>
+                  ))}
                 </div>
               </div>
 
-              {i < items.length - 1 && (
+              {gi < groupArr.length - 1 && (
                 <div className="border-t border-border" />
               )}
-            </ScrollReveal>
+            </div>
           ))}
         </div>
       </div>

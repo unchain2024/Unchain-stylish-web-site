@@ -1,5 +1,6 @@
 import React from "react";
-import { X, ArrowLeft } from "lucide-react";
+import { X, ArrowLeft, Newspaper } from "lucide-react";
+import PressReleaseRenderer, { parsePressRelease } from "./PressReleaseRenderer";
 
 interface PreviewModalProps {
   isOpen: boolean;
@@ -25,6 +26,8 @@ const ArticlePreviewModal: React.FC<PreviewModalProps> = ({ isOpen, onClose, art
   };
 
   const isCustomHtml = article.content_type === "custom_html";
+  const isPressRelease = article.content_type === "press_release";
+  const pressData = isPressRelease ? parsePressRelease(article.content) : null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 sm:p-6 font-mono overflow-y-auto">
@@ -44,6 +47,11 @@ const ArticlePreviewModal: React.FC<PreviewModalProps> = ({ isOpen, onClose, art
             {isCustomHtml && (
               <span className="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded-full">CUSTOM HTML</span>
             )}
+            {isPressRelease && (
+              <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                <Newspaper className="w-3 h-3" /> PRESS RELEASE
+              </span>
+            )}
           </div>
           <button
             onClick={onClose}
@@ -53,17 +61,23 @@ const ArticlePreviewModal: React.FC<PreviewModalProps> = ({ isOpen, onClose, art
           </button>
         </div>
 
-        {/* Content */}
         <div className="overflow-y-auto w-full p-6 sm:p-12">
-          <article className="max-w-3xl mx-auto">
+          <article className="max-w-4xl mx-auto">
             {/* Meta */}
             <div className="mb-12 relative">
-              <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <span className="body text-light-body">{formatDate(new Date())}</span>
+              <div className="flex items-center gap-4 mb-5 flex-wrap">
+                <span className="body text-light-body font-medium">{formatDate(new Date())}</span>
                 {article.category && (
-                  <span className="text-[10px] text-light-label border border-border rounded-full px-2 py-0.5 whitespace-nowrap uppercase">
-                    {article.category}
-                  </span>
+                  <div className="flex gap-2 flex-wrap">
+                    {article.category.split(",").map((cat, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[11px] font-bold border rounded-full px-2.5 py-1 whitespace-nowrap uppercase shadow-sm bg-primary/5 text-primary border-primary/20"
+                      >
+                        {cat.trim()}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
 
@@ -82,34 +96,36 @@ const ArticlePreviewModal: React.FC<PreviewModalProps> = ({ isOpen, onClose, art
                   {article.author_first_name?.charAt(0) || "U"}
                 </div>
                 <div className="body text-light-body">
-                  <div className="text-light-heading">{article.author_first_name} {article.author_last_name}</div>
+                  <div className="text-light-heading font-bold">{article.author_first_name} {article.author_last_name}</div>
                   <div className="text-sm">Writer</div>
                 </div>
               </div>
             </div>
 
             {/* Image (standard mode only) */}
-            {!isCustomHtml && article.image_url && (
-              <div className="w-full mb-12 rounded-xl overflow-hidden bg-secondary">
+            {!isCustomHtml && !isPressRelease && article.image_url && (
+              <div className="w-full mb-12 rounded-xl overflow-hidden bg-secondary shadow-sm border border-border/50">
                 {article.image_url.match(/\.(mp4|webm|ogg)$/i) ? (
-                  <video src={article.image_url} className="w-full h-full object-cover" controls />
+                  <video src={article.image_url} className="w-full h-full max-h-[60vh] object-contain bg-black/5" controls />
                 ) : (
-                  <img src={article.image_url} alt="Preview Hero" className="w-full h-full object-cover" />
+                  <img src={article.image_url} alt="Preview Hero" className="w-full h-full max-h-[60vh] object-contain bg-black/5" />
                 )}
               </div>
             )}
 
             {/* Content */}
-            {isCustomHtml ? (
+            {isPressRelease && pressData ? (
+              <PressReleaseRenderer data={pressData} />
+            ) : isCustomHtml ? (
               <div
-                className="prose prose-sm max-w-none"
+                className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: article.custom_html || "<p><em>HTML content will appear here...</em></p>" }}
               />
             ) : (
-              <div className="body-large text-light-body">
+              <div className="body-large text-light-body leading-loose">
                 {article.content ? (
                   article.content.split("\n").map((paragraph, idx) => (
-                    <p key={idx} className="mb-8 whitespace-pre-wrap leading-relaxed">{paragraph}</p>
+                    <p key={idx} className="mb-8 whitespace-pre-wrap">{paragraph}</p>
                   ))
                 ) : (
                   <p className="text-light-body/50 italic">Article content will appear here...</p>

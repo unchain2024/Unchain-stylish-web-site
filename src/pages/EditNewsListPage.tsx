@@ -68,6 +68,26 @@ const EditNewsListPage = () => {
         }
       }
 
+      // Automatically clean up all additional media (Press Release images, Custom HTML embedded images) 
+      // stored inside the specific article's folder namespace
+      try {
+        const { data: listData, error: listError } = await supabase.storage.from("article-media").list(id);
+        if (!listError && listData && listData.length > 0) {
+          const filesToRemove = listData
+            .filter(file => file.name && file.name !== ".emptyFolderPlaceholder")
+            .map(file => `${id}/${file.name}`);
+            
+          if (filesToRemove.length > 0) {
+            const { error: batchRemoveError } = await supabase.storage.from("article-media").remove(filesToRemove);
+            if (batchRemoveError) {
+               console.error("Batch folder deletion error: ", batchRemoveError);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Failed to delete article folder media", e);
+      }
+
       const { error } = await supabase
         .from("articles")
         .delete()

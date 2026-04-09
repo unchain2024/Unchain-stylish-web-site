@@ -19,13 +19,13 @@ const solutions = {
       description: "AIセキュリティ",
       cta: "詳しく見る",
     },
-    {
-      slug: "consulting",
-      category: "AI DX",
-      name: "AI Consulting",
-      description: "実践的なAIトランスフォーメーション",
-      cta: "詳しく見る",
-    },
+    // {
+    //   slug: "consulting",
+    //   category: "AI DX",
+    //   name: "AI Consulting",
+    //   description: "実践的なAIトランスフォーメーション",
+    //   cta: "詳しく見る",
+    // },
   ],
   en: [
     {
@@ -42,13 +42,13 @@ const solutions = {
       description: "AI Security",
       cta: "Learn More",
     },
-    {
-      slug: "consulting",
-      category: "AI DX",
-      name: "AI Consulting",
-      description: "Hands-on AI transformation",
-      cta: "Learn More",
-    },
+    // {
+    //   slug: "consulting",
+    //   category: "AI DX",
+    //   name: "AI Consulting",
+    //   description: "Hands-on AI transformation",
+    //   cta: "Learn More",
+    // },
   ],
 };
 

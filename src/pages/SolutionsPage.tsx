@@ -61,20 +61,20 @@ const productsData: Record<string, Record<string, Product[]>> = {
         link: "https://the-asguard.com",
       },
     ],
-    "AI DX": [
-      {
-        slug: "consulting",
-        name: "AIコンサルティング",
-        tagline: "ハンズオンAIトランスフォーメーション",
-        desc: "コンサルティングチームが組織と直接協力し、最もインパクトの高いAI機会を特定、カスタマイズされた戦略を設計、本番対応ソリューションを実装します。すべて数ヶ月ではなく数週間で。",
-        features: [
-          { title: "AI戦略＆ロードマップ", desc: "ワークフローを分析し、ボトルネックを特定、初日から価値を提供する段階的なAI導入計画を設計します。" },
-          { title: "チームイネーブルメント", desc: "AIベストプラクティスのトレーニング、内部能力の構築、エンゲージメント後も持続可能な導入を保証します。" },
-          { title: "ラピッドプロトタイピング", desc: "長い報告書の代わりに、チームが1週間以内にテストできるワーキングプロトタイプを構築。スケーリング前に価値を証明します。" },
-        ],
-        link: "https://the-aiadviser.com/",
-      },
-    ],
+    // "AI DX": [
+    //   {
+    //     slug: "consulting",
+    //     name: "AIコンサルティング",
+    //     tagline: "ハンズオンAIトランスフォーメーション",
+    //     desc: "コンサルティングチームが組織と直接協力し、最もインパクトの高いAI機会を特定、カスタマイズされた戦略を設計、本番対応ソリューションを実装します。すべて数ヶ月ではなく数週間で。",
+    //     features: [
+    //       { title: "AI戦略＆ロードマップ", desc: "ワークフローを分析し、ボトルネックを特定、初日から価値を提供する段階的なAI導入計画を設計します。" },
+    //       { title: "チームイネーブルメント", desc: "AIベストプラクティスのトレーニング、内部能力の構築、エンゲージメント後も持続可能な導入を保証します。" },
+    //       { title: "ラピッドプロトタイピング", desc: "長い報告書の代わりに、チームが1週間以内にテストできるワーキングプロトタイプを構築。スケーリング前に価値を証明します。" },
+    //     ],
+    //     link: "https://the-aiadviser.com/",
+    //   },
+    // ],
   },
   en: {
     "AI SaaS": [
@@ -105,20 +105,20 @@ const productsData: Record<string, Record<string, Product[]>> = {
         link: "https://the-asguard.com",
       },
     ],
-    "AI DX": [
-      {
-        slug: "consulting",
-        name: "AI Consulting",
-        tagline: "Hands-on AI transformation",
-        desc: "Our consulting team works hands-on with your organization to identify the highest-impact AI opportunities, design tailored strategies, and implement production-ready solutions — all in weeks, not months.",
-        features: [
-          { title: "AI Strategy & Roadmap", desc: "We analyze your workflows, identify bottlenecks, and design a phased AI adoption plan that delivers value from day one." },
-          { title: "Team Enablement", desc: "We train your teams on AI best practices, build internal capability, and ensure sustainable adoption beyond our engagement." },
-          { title: "Rapid Prototyping", desc: "Instead of lengthy reports, we build working prototypes your team can test within a week — proving value before scaling." },
-        ],
-        link: "https://the-aiadviser.com/",
-      },
-    ],
+    // "AI DX": [
+    //   {
+    //     slug: "consulting",
+    //     name: "AI Consulting",
+    //     tagline: "Hands-on AI transformation",
+    //     desc: "Our consulting team works hands-on with your organization to identify the highest-impact AI opportunities, design tailored strategies, and implement production-ready solutions — all in weeks, not months.",
+    //     features: [
+    //       { title: "AI Strategy & Roadmap", desc: "We analyze your workflows, identify bottlenecks, and design a phased AI adoption plan that delivers value from day one." },
+    //       { title: "Team Enablement", desc: "We train your teams on AI best practices, build internal capability, and ensure sustainable adoption beyond our engagement." },
+    //       { title: "Rapid Prototyping", desc: "Instead of lengthy reports, we build working prototypes your team can test within a week — proving value before scaling." },
+    //     ],
+    //     link: "https://the-aiadviser.com/",
+    //   },
+    // ],
   },
 };
 

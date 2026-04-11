@@ -9,6 +9,7 @@ interface PressReleaseFormProps {
   onChange: (data: PressReleaseData) => void;
   articleId: string;
   formLang?: "ja" | "en";
+  onImagesChange?: (sectionIdx: number, urls: string[]) => void;
 }
 
 const inputCls = "w-full bg-secondary/30 rounded-xl px-4 py-3 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium placeholder-light-body/40 border border-transparent focus:border-border/30";
@@ -16,7 +17,7 @@ const textareaCls = `${inputCls} resize-y leading-relaxed`;
 const labelCls = "block text-sm font-semibold text-light-heading mb-1.5";
 const sectionLabelCls = "block text-xs font-bold text-light-label uppercase tracking-wider mb-1";
 
-const PressReleaseForm: React.FC<PressReleaseFormProps> = ({ data, onChange, articleId, formLang = "ja" }) => {
+const PressReleaseForm: React.FC<PressReleaseFormProps> = ({ data, onChange, articleId, formLang = "ja", onImagesChange }) => {
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
   const fileRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -64,6 +65,7 @@ const PressReleaseForm: React.FC<PressReleaseFormProps> = ({ data, onChange, art
         newUrls.push(urlData.publicUrl);
       }
       updateSection(idx, { imageUrls: newUrls, imageUrl: newUrls.length > 0 ? newUrls[0] : "" });
+      onImagesChange?.(idx, newUrls);
     } catch {
       toast.error("Failed to upload section images.");
     } finally {
@@ -152,6 +154,7 @@ const PressReleaseForm: React.FC<PressReleaseFormProps> = ({ data, onChange, art
                         const existingUrls = section.imageUrls || (section.imageUrl ? [section.imageUrl] : []);
                         const newUrls = existingUrls.filter((_, i) => i !== imgIdx);
                         updateSection(idx, { imageUrls: newUrls, imageUrl: newUrls.length > 0 ? newUrls[0] : "" });
+                        onImagesChange?.(idx, newUrls);
                       }}
                       className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors shadow-sm z-10"
                     >
@@ -215,19 +218,6 @@ const PressReleaseForm: React.FC<PressReleaseFormProps> = ({ data, onChange, art
         />
       </div>
 
-      {/* ── Note / Disclaimer ── */}
-      <div>
-        <label className={labelCls}>
-          {formLang === "ja" ? "会社・組織情報" : "Company / Organization Info"} <span className="text-light-body font-normal text-xs ml-1">(Format: Name, Location, Website etc.)</span>
-        </label>
-        <textarea
-          placeholder={formLang === "ja" ? "【株式会社UNCHAIN】\n所在地: ...\n代表者: ...\nURL: ..." : "[UNCHAIN Inc.]\nLocation: ...\nURL: ..."}
-          value={data.companiesInfo}
-          onChange={e => set("companiesInfo", e.target.value)}
-          rows={5}
-          className={textareaCls}
-        />
-      </div>
     </div>
   );
 };

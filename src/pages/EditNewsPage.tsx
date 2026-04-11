@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import {
-  Loader2, FileImage, X, FileText, ArrowLeft, Eye, CheckCircle2, Plus,
+  Loader2, FileImage, X, FileText, ArrowLeft, Eye, EyeOff, CheckCircle2, Plus,
   History, Code2, LayoutTemplate, ExternalLink, Upload, Copy, Check,
   Download, Newspaper
 } from "lucide-react";
@@ -79,6 +79,7 @@ const EditNewsPage = () => {
   const [activeTab, setActiveTab] = useState<"ja" | "en">("ja");
   const [showPreview, setShowPreview] = useState(false);
   const [isDraft, setIsDraft] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [externalLanguage, setExternalLanguage] = useState<"ja" | "en">("ja");
 
@@ -177,6 +178,7 @@ const EditNewsPage = () => {
       setExistingImageUrl(article.image_url || "");
       setOriginalImageUrl(article.image_url || "");
       setIsDraft(article.is_draft || false);
+      setIsHidden(article.is_hidden || false);
 
       setLoading(false);
     };
@@ -357,6 +359,41 @@ const EditNewsPage = () => {
       saved_by: user.id,
       snapshot,
     }]);
+  };
+
+  const toggleVisibility = async () => {
+    if (!user || !id) return;
+    const newValue = !isHidden;
+    const { error } = await supabase
+      .from("articles")
+      .update({ is_hidden: newValue })
+      .eq("id", id)
+      .eq("author_id", user.id);
+    if (error) {
+      toast.error(lang === "ja" ? "表示設定の変更に失敗しました。" : "Failed to update visibility.");
+    } else {
+      setIsHidden(newValue);
+      toast.success(newValue
+        ? (lang === "ja" ? "ニュース一覧から非表示にしました。" : "Article hidden from news.")
+        : (lang === "ja" ? "ニュース一覧に表示しました。" : "Article is now visible in news.")
+      );
+    }
+  };
+
+  const handlePRImagesChange = (sectionIdx: number, urls: string[]) => {
+    // Mirror images to both JP and EN press release data so they stay in sync
+    setPressReleaseData(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+    setPressReleaseDataEn(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
   };
 
   const performSave = async (isExplicitPublish: boolean) => {
@@ -650,6 +687,23 @@ const EditNewsPage = () => {
                     <Eye size={16} /> {l.previewBtn}
                   </button>
                 )}
+                {/* Hide / Show toggle */}
+                {!isDraft && (
+                  <button
+                    type="button"
+                    onClick={toggleVisibility}
+                    className={`flex items-center gap-2 py-3 px-5 h-auto rounded-xl border text-sm font-semibold transition-all whitespace-nowrap ${
+                      isHidden
+                        ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "border-border/50 bg-white text-light-body hover:bg-secondary hover:text-foreground"
+                    }`}
+                  >
+                    {isHidden ? <Eye size={16} /> : <EyeOff size={16} />}
+                    {isHidden
+                      ? (lang === "ja" ? "表示する" : "Make Visible")
+                      : (lang === "ja" ? "非表示にする" : "Hide Article")}
+                  </button>
+                )}
                 <button
                   type="submit"
                   form="edit-form"
@@ -871,6 +925,7 @@ const EditNewsPage = () => {
                           onChange={activeTab === "ja" ? setPressReleaseData : setPressReleaseDataEn}
                           articleId={id || ""}
                           formLang={activeTab}
+                          onImagesChange={handlePRImagesChange}
                         />
                       </div>
                     </div>

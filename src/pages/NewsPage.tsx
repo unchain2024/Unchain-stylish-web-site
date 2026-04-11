@@ -135,6 +135,7 @@ const NewsPage = () => {
         .from("articles")
         .select("*")
         .eq("is_draft", false)
+        .eq("is_hidden", false)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -205,6 +206,10 @@ const NewsPage = () => {
   // Apply filters to articles
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
+      // Filter by current site language — article must have a title in the active language
+      if (lang === "ja" && (!article.title || article.title.trim() === "")) return false;
+      if (lang === "en" && (!article.title_en || article.title_en.trim() === "")) return false;
+
       // Check keyword
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -223,7 +228,7 @@ const NewsPage = () => {
         if (!matchesCat) return false;
       }
 
-      // Check language filter
+      // Check explicit language filter (user-controlled toggle)
       if (selectedLanguage === "ja" && (!article.title || article.title.trim() === "")) return false;
       if (selectedLanguage === "en" && (!article.title_en || article.title_en.trim() === "")) return false;
 

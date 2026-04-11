@@ -146,10 +146,6 @@ const PressReleaseRenderer: React.FC<PressReleaseRendererProps> = ({ data, class
         </div>
       )}
 
-      {/* Disclaimer / Release note */}
-      <div className="mt-12 text-[11px] sm:text-xs text-light-body/60 leading-[1.8]">
-        {data.companiesInfo}
-      </div>
     </div>
   );
 };

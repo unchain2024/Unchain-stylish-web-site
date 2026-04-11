@@ -256,6 +256,22 @@ const PublishNewsPage = () => {
     }
   };
 
+  const handlePRImagesChange = (sectionIdx: number, urls: string[]) => {
+    // Mirror images to both JP and EN press release data so they stay in sync
+    setPressReleaseData(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+    setPressReleaseDataEn(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+  };
+
   const handleAddCategory = () => {
     const trimmed = newCategoryInput.trim();
     if (trimmed && !selectedCategories.includes(trimmed)) {
@@ -806,6 +822,7 @@ const PublishNewsPage = () => {
                           onChange={activeTab === "ja" ? setPressReleaseData : setPressReleaseDataEn}
                           articleId={articleId}
                           formLang={activeTab}
+                          onImagesChange={handlePRImagesChange}
                         />
                       </div>
                     </div>

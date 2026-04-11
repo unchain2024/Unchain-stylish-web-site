@@ -3,17 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import {
   Loader2, FileImage, X, FileText, ArrowLeft, Eye, CheckCircle2, Plus,
-  Link2, Download, Code2, LayoutTemplate, ExternalLink, Upload, Copy, Check
+  Download, Code2, LayoutTemplate, ExternalLink, Upload, Copy, Check, Newspaper
 } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import ArticlePreviewModal from "@/components/ArticlePreviewModal";
+import PressReleaseForm from "@/components/PressReleaseForm";
+import { EMPTY_PRESS_RELEASE } from "@/components/PressReleaseRenderer";
+import type { PressReleaseData } from "@/components/PressReleaseRenderer";
 import { getCategoryColor } from "./NewsPage";
 import { useLang } from "@/lib/language";
 
-type ContentMode = "standard" | "custom_html" | "external";
+type ContentMode = "standard" | "custom_html" | "external" | "press_release";
 
 const PublishNewsPage = () => {
   const { lang } = useLang();
@@ -47,6 +50,10 @@ const PublishNewsPage = () => {
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
+  // Press Release fields
+  const [pressReleaseData, setPressReleaseData] = useState<PressReleaseData>(EMPTY_PRESS_RELEASE);
+  const [pressReleaseDataEn, setPressReleaseDataEn] = useState<PressReleaseData>(EMPTY_PRESS_RELEASE);
+
   // Standard header image
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
@@ -60,7 +67,18 @@ const PublishNewsPage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [externalLanguage, setExternalLanguage] = useState<"ja" | "en">("ja");
 
-  const [draftId, setDraftId] = useState<string | null>(null);
+  const [articleId] = useState(() => {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  });
+  
+  const [hasInserted, setHasInserted] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
   const additionalMediaRef = useRef<HTMLInputElement>(null);
@@ -117,6 +135,13 @@ const PublishNewsPage = () => {
     }
   }, [contentMode]);
 
+  // Press release: auto-set a default title from pressReleaseData.title
+  useEffect(() => {
+    if (contentMode === "press_release" && pressReleaseData.title && !title) {
+      setTitle(pressReleaseData.title);
+    }
+  }, [pressReleaseData.title, contentMode]);
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if ((title || titleEn || description || content || mediaFile) && !submitting) {
@@ -160,7 +185,7 @@ const PublishNewsPage = () => {
     for (const file of files) {
       const fileExt = file.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
+      const filePath = `${articleId}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("article-media")
@@ -231,6 +256,22 @@ const PublishNewsPage = () => {
     }
   };
 
+  const handlePRImagesChange = (sectionIdx: number, urls: string[]) => {
+    // Mirror images to both JP and EN press release data so they stay in sync
+    setPressReleaseData(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+    setPressReleaseDataEn(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+  };
+
   const handleAddCategory = () => {
     const trimmed = newCategoryInput.trim();
     if (trimmed && !selectedCategories.includes(trimmed)) {
@@ -286,7 +327,7 @@ const PublishNewsPage = () => {
       if (mediaFile && !uploadedImageUrl && contentMode === "standard") {
         const fileExt = mediaFile.name.split(".").pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
+        const filePath = `${articleId}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from("article-media")
@@ -302,6 +343,15 @@ const PublishNewsPage = () => {
         setUploadedImageUrl(mediaUrl);
       }
 
+      // Press release: sync title/desc from structured data, serialize to content
+      if (contentMode === "press_release") {
+        const prTitle = pressReleaseData.subtitle || "";
+        const prTitleEn = pressReleaseDataEn.subtitle || "";
+        
+        // Note: Title and Description are now handled directly via the standard inputs,
+        // so we do not overwrite them here with pressReleaseData fields anymore.
+      }
+
       // If external mode, only save the selected language fields
       const finalTitle = contentMode === "external" ? (externalLanguage === "ja" ? title : "") : title;
       const finalDesc = contentMode === "external" ? (externalLanguage === "ja" ? description : "") : description;
@@ -309,19 +359,26 @@ const PublishNewsPage = () => {
       const finalDescEn = contentMode === "external" ? (externalLanguage === "en" ? descriptionEn : "") : descriptionEn;
 
       const payload: Record<string, any> = {
+        id: articleId,
         category: selectedCategories.join(", "),
         title: finalTitle,
         description: finalDesc,
-        content: contentMode === "external" ? "" : content,
+        content: contentMode === "external" ? ""
+          : contentMode === "press_release" ? JSON.stringify(pressReleaseData)
+          : content,
         title_en: finalTitleEn,
         description_en: finalDescEn,
-        content_en: contentMode === "external" ? "" : contentEn,
+        content_en: contentMode === "external" ? ""
+          : contentMode === "press_release" ? JSON.stringify(pressReleaseDataEn)
+          : contentEn,
         image_url: mediaUrl,
         author_first_name: firstName,
         author_last_name: lastName,
         author_id: user.id,
         is_draft: !isExplicitPublish,
-        content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+        content_type: contentMode === "custom_html" ? "custom_html"
+          : contentMode === "press_release" ? "press_release"
+          : "standard",
         custom_html: contentMode === "custom_html" ? customHtml : null,
         custom_html_en: contentMode === "custom_html" ? customHtmlEn : null,
         additional_media: contentMode === "custom_html" ? additionalMedia : [],
@@ -333,20 +390,20 @@ const PublishNewsPage = () => {
         payload.created_at = externalPublishedDate;
       }
 
-      if (draftId) {
+      if (hasInserted) {
+        // Exclude ID from update payload to avoid any constraint issues
+        const { id, ...updatePayload } = payload;
         const { error: updateError } = await supabase
           .from("articles")
-          .update(payload)
-          .eq("id", draftId);
+          .update(updatePayload)
+          .eq("id", articleId);
         if (updateError) throw updateError;
       } else {
-        const { data, error: insertError } = await supabase
+        const { error: insertError } = await supabase
           .from("articles")
-          .insert([payload])
-          .select("id")
-          .single();
+          .insert([payload]);
         if (insertError) throw insertError;
-        if (data) setDraftId(data.id);
+        setHasInserted(true);
       }
 
       setLastSavedAt(new Date());
@@ -375,14 +432,14 @@ const PublishNewsPage = () => {
     if (!mediaFile && uploadedImageUrl) previewUrl = uploadedImageUrl;
 
     return {
-      title: activeTab === "ja" ? title : titleEn || title,
-      description: activeTab === "ja" ? description : descriptionEn || description,
-      content: activeTab === "ja" ? content : contentEn || content,
+      title: contentMode === "press_release" ? (pressReleaseData.title || title) : (activeTab === "ja" ? title : titleEn || title),
+      description: contentMode === "press_release" ? (pressReleaseData.leadParagraph?.substring(0, 200) || description) : (activeTab === "ja" ? description : descriptionEn || description),
+      content: contentMode === "press_release" ? JSON.stringify(pressReleaseData) : (activeTab === "ja" ? content : contentEn || content),
       category: selectedCategories.join(", "),
       image_url: previewUrl,
       author_first_name: firstName,
       author_last_name: lastName,
-      content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+      content_type: contentMode === "press_release" ? "press_release" : contentMode === "custom_html" ? "custom_html" : "standard",
       custom_html: activeTab === "ja" ? customHtml : customHtmlEn || customHtml,
     };
   };
@@ -463,6 +520,8 @@ const PublishNewsPage = () => {
   };
 
   const l = labels[lang];
+  const activeLabelLang = contentMode === "external" ? externalLanguage : activeTab;
+  const lActive = labels[activeLabelLang] || l;
 
   const modeOptions: { value: ContentMode; label: string; icon: React.ReactNode; desc: string }[] = [
     {
@@ -470,6 +529,12 @@ const PublishNewsPage = () => {
       icon: <LayoutTemplate className="w-5 h-5" />,
       label: lang === "ja" ? "標準テンプレート" : "Standard Template",
       desc: lang === "ja" ? "テキストと1枚の画像" : "Text content with one header image",
+    },
+    {
+      value: "press_release",
+      icon: <Newspaper className="w-5 h-5" />,
+      label: lang === "ja" ? "プレスリリース" : "Press Release",
+      desc: lang === "ja" ? "正式なプレスリリース形式" : "Formal press release format",
     },
     {
       value: "custom_html",
@@ -532,7 +597,7 @@ const PublishNewsPage = () => {
                 <button
                   type="submit"
                   form="publish-form"
-                  disabled={submitting || (!title && !titleEn && contentMode !== "external")}
+                  disabled={submitting || (!title && !titleEn && contentMode !== "external" && contentMode !== "press_release")}
                   className="btn-primary py-3 px-6 h-auto disabled:opacity-50 whitespace-nowrap"
                 >
                   {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText size={18} />} {l.publishBtn}
@@ -699,11 +764,11 @@ const PublishNewsPage = () => {
                   {/* Title */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
-                      {l.titleLabel}
+                      {lActive.titleLabel}
                     </label>
                     <input
                       type="text"
-                      placeholder={l.titlePlaceholder}
+                      placeholder={lActive.titlePlaceholder}
                       required={contentMode !== "external" ? (activeTab === "ja") : true}
                       value={contentMode === "external" ? (externalLanguage === "ja" ? title : titleEn) : (activeTab === "ja" ? title : titleEn)}
                       onChange={(e) => contentMode === "external" 
@@ -716,10 +781,10 @@ const PublishNewsPage = () => {
                   {/* Description */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
-                      {l.descLabel}
+                      {lActive.descLabel}
                     </label>
                     <textarea
-                      placeholder={l.descPlaceholder}
+                      placeholder={lActive.descPlaceholder}
                       value={contentMode === "external" ? (externalLanguage === "ja" ? description : descriptionEn) : (activeTab === "ja" ? description : descriptionEn)}
                       onChange={(e) => contentMode === "external"
                         ? (externalLanguage === "ja" ? setDescription(e.target.value) : setDescriptionEn(e.target.value))
@@ -732,15 +797,34 @@ const PublishNewsPage = () => {
                   {/* Standard: content textarea */}
                   {contentMode === "standard" && (
                     <div className="space-y-2">
-                      <label className="text-sm font-semibold text-light-heading ml-1">{l.contentLabel}</label>
+                      <label className="text-sm font-semibold text-light-heading ml-1">{lActive.contentLabel}</label>
                       <textarea
-                        placeholder={l.contentPlaceholder}
+                        placeholder={lActive.contentPlaceholder}
                         required={activeTab === "ja"}
                         value={activeTab === "ja" ? content : contentEn}
                         onChange={(e) => activeTab === "ja" ? setContent(e.target.value) : setContentEn(e.target.value)}
                         rows={12}
                         className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-y leading-relaxed placeholder-light-body/40"
                       />
+                    </div>
+                  )}
+
+                  {/* Press Release: structured form */}
+                  {contentMode === "press_release" && (
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-light-heading ml-1 flex items-center gap-2">
+                        <Newspaper className="w-4 h-4 text-primary" />
+                        {activeTab === "ja" ? "プレスリリース詳細 (JP)" : "Press Release Details (EN)"}
+                      </label>
+                      <div className="border border-border/50 rounded-xl p-6 bg-white/50">
+                        <PressReleaseForm
+                          data={activeTab === "ja" ? pressReleaseData : pressReleaseDataEn}
+                          onChange={activeTab === "ja" ? setPressReleaseData : setPressReleaseDataEn}
+                          articleId={articleId}
+                          formLang={activeTab}
+                          onImagesChange={handlePRImagesChange}
+                        />
+                      </div>
                     </div>
                   )}
 

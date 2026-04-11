@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import {
-  Loader2, FileImage, X, FileText, ArrowLeft, Eye, CheckCircle2, Plus,
+  Loader2, FileImage, X, FileText, ArrowLeft, Eye, EyeOff, CheckCircle2, Plus,
   History, Code2, LayoutTemplate, ExternalLink, Upload, Copy, Check,
-  Download
+  Download, Newspaper
 } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
@@ -13,10 +13,13 @@ import ScrollReveal from "@/components/ScrollReveal";
 import ArticlePreviewModal from "@/components/ArticlePreviewModal";
 import ArticleHistoryModal from "@/components/ArticleHistoryModal";
 import ArticleDiffModal from "@/components/ArticleDiffModal";
+import PressReleaseForm from "@/components/PressReleaseForm";
+import { EMPTY_PRESS_RELEASE, parsePressRelease } from "@/components/PressReleaseRenderer";
+import type { PressReleaseData } from "@/components/PressReleaseRenderer";
 import { getCategoryColor } from "./NewsPage";
 import { useLang } from "@/lib/language";
 
-type ContentMode = "standard" | "custom_html" | "external";
+type ContentMode = "standard" | "custom_html" | "external" | "press_release";
 
 interface ArticleVersion {
   id: string;
@@ -58,6 +61,10 @@ const EditNewsPage = () => {
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
+  // Press Release
+  const [pressReleaseData, setPressReleaseData] = useState<PressReleaseData>(EMPTY_PRESS_RELEASE);
+  const [pressReleaseDataEn, setPressReleaseDataEn] = useState<PressReleaseData>(EMPTY_PRESS_RELEASE);
+
   // Standard media
   const [existingImageUrl, setExistingImageUrl] = useState("");
   const [originalImageUrl, setOriginalImageUrl] = useState("");
@@ -72,6 +79,7 @@ const EditNewsPage = () => {
   const [activeTab, setActiveTab] = useState<"ja" | "en">("ja");
   const [showPreview, setShowPreview] = useState(false);
   const [isDraft, setIsDraft] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [externalLanguage, setExternalLanguage] = useState<"ja" | "en">("ja");
 
@@ -152,6 +160,12 @@ const EditNewsPage = () => {
         } else {
           setExternalLanguage("ja");
         }
+      } else if (article.content_type === "press_release") {
+        setContentMode("press_release");
+        const parsed = parsePressRelease(article.content || "");
+        if (parsed) setPressReleaseData(parsed);
+        const parsedEn = parsePressRelease(article.content_en || "");
+        if (parsedEn) setPressReleaseDataEn(parsedEn);
       } else if (article.content_type === "custom_html") {
         setContentMode("custom_html");
         setCustomHtml(article.custom_html || "");
@@ -164,6 +178,7 @@ const EditNewsPage = () => {
       setExistingImageUrl(article.image_url || "");
       setOriginalImageUrl(article.image_url || "");
       setIsDraft(article.is_draft || false);
+      setIsHidden(article.is_hidden || false);
 
       setLoading(false);
     };
@@ -237,7 +252,7 @@ const EditNewsPage = () => {
     for (const file of files) {
       const fileExt = file.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
+      const filePath = `${id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("article-media")
@@ -346,6 +361,41 @@ const EditNewsPage = () => {
     }]);
   };
 
+  const toggleVisibility = async () => {
+    if (!user || !id) return;
+    const newValue = !isHidden;
+    const { error } = await supabase
+      .from("articles")
+      .update({ is_hidden: newValue })
+      .eq("id", id)
+      .eq("author_id", user.id);
+    if (error) {
+      toast.error(lang === "ja" ? "表示設定の変更に失敗しました。" : "Failed to update visibility.");
+    } else {
+      setIsHidden(newValue);
+      toast.success(newValue
+        ? (lang === "ja" ? "ニュース一覧から非表示にしました。" : "Article hidden from news.")
+        : (lang === "ja" ? "ニュース一覧に表示しました。" : "Article is now visible in news.")
+      );
+    }
+  };
+
+  const handlePRImagesChange = (sectionIdx: number, urls: string[]) => {
+    // Mirror images to both JP and EN press release data so they stay in sync
+    setPressReleaseData(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+    setPressReleaseDataEn(prev => ({
+      ...prev,
+      sections: prev.sections.map((s, i) =>
+        i === sectionIdx ? { ...s, imageUrls: urls, imageUrl: urls[0] || "" } : s
+      ),
+    }));
+  };
+
   const performSave = async (isExplicitPublish: boolean) => {
     if (!user) return false;
 
@@ -379,7 +429,7 @@ const EditNewsPage = () => {
       if (mediaFile && !uploadedImageUrl && contentMode === "standard") {
         const fileExt = mediaFile.name.split(".").pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
+        const filePath = `${id}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from("article-media")
@@ -404,13 +454,19 @@ const EditNewsPage = () => {
         category: selectedCategories.join(", "),
         title: finalTitle,
         description: finalDesc,
-        content: contentMode === "external" ? "" : content,
+        content: contentMode === "external" ? ""
+          : contentMode === "press_release" ? JSON.stringify(pressReleaseData)
+          : content,
         title_en: finalTitleEn,
         description_en: finalDescEn,
-        content_en: contentMode === "external" ? "" : contentEn,
+        content_en: contentMode === "external" ? ""
+          : contentMode === "press_release" ? JSON.stringify(pressReleaseDataEn)
+          : contentEn,
         image_url: contentMode === "standard" ? mediaUrl : null,
         is_draft: !isExplicitPublish ? isDraft : false,
-        content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+        content_type: contentMode === "custom_html" ? "custom_html"
+          : contentMode === "press_release" ? "press_release"
+          : "standard",
         custom_html: contentMode === "custom_html" ? customHtml : null,
         custom_html_en: contentMode === "custom_html" ? customHtmlEn : null,
         additional_media: contentMode === "custom_html" ? additionalMedia : [],
@@ -474,14 +530,16 @@ const EditNewsPage = () => {
     if (!mediaFile && uploadedImageUrl) previewUrl = uploadedImageUrl;
 
     return {
-      title: activeTab === "ja" ? title : titleEn || title,
-      description: activeTab === "ja" ? description : descriptionEn || description,
-      content: activeTab === "ja" ? content : contentEn || content,
+      title: contentMode === "external" ? (externalLanguage === "ja" ? title : titleEn || title) : (activeTab === "ja" ? title : titleEn || title),
+      description: contentMode === "external" ? (externalLanguage === "ja" ? description : descriptionEn || description) : (activeTab === "ja" ? description : descriptionEn || description),
+      content: contentMode === "press_release" 
+        ? JSON.stringify(activeTab === "ja" ? pressReleaseData : pressReleaseDataEn) 
+        : (activeTab === "ja" ? content : contentEn || content),
       category: selectedCategories.join(", "),
       image_url: previewUrl,
       author_first_name: firstName,
       author_last_name: lastName,
-      content_type: contentMode === "custom_html" ? "custom_html" : "standard",
+      content_type: contentMode === "press_release" ? "press_release" : contentMode === "custom_html" ? "custom_html" : "standard",
       custom_html: activeTab === "ja" ? customHtml : customHtmlEn || customHtml,
     };
   };
@@ -570,9 +628,13 @@ const EditNewsPage = () => {
 
   const modeOptions: { value: ContentMode; label: string; icon: React.ReactNode }[] = [
     { value: "standard", icon: <LayoutTemplate className="w-4 h-4" />, label: lang === "ja" ? "標準" : "Standard" },
+    { value: "press_release", icon: <Newspaper className="w-4 h-4" />, label: lang === "ja" ? "プレスリリース" : "Press Release" },
     { value: "custom_html", icon: <Code2 className="w-4 h-4" />, label: lang === "ja" ? "カスタム HTML" : "Custom HTML" },
     { value: "external", icon: <ExternalLink className="w-4 h-4" />, label: lang === "ja" ? "外部リンク" : "External Link" },
   ];
+
+  const activeLabelLang = contentMode === "external" ? externalLanguage : activeTab;
+  const lActive = labels[activeLabelLang] || l;
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
@@ -625,10 +687,27 @@ const EditNewsPage = () => {
                     <Eye size={16} /> {l.previewBtn}
                   </button>
                 )}
+                {/* Hide / Show toggle */}
+                {!isDraft && (
+                  <button
+                    type="button"
+                    onClick={toggleVisibility}
+                    className={`flex items-center gap-2 py-3 px-5 h-auto rounded-xl border text-sm font-semibold transition-all whitespace-nowrap ${
+                      isHidden
+                        ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "border-border/50 bg-white text-light-body hover:bg-secondary hover:text-foreground"
+                    }`}
+                  >
+                    {isHidden ? <Eye size={16} /> : <EyeOff size={16} />}
+                    {isHidden
+                      ? (lang === "ja" ? "表示する" : "Make Visible")
+                      : (lang === "ja" ? "非表示にする" : "Hide Article")}
+                  </button>
+                )}
                 <button
                   type="submit"
                   form="edit-form"
-                  disabled={submitting || (!title && !titleEn && contentMode !== "external")}
+                  disabled={submitting || (!title && !titleEn && contentMode !== "external" && contentMode !== "press_release")}
                   className="btn-primary py-3 px-6 h-auto disabled:opacity-50 whitespace-nowrap"
                 >
                   {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText size={18} />} {l.publishBtn}
@@ -788,11 +867,11 @@ const EditNewsPage = () => {
                   {/* Title */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
-                      {l.titleLabel}
+                      {lActive.titleLabel}
                     </label>
                     <input
                       type="text"
-                      placeholder={l.titlePlaceholder}
+                      placeholder={lActive.titlePlaceholder}
                       required={contentMode !== "external" ? (activeTab === "ja") : true}
                       value={contentMode === "external" ? (externalLanguage === "ja" ? title : titleEn) : (activeTab === "ja" ? title : titleEn)}
                       onChange={(e) => contentMode === "external" 
@@ -805,10 +884,10 @@ const EditNewsPage = () => {
                   {/* Description */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-light-heading ml-1">
-                      {l.descLabel}
+                      {lActive.descLabel}
                     </label>
                     <textarea
-                      placeholder={l.descPlaceholder}
+                      placeholder={lActive.descPlaceholder}
                       value={contentMode === "external" ? (externalLanguage === "ja" ? description : descriptionEn) : (activeTab === "ja" ? description : descriptionEn)}
                       onChange={(e) => contentMode === "external"
                         ? (externalLanguage === "ja" ? setDescription(e.target.value) : setDescriptionEn(e.target.value))
@@ -821,15 +900,34 @@ const EditNewsPage = () => {
                   {/* Standard: content */}
                   {contentMode === "standard" && (
                     <div className="space-y-2">
-                      <label className="text-sm font-semibold text-light-heading ml-1">{l.contentLabel}</label>
-                      <textarea
-                        placeholder={l.contentPlaceholder}
-                        required={activeTab === "ja"}
-                        value={activeTab === "ja" ? content : contentEn}
-                        onChange={(e) => activeTab === "ja" ? setContent(e.target.value) : setContentEn(e.target.value)}
-                        rows={12}
-                        className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-y leading-relaxed placeholder-light-body/40"
-                      />
+                       <label className="text-sm font-semibold text-light-heading ml-1">{lActive.contentLabel}</label>
+                       <textarea
+                         placeholder={lActive.contentPlaceholder}
+                         required={activeTab === "ja"}
+                         value={activeTab === "ja" ? content : contentEn}
+                         onChange={(e) => activeTab === "ja" ? setContent(e.target.value) : setContentEn(e.target.value)}
+                         rows={12}
+                         className="w-full bg-secondary/30 rounded-xl px-5 py-4 text-light-heading focus:outline-none focus:bg-secondary/60 transition-colors font-medium resize-y leading-relaxed placeholder-light-body/40"
+                       />
+                    </div>
+                  )}
+
+                  {/* Press Release: structured form */}
+                  {contentMode === "press_release" && (
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-light-heading ml-1 flex items-center gap-2">
+                        <Newspaper className="w-4 h-4 text-primary" />
+                        {activeTab === "ja" ? "プレスリリース詳細 (JP)" : "Press Release Details (EN)"}
+                      </label>
+                      <div className="border border-border/50 rounded-xl p-6 bg-white/50">
+                        <PressReleaseForm
+                          data={activeTab === "ja" ? pressReleaseData : pressReleaseDataEn}
+                          onChange={activeTab === "ja" ? setPressReleaseData : setPressReleaseDataEn}
+                          articleId={id || ""}
+                          formLang={activeTab}
+                          onImagesChange={handlePRImagesChange}
+                        />
+                      </div>
                     </div>
                   )}
 

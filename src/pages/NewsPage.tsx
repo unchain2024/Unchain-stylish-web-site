@@ -6,6 +6,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 import { supabase } from "@/lib/supabase";
 import { Helmet } from "react-helmet-async";
+import PressReleaseRenderer, { parsePressRelease } from "@/components/PressReleaseRenderer";
 
 const heroText = {
   ja: {
@@ -134,6 +135,7 @@ const NewsPage = () => {
         .from("articles")
         .select("*")
         .eq("is_draft", false)
+        .eq("is_hidden", false)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -204,6 +206,10 @@ const NewsPage = () => {
   // Apply filters to articles
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
+      // Filter by current site language — article must have a title in the active language
+      if (lang === "ja" && (!article.title || article.title.trim() === "")) return false;
+      if (lang === "en" && (!article.title_en || article.title_en.trim() === "")) return false;
+
       // Check keyword
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -222,7 +228,7 @@ const NewsPage = () => {
         if (!matchesCat) return false;
       }
 
-      // Check language filter
+      // Check explicit language filter (user-controlled toggle)
       if (selectedLanguage === "ja" && (!article.title || article.title.trim() === "")) return false;
       if (selectedLanguage === "en" && (!article.title_en || article.title_en.trim() === "")) return false;
 
@@ -505,8 +511,18 @@ const NewsPage = () => {
               </div>
             )}
 
-            {/* Content — standard text or custom HTML */}
-            {selectedArticle.content_type === "custom_html" ? (
+            {/* Content — standard text, custom HTML, or press release */}
+            {selectedArticle.content_type === "press_release" ? (
+              (() => {
+                const targetContent = lang === "en" && selectedArticle.content_en 
+                  ? selectedArticle.content_en 
+                  : selectedArticle.content || "";
+                const prData = parsePressRelease(targetContent);
+                return prData
+                  ? <PressReleaseRenderer data={prData} className="" />
+                  : <p className="text-light-body/50 italic">No press release content available.</p>;
+              })()
+            ) : selectedArticle.content_type === "custom_html" ? (
               <div
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: getLocalizedCustomHtml(selectedArticle, lang) || "<p><em>No content available.</em></p>" }}

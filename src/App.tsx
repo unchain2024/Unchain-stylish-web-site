@@ -19,6 +19,11 @@ import Login from "./pages/Login";
 import PublishNewsPage from "./pages/PublishNewsPage";
 import EditNewsListPage from "./pages/EditNewsListPage";
 import EditNewsPage from "./pages/EditNewsPage";
+import BlogPage from "./pages/BlogPage";
+import PublishBlogPage from "./pages/PublishBlogPage";
+import EditBlogListPage from "./pages/EditBlogListPage";
+import EditBlogPage from "./pages/EditBlogPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +39,7 @@ const pageRoutes = (
     <Route index element={<Index />} />
     <Route path="about" element={<AboutPage />} />
     <Route path="news" element={<NewsPage />} />
+    <Route path="blog" element={<BlogPage />} />
     <Route path="career" element={<CareerPage />} />
     <Route path="contact" element={<ContactPage />} />
     <Route path="solutions" element={<SolutionsPage />} />
@@ -62,6 +68,10 @@ const App = () => (
             <Route path="publish" element={<PublishNewsPage />} />
             <Route path="edit" element={<EditNewsListPage />} />
             <Route path="edit/:id" element={<EditNewsPage />} />
+            <Route path="admin" element={<AdminDashboardPage />} />
+            <Route path="publish-blog" element={<PublishBlogPage />} />
+            <Route path="edit-blog" element={<EditBlogListPage />} />
+            <Route path="edit-blog/:id" element={<EditBlogPage />} />
           </Route>
 
           {/* Admin Routes */}
@@ -70,6 +80,10 @@ const App = () => (
             <Route path="publish" element={<PublishNewsPage />} />
             <Route path="edit" element={<EditNewsListPage />} />
             <Route path="edit/:id" element={<EditNewsPage />} />
+            <Route path="admin" element={<AdminDashboardPage />} />
+            <Route path="publish-blog" element={<PublishBlogPage />} />
+            <Route path="edit-blog" element={<EditBlogListPage />} />
+            <Route path="edit-blog/:id" element={<EditBlogPage />} />
           </Route>
 
           {/* 404 */}

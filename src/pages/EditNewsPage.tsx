@@ -136,7 +136,7 @@ const EditNewsPage = () => {
 
       if (error || !article) {
         toast.error("Article not found or access denied.");
-        navigate("/edit");
+        navigate("/admin");
         return;
       }
 
@@ -644,7 +644,7 @@ const EditNewsPage = () => {
         <div className="max-w-4xl mx-auto relative z-10">
           <ScrollReveal>
             <button
-              onClick={() => navigate("/edit")}
+              onClick={() => navigate("/admin")}
               className="flex items-center gap-2 text-light-body hover:text-primary mb-8 text-sm font-medium transition-all group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {l.back}

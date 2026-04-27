@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
@@ -10,13 +11,13 @@ import { useLang } from "@/lib/language";
 const heroText = {
   ja: {
     label: "ソリューション",
-    heading: "ミッションに仕えるAI",
+    heading: "UNCHAINはどのような\nAIソリューションを提供しますか？",
     description:
       "AIが人に寄り添うとき、組織も個人も、本当に成し遂げたいことをUNCHAINできるようになります。",
   },
   en: {
     label: "SOLUTIONS",
-    heading: "AI that serves\nyour mission",
+    heading: "What AI Solutions\nDoes UNCHAIN Provide?",
     description:
       "When AI stands by people, it enables organizations and individuals to UNCHAIN what they truly set out to achieve.",
   },
@@ -159,8 +160,19 @@ const SolutionsPage = () => {
     }
   }, [searchParams]);
 
+  const faqSchemaData = Object.values(businessData).flat().map((item) => ({
+    question: `What is ${item.name}?`,
+    answer: item.desc,
+  }));
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={`${hero.label} | UNCHAIN`} 
+        description={hero.description}
+        type="faq"
+        faqData={faqSchemaData}
+      />
       <Navigation />
 
       {/* Hero */}

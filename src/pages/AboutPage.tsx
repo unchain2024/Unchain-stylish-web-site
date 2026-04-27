@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 
-import founderSunwoo from "@/assets/founder-sunwoo.jpeg";
-import founderLui from "@/assets/founder-lui.png";
-import founderTaizo from "@/assets/founder-taizo.png";
+import founderSunwoo from "@/assets/founder-sunwoo.webp";
+import founderLui from "@/assets/founder-lui.webp";
+import founderTaizo from "@/assets/founder-taizo.webp";
 
 const founderPhotos = [
   { src: founderSunwoo, className: "w-full h-full object-cover object-top" },
@@ -170,6 +171,7 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title={`${hero.label} | UNCHAIN`} description={hero.description} organization />
       <Navigation />
 
       {/* Hero */}

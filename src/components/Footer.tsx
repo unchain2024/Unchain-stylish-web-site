@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Linkedin } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
-import logoWhite from "@/assets/logo-white.png";
+import logoWhite from "@/assets/logo-white.webp";
 
 const footerLinks = {
   ja: [

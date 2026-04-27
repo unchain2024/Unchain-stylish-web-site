@@ -14,6 +14,7 @@ const navItems = {
     { label: "会社概要", href: "/about" },
     { label: "ソリューション", href: "/solutions" },
     { label: "ニュース", href: "/news" },
+    { label: "ブログ", href: "/blog" },
     { label: "採用情報", href: "/career" },
     { label: "お問い合わせ", href: "/contact" },
   ],
@@ -21,6 +22,7 @@ const navItems = {
     { label: "ABOUT US", href: "/about" },
     { label: "SOLUTIONS", href: "/solutions" },
     { label: "NEWS", href: "/news" },
+    { label: "BLOG", href: "/blog" },
     { label: "CAREER", href: "/career" },
     { label: "CONTACT US", href: "/contact" },
   ],
@@ -121,8 +123,8 @@ const Navigation = () => {
           {user && (
             <>
               <Link
-                to="/edit"
-                className={`text-[15px] font-bold transition-colors duration-500 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-300 hover:bg-emerald-200`}
+                to="/admin"
+                className={`text-[13px] font-bold transition-colors duration-500 bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/30 hover:bg-primary/20`}
               >
                 ADMIN
               </Link>
@@ -187,9 +189,9 @@ const Navigation = () => {
               {user && (
                 <>
                   <Link
-                    to="/edit"
+                    to="/admin"
                     onClick={() => setMobileOpen(false)}
-                    className="text-lg text-emerald-600 font-bold py-2"
+                    className="text-lg text-primary font-bold py-2"
                   >
                     Admin Dashboard
                   </Link>

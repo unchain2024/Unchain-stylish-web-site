@@ -15,6 +15,7 @@ interface ArticleHistoryModalProps {
   onClose: () => void;
   articleId: string;
   onCompare: (versionA: ArticleVersion, versionB: ArticleVersion) => void;
+  versionTable?: string;
 }
 
 const ArticleHistoryModal: React.FC<ArticleHistoryModalProps> = ({
@@ -22,6 +23,7 @@ const ArticleHistoryModal: React.FC<ArticleHistoryModalProps> = ({
   onClose,
   articleId,
   onCompare,
+  versionTable = "article_versions",
 }) => {
   const [versions, setVersions] = useState<ArticleVersion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,7 @@ const ArticleHistoryModal: React.FC<ArticleHistoryModalProps> = ({
     setSelectedVersions([]);
     const fetchVersions = async () => {
       const { data, error } = await supabase
-        .from("article_versions")
+        .from(versionTable)
         .select("*")
         .eq("article_id", articleId)
         .order("saved_at", { ascending: false })

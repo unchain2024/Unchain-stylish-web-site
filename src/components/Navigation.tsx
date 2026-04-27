@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useLang } from "@/lib/language";
 import AnnouncementBar from "./AnnouncementBar";
-import logoBlack from "@/assets/logo-black.png";
-import logoWhite from "@/assets/logo-white.png";
+import logoBlack from "@/assets/logo-black.webp";
+import logoWhite from "@/assets/logo-white.webp";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 

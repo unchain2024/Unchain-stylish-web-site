@@ -6,6 +6,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 import { supabase } from "@/lib/supabase";
 import { Helmet } from "react-helmet-async";
+import SEO from "@/components/SEO";
 import PressReleaseRenderer, { parsePressRelease } from "@/components/PressReleaseRenderer";
 import { getCategoryColor } from "./NewsPage";
 
@@ -204,9 +205,18 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden font-mono">
-      <Helmet>
-        <title>{currentTitle}</title>
-      </Helmet>
+      {!selectedArticle ? (
+        <SEO title={currentTitle} description={hero.description} />
+      ) : (
+        <SEO 
+          title={currentTitle} 
+          description={getLocalized(selectedArticle, "description", lang)}
+          type="article"
+          image={selectedArticle.image_url}
+          author={{ name: `${selectedArticle.author_first_name} ${selectedArticle.author_last_name}` }}
+          datePublished={selectedArticle.created_at}
+        />
+      )}
       <Navigation />
 
       <div className={`transition-opacity duration-300 relative z-10 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
@@ -435,15 +445,19 @@ const BlogPage = () => {
                 </p>
               )}
 
-              <div className="mt-8 flex items-center gap-4">
-                <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center heading-4 text-light-heading">
+              <div className="mt-8 flex items-center gap-4 bg-secondary/30 p-6 rounded-2xl border border-border/50">
+                <div className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center heading-3 text-light-heading shadow-sm">
                   {selectedArticle.author_first_name?.charAt(0) || "U"}
                 </div>
                 <div className="body text-light-body">
-                  <div className="text-light-heading font-bold">
+                  <div className="text-light-heading font-bold text-lg flex items-center gap-2">
                     {selectedArticle.author_first_name} {selectedArticle.author_last_name}
                   </div>
-                  <div className="text-sm">Writer</div>
+                  <div className="text-sm font-medium mt-0.5">Contributor at UNCHAIN</div>
+                  <div className="text-xs mt-2 text-light-body/80 max-w-xl">
+                    Our authors are experts in AI, organizational intelligence, and enterprise solutions. 
+                    They share insights drawn from hands-on experience driving transformation.
+                  </div>
                 </div>
               </div>
             </div>

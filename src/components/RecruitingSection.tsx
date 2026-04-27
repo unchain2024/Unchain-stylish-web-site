@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import r1 from "@/assets/recruiting-1.png";
-import r2 from "@/assets/recruiting-2.png";
-import r3 from "@/assets/recruiting-3.png";
-import r4 from "@/assets/recruiting-4.png";
-import r5 from "@/assets/recruiting-5.png";
-import r6 from "@/assets/recruiting-6.png";
-import r7 from "@/assets/recruiting-7.png";
-import r8 from "@/assets/recruiting-8.png";
+import r1 from "@/assets/recruiting-1.webp";
+import r2 from "@/assets/recruiting-2.webp";
+import r3 from "@/assets/recruiting-3.webp";
+import r4 from "@/assets/recruiting-4.webp";
+import r5 from "@/assets/recruiting-5.webp";
+import r6 from "@/assets/recruiting-6.webp";
+import r7 from "@/assets/recruiting-7.webp";
+import r8 from "@/assets/recruiting-8.webp";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
 
@@ -77,7 +77,7 @@ const RecruitingSection = () => {
                   >
                     {[...leftPhotos, ...leftPhotos].map((src, i) => (
                       <div key={i} className="aspect-[4/4.5] rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover object-top" />
+                        <img src={src} alt={`Team ${i + 1}`} loading="lazy" className="w-full h-full object-cover object-top" />
                       </div>
                     ))}
                   </motion.div>
@@ -92,7 +92,7 @@ const RecruitingSection = () => {
                   >
                     {[...rightPhotos, ...rightPhotos].map((src, i) => (
                       <div key={i} className="aspect-[4/4.5] rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={src} alt={`Team ${i + 1}`} className="w-full h-full object-cover object-top" />
+                        <img src={src} alt={`Team ${i + 1}`} loading="lazy" className="w-full h-full object-cover object-top" />
                       </div>
                     ))}
                   </motion.div>

@@ -48,34 +48,21 @@ const productsData: Record<string, Record<string, Product[]>> = {
         ],
         link: "https://www.the-neuron.com/ja",
       },
+    ],
+    "AI DX": [
       {
-        slug: "asguard",
-        name: "ASGUARD",
-        tagline: "AIセキュリティ",
-        desc: "ASGUARDはAI搭載のセキュリティプラットフォームです。高度な脅威検出、リアルタイム監視、コンプライアンス自動化を組み合わせ、進化するサイバー脅威から組織のデジタル資産を守ります。",
+        slug: "consulting",
+        name: "AIコンサルティング",
+        tagline: "ハンズオンAIトランスフォーメーション",
+        desc: "コンサルティングチームが組織と直接協力し、最もインパクトの高いAI機会を特定、カスタマイズされた戦略を設計、本番対応ソリューションを実装します。すべて数ヶ月ではなく数週間で。",
         features: [
-          { title: "脅威検出", desc: "AIがリアルタイムで脅威を特定し、自動的に対応。従来のセキュリティツールでは見逃される高度な攻撃も検出します。" },
-          { title: "コンプライアンス自動化", desc: "セキュリティ監査と規制準拠を自動化。業界標準への対応を継続的に監視し、レポートを生成します。" },
-          { title: "データ保護", desc: "エンドツーエンドの暗号化とデータ漏洩防止機能で、機密情報を包括的に保護します。" },
-          { title: "継続的モニタリング", desc: "24時間365日のAI監視により、異常を即座に検出。インシデント発生時には即座にアラートを送信します。" },
+          { title: "AI戦略＆ロードマップ", desc: "ワークフローを分析し、ボトルネックを特定、初日から価値を提供する段階的なAI導入計画を設計します。" },
+          { title: "チームイネーブルメント", desc: "AIベストプラクティスのトレーニング、内部能力の構築、エンゲージメント後も持続可能な導入を保証します。" },
+          { title: "ラピッドプロトタイピング", desc: "長い報告書の代わりに、チームが1週間以内にテストできるワーキングプロトタイプを構築。スケーリング前に価値を証明します。" },
         ],
-        link: "https://the-asguard.com",
+        link: "https://the-aiadviser.com/",
       },
     ],
-    // "AI DX": [
-    //   {
-    //     slug: "consulting",
-    //     name: "AIコンサルティング",
-    //     tagline: "ハンズオンAIトランスフォーメーション",
-    //     desc: "コンサルティングチームが組織と直接協力し、最もインパクトの高いAI機会を特定、カスタマイズされた戦略を設計、本番対応ソリューションを実装します。すべて数ヶ月ではなく数週間で。",
-    //     features: [
-    //       { title: "AI戦略＆ロードマップ", desc: "ワークフローを分析し、ボトルネックを特定、初日から価値を提供する段階的なAI導入計画を設計します。" },
-    //       { title: "チームイネーブルメント", desc: "AIベストプラクティスのトレーニング、内部能力の構築、エンゲージメント後も持続可能な導入を保証します。" },
-    //       { title: "ラピッドプロトタイピング", desc: "長い報告書の代わりに、チームが1週間以内にテストできるワーキングプロトタイプを構築。スケーリング前に価値を証明します。" },
-    //     ],
-    //     link: "https://the-aiadviser.com/",
-    //   },
-    // ],
   },
   en: {
     "AI SaaS": [
@@ -92,34 +79,21 @@ const productsData: Record<string, Record<string, Product[]>> = {
         ],
         link: "https://www.the-neuron.com/en",
       },
+    ],
+    "AI DX": [
       {
-        slug: "asguard",
-        name: "ASGUARD",
-        tagline: "AI Security",
-        desc: "ASGUARD is an AI-powered security platform that combines advanced threat detection, real-time monitoring, and compliance automation to protect your organization's digital assets against evolving cyber threats.",
+        slug: "consulting",
+        name: "AI Consulting",
+        tagline: "Hands-on AI transformation",
+        desc: "Our consulting team works hands-on with your organization to identify the highest-impact AI opportunities, design tailored strategies, and implement production-ready solutions — all in weeks, not months.",
         features: [
-          { title: "Threat Detection", desc: "AI identifies and responds to threats in real time — detecting sophisticated attacks that traditional security tools miss." },
-          { title: "Compliance Automation", desc: "Automates security audits and regulatory compliance, continuously monitoring adherence to industry standards and generating reports." },
-          { title: "Data Protection", desc: "End-to-end encryption and data loss prevention to comprehensively safeguard your sensitive information." },
-          { title: "Continuous Monitoring", desc: "24/7 AI-powered surveillance detects anomalies instantly and sends immediate alerts when incidents occur." },
+          { title: "AI Strategy & Roadmap", desc: "We analyze your workflows, identify bottlenecks, and design a phased AI adoption plan that delivers value from day one." },
+          { title: "Team Enablement", desc: "We train your teams on AI best practices, build internal capability, and ensure sustainable adoption beyond our engagement." },
+          { title: "Rapid Prototyping", desc: "Instead of lengthy reports, we build working prototypes your team can test within a week — proving value before scaling." },
         ],
-        link: "https://the-asguard.com",
+        link: "https://the-aiadviser.com/",
       },
     ],
-    // "AI DX": [
-    //   {
-    //     slug: "consulting",
-    //     name: "AI Consulting",
-    //     tagline: "Hands-on AI transformation",
-    //     desc: "Our consulting team works hands-on with your organization to identify the highest-impact AI opportunities, design tailored strategies, and implement production-ready solutions — all in weeks, not months.",
-    //     features: [
-    //       { title: "AI Strategy & Roadmap", desc: "We analyze your workflows, identify bottlenecks, and design a phased AI adoption plan that delivers value from day one." },
-    //       { title: "Team Enablement", desc: "We train your teams on AI best practices, build internal capability, and ensure sustainable adoption beyond our engagement." },
-    //       { title: "Rapid Prototyping", desc: "Instead of lengthy reports, we build working prototypes your team can test within a week — proving value before scaling." },
-    //     ],
-    //     link: "https://the-aiadviser.com/",
-    //   },
-    // ],
   },
 };
 

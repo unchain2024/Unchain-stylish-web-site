@@ -13,19 +13,12 @@ const solutions = {
       cta: "詳しく見る",
     },
     {
-      slug: "asguard",
-      category: "AI SaaS",
-      name: "ASGUARD",
-      description: "AIセキュリティ",
+      slug: "consulting",
+      category: "AI DX",
+      name: "AI Consulting",
+      description: "実践的なAIトランスフォーメーション",
       cta: "詳しく見る",
     },
-    // {
-    //   slug: "consulting",
-    //   category: "AI DX",
-    //   name: "AI Consulting",
-    //   description: "実践的なAIトランスフォーメーション",
-    //   cta: "詳しく見る",
-    // },
   ],
   en: [
     {
@@ -36,19 +29,12 @@ const solutions = {
       cta: "Learn More",
     },
     {
-      slug: "asguard",
-      category: "AI SaaS",
-      name: "ASGUARD",
-      description: "AI Security",
+      slug: "consulting",
+      category: "AI DX",
+      name: "AI Consulting",
+      description: "Hands-on AI transformation",
       cta: "Learn More",
     },
-    // {
-    //   slug: "consulting",
-    //   category: "AI DX",
-    //   name: "AI Consulting",
-    //   description: "Hands-on AI transformation",
-    //   cta: "Learn More",
-    // },
   ],
 };
 

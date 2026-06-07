@@ -1,56 +1,30 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, ExternalLink } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { useLang } from "@/lib/language";
+import { supabase } from "@/lib/supabase";
 
-const newsItems = {
-  ja: [
-    {
-      date: "2026年2月24日",
-      tags: ["プレスリリース", "注目"],
-      title: "UNCHAINがプレシードラウンドで3,500万円を調達",
-      excerpt: "East VenturesとANOBAKAが主導するプレシードラウンドで3,500万円を調達しました…",
-      url: "https://prtimes.jp/main/html/rd/p/000000001.000177392.html",
-    },
-    {
-      date: "2025年11月12日",
-      tags: [],
-      title: "UNCHAIN CEO Christian Parkが日米協議会年次カンファレンス2025で登壇",
-      excerpt: "共同創業者兼CEOのSunwoo \"Christian\" Parkが日米協議会の舞台に立ちました…",
-      url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
-    },
-    {
-      date: "2025年11月12日",
-      tags: [],
-      title: "Microsoft for Startupsに公式採択 — クラウドの力でグローバル展開を加速",
-      excerpt: "Microsoft for Startupsに公式採択され、クラウドの力でグローバル展開を加速します…",
-      url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
-    },
-  ],
-  en: [
-    {
-      date: "FEB 24, 2026",
-      tags: ["PRESS RELEASE", "FEATURED"],
-      title: "UNCHAIN Raises ¥35 Million in Pre-Seed Round",
-      excerpt: "UNCHAIN has raised ¥35 million in a pre-seed round led by East Ventures and ANOBAKA to...",
-      url: "https://prtimes.jp/main/html/rd/p/000000001.000177392.html",
-    },
-    {
-      date: "NOV 12, 2025",
-      tags: [],
-      title: "UNCHAIN CEO Christian Park Takes the Stage at U.S.–Japan Council Annual Conference 2025",
-      excerpt: 'Sunwoo "Christian" Park, Co-founder and CEO of UNCHAIN, took the stage at the U.S.–Japan...',
-      url: "https://medium.com/@unchain_the_world/unchain-ceo-christian-park-takes-the-stage-at-u-s-japan-council-annual-conference-2025-d45b6a4a168b",
-    },
-    {
-      date: "NOV 12, 2025",
-      tags: [],
-      title: "Official Selection for Microsoft for Startups — Advancing Globally Through the Power of Cloud",
-      excerpt: "UNCHAIN has been officially selected for Microsoft for Startups, leveraging Azure cloud to accelerate global expansion.",
-      url: "https://medium.com/@unchain_the_world/official-selection-for-microsoft-for-startups-advancing-globally-through-the-power-of-cloud-and-403ae4c0fd76",
-    },
-  ],
+interface Article {
+  id: string;
+  category?: string;
+  title: string;
+  description: string;
+  title_en?: string;
+  description_en?: string;
+  created_at: string;
+  is_draft: boolean;
+  is_external?: boolean;
+  external_url?: string;
+}
+
+const getLocalized = (article: Article, field: "title" | "description", lang: "ja" | "en") => {
+  const valCurrent = lang === "en" ? article[`${field}_en` as keyof Article] : article[field];
+  if (valCurrent && typeof valCurrent === "string" && valCurrent.trim() !== "") {
+    return valCurrent;
+  }
+  const valOther = lang === "en" ? article[field] : article[`${field}_en` as keyof Article];
+  return (valOther as string) || "";
 };
 
 const sectionText = {
@@ -60,63 +34,49 @@ const sectionText = {
 
 const NewsSection = () => {
   const { lang, localePath } = useLang();
-  const [items, setItems] = useState(newsItems[lang]);
-  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const t = sectionText[lang];
 
   useEffect(() => {
     let isMounted = true;
-    setItems(newsItems[lang]);
-    setLoading(true);
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("articles")
+          .select("*")
+          .eq("is_draft", false)
+          .eq("is_hidden", false)
+          .order("created_at", { ascending: false })
+          .limit(3);
 
-    const fetchMeta = async () => {
-      const updatedItems = await Promise.all(
-        newsItems[lang].map(async (item) => {
-          if (!("url" in item) || !item.url) return item;
-          try {
-            const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(item.url as string)}`;
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-            
-            if (data.status === "success" && data.data) {
-              
-              // Map microlink date to a localized format if available
-              let localizedDate = item.date;
-              if (data.data.date) {
-                const dateObj = new Date(data.data.date);
-                if (!isNaN(dateObj.getTime())) {
-                   localizedDate = lang === "ja" 
-                     ? `${dateObj.getFullYear()}年${dateObj.getMonth() + 1}月${dateObj.getDate()}日`
-                     : dateObj.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }).toUpperCase();
-                }
-              }
-
-              return {
-                ...item,
-                title: data.data.title || item.title,
-                excerpt: data.data.description || item.excerpt,
-                date: localizedDate
-              };
-            }
-            return item;
-          } catch (err) {
-            console.error("Failed to fetch metadata for", item.url, err);
-            return item;
-          }
-        })
-      );
-      if (isMounted) {
-        setItems(updatedItems);
-        setLoading(false);
+        if (error) throw error;
+        if (isMounted) {
+          setItems(data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching articles:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
 
-    fetchMeta();
-
+    fetchArticles();
     return () => {
       isMounted = false;
     };
-  }, [lang]);
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (lang === "ja") {
+      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+    return date
+      .toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+      .toUpperCase();
+  };
 
   return (
     <section id="news" data-nav-theme="light" className="bg-background section flex items-center min-h-0 md:min-h-screen">
@@ -145,13 +105,18 @@ const NewsSection = () => {
             </div>
           )}
           {items.map((item, i) => {
-            const hasUrl = "url" in item && item.url;
-            const Wrapper = hasUrl ? "a" : Link;
-            const linkProps = hasUrl
-              ? { href: item.url, target: "_blank", rel: "noopener noreferrer" }
+            const isExternal = item.is_external && item.external_url;
+            const Wrapper = isExternal ? "a" : Link;
+            const linkProps = isExternal
+              ? { href: item.external_url, target: "_blank", rel: "noopener noreferrer" }
               : { to: localePath("/news") };
+              
+            const tags = item.category ? item.category.split(",").map(c => c.trim()).filter(c => c.toLowerCase() !== "external") : [];
+            const title = getLocalized(item, "title", lang);
+            const excerpt = getLocalized(item, "description", lang);
+
             return (
-              <ScrollReveal key={i} delay={i * 0.08}>
+              <ScrollReveal key={item.id || i} delay={i * 0.08}>
                 <Wrapper {...(linkProps as any)} className="group block py-6">
                   <div className="flex items-start gap-6 lg:gap-8">
                     <div className="flex-shrink-0 w-12 lg:w-16 pt-1">
@@ -161,20 +126,30 @@ const NewsSection = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <span className="text-xs text-light-body">{item.date}</span>
-                        {item.tags.map((tag) => (
-                          <span key={tag} className="text-[10px] text-light-label border border-border rounded-full px-2 py-0.5 whitespace-nowrap">
+                        <span className="text-xs text-light-body font-medium">{formatDate(item.created_at)}</span>
+                        {tags.map((tag) => (
+                          <span key={tag} className="text-[10px] text-light-label border border-border rounded-full px-2 py-0.5 whitespace-nowrap uppercase">
                             {tag}
                           </span>
                         ))}
+                        {isExternal && (
+                          <span className="text-[10px] font-bold border rounded-full px-2 py-0.5 whitespace-nowrap uppercase bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1">
+                            <ExternalLink className="w-2.5 h-2.5" />
+                            {lang === "ja" ? "外部サイト" : "External"}
+                          </span>
+                        )}
                       </div>
                       <h3 className="text-2xl md:text-3xl font-bold text-light-heading mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                        {item.title}
+                        {title}
                       </h3>
-                      <p className="text-sm text-light-body line-clamp-1">{item.excerpt}</p>
+                      <p className="text-sm text-light-body line-clamp-1">{excerpt}</p>
                     </div>
                     <div className="hidden sm:block flex-shrink-0 pt-4">
-                      <ArrowRight className="w-4 h-4 text-light-body group-hover:text-foreground transition-colors" />
+                      {isExternal ? (
+                        <ExternalLink className="w-4 h-4 text-amber-500 group-hover:text-amber-600 transition-colors" />
+                      ) : (
+                        <ArrowRight className="w-4 h-4 text-light-body group-hover:text-foreground transition-colors" />
+                      )}
                     </div>
                   </div>
                 </Wrapper>

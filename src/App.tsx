@@ -24,6 +24,14 @@ import PublishBlogPage from "./pages/PublishBlogPage";
 import EditBlogListPage from "./pages/EditBlogListPage";
 import EditBlogPage from "./pages/EditBlogPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import YappPage from "./pages/YappPage";
+import YappLayout from "./components/yapp/chrome";
+import YappSolutions from "./pages/yapp/Solutions";
+import YappAbout from "./pages/yapp/About";
+import YappCareers from "./pages/yapp/Careers";
+import YappContact from "./pages/yapp/Contact";
+import YappNews from "./pages/yapp/News";
+import { YappPrivacy, YappTerms } from "./pages/yapp/Legal";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +45,16 @@ const AppLayout = () => (
 const pageRoutes = (
   <>
     <Route index element={<Index />} />
+    <Route path="yapp" element={<YappLayout />}>
+      <Route index element={<YappPage />} />
+      <Route path="solutions" element={<YappSolutions />} />
+      <Route path="about" element={<YappAbout />} />
+      <Route path="careers" element={<YappCareers />} />
+      <Route path="contact" element={<YappContact />} />
+      <Route path="news" element={<YappNews />} />
+      <Route path="privacy" element={<YappPrivacy />} />
+      <Route path="terms" element={<YappTerms />} />
+    </Route>
     <Route path="about" element={<AboutPage />} />
     <Route path="news" element={<NewsPage />} />
     <Route path="blog" element={<BlogPage />} />

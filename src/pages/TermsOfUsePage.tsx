@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 
-const heroText = {
+export const heroText = {
   ja: {
     label: "情報セキュリティ基本方針",
     heading: "情報セキュリティ\n基本方針",
@@ -16,7 +16,7 @@ const heroText = {
   },
 };
 
-const content = {
+export const content = {
   ja: {
     intro:
       "UNCHAIN株式会社（以下、当社）は、「AIセキュリティで、自律型AIエージェントを守る。」を理念とし、事業を行っています。当社の事業の中で取り扱う、お客様の情報をはじめとする情報資産は、当社の経営基盤として極めて重要なものです。漏洩、き損、滅失等のリスクから、情報資産を保護することの重要性を認識した役員や従業員を含めた、情報資産を扱う者が本方針を遵守し、情報資産の機密性、完全性、可用性といった情報セキュリティを維持するための活動を実践します。",

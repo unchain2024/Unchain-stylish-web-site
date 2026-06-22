@@ -1,0 +1,308 @@
+/* ============================================================
+   YAPP-STYLE THEME  —  exact-match port of yapp.li (Yappli)
+   ------------------------------------------------------------
+   Reverse-engineered from the live Yappli CSS (css/202007/*).
+   Design tokens taken verbatim from the source:
+     accent   #00a9e0  (sky-blue brand color)
+     accent-2 #23b3e3
+     navy     #1c2438  (primary text / dark sections)
+     gray     #838690  (secondary text)
+     surface  #f4f5f7  (light section background)
+     display  Montserrat   body  "Yu Gothic" / Noto Sans JP
+     buttons  solid #00a9e0 fill, border-radius 5px (NOT pills)
+     cards    border-radius 10px, soft navy-tinted shadow
+   Scoped to the /yapp route via `.yapp-root` so it never touches
+   the main UNCHAIN site's design tokens. Light theme, flat, airy.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap");
+
+.yapp-root {
+  --yapp-bg: #ffffff;
+  --yapp-surface: #f4f5f7;
+  --yapp-surface-2: #eef1f9;
+  --yapp-tint: #f4f9ff;
+  --yapp-navy: #1c2438;
+  --yapp-text: #1c2438;
+  --yapp-text-secondary: #838690;
+  --yapp-text-muted: #acb4c1;
+  --yapp-accent: #00a9e0;
+  --yapp-accent-2: #23b3e3;
+  --yapp-accent-dark: #0090c4;
+  --yapp-mint: #52bcb1;
+  --yapp-mint-soft: #b9eae0;
+  --yapp-border: #e0e3ea;
+  --yapp-border-strong: #dadde5;
+
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--yapp-bg);
+  color: var(--yapp-text);
+  font-family: "Noto Sans JP", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ Pro W3",
+    "メイリオ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  letter-spacing: 0.01em;
+}
+
+/* Montserrat for Latin display headings — Yappli's signature */
+.yapp-root h1,
+.yapp-root h2,
+.yapp-root h3,
+.yapp-display {
+  font-family: "Montserrat", "Noto Sans JP", "Yu Gothic Medium", sans-serif;
+}
+
+/* ambient background field — light blue wash, very subtle (Yappli-flat) */
+.yapp-bg-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 88% -10%, rgba(0, 169, 224, 0.06), transparent 60%),
+    radial-gradient(48rem 36rem at 6% 4%, rgba(82, 188, 177, 0.06), transparent 55%),
+    var(--yapp-bg);
+}
+/* keep grid element present (referenced by JSX) but effectively invisible/light */
+.yapp-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(to right, rgba(28, 36, 56, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 36, 56, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 45% at 50% 0%, #000 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 45% at 50% 0%, #000 25%, transparent 75%);
+}
+
+/* typography helpers */
+.yapp-secondary { color: var(--yapp-text-secondary); }
+.yapp-muted { color: var(--yapp-text-muted); }
+/* "grad" helper kept for API compatibility but now flat brand accent */
+.yapp-grad { color: var(--yapp-accent); }
+
+/* surfaces — light cards with soft navy shadow, 10px radius */
+.yapp-card {
+  background: #ffffff;
+  border: 1px solid var(--yapp-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px -16px rgba(28, 36, 56, 0.12);
+}
+.yapp-card-hover {
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.yapp-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--yapp-accent);
+  box-shadow: 0 24px 50px -22px rgba(0, 169, 224, 0.32);
+}
+
+/* buttons — Yappli: solid sky-blue fill, white text, radius 5px, weight 700 */
+.yapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  padding: 0.95rem 2rem;
+  border-radius: 5px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease, border-color 0.2s ease;
+}
+.yapp-btn-primary {
+  background: var(--yapp-accent);
+  color: #ffffff;
+  box-shadow: 0 12px 26px -12px rgba(0, 169, 224, 0.55);
+}
+.yapp-btn-primary:hover {
+  transform: translateY(-2px);
+  background: var(--yapp-accent-dark);
+  box-shadow: 0 18px 36px -12px rgba(0, 169, 224, 0.55);
+}
+/* outline / ghost — white fill, accent border + text (Yappli secondary btn) */
+.yapp-btn-ghost {
+  background: #ffffff;
+  border: 1px solid var(--yapp-accent);
+  color: var(--yapp-accent);
+}
+.yapp-btn-ghost:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 169, 224, 0.06);
+}
+
+/* eyebrow / section label — small Montserrat accent label, not a glassy pill */
+.yapp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(0, 169, 224, 0.1);
+  color: var(--yapp-accent);
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.yapp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--yapp-accent);
+  animation: yapp-ping 2s ease-in-out infinite;
+}
+@keyframes yapp-ping {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 169, 224, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(0, 169, 224, 0); }
+}
+
+/* award / medal badge — Yappli's signature circular ribbon in the hero */
+.yapp-medal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem 0.6rem 0.65rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid var(--yapp-border);
+  box-shadow: 0 10px 26px -16px rgba(28, 36, 56, 0.22);
+}
+.yapp-medal-coin {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  color: #ffffff;
+  background: linear-gradient(150deg, var(--yapp-accent-2), var(--yapp-accent));
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+/* small button variant (nav) */
+.yapp-btn-sm { padding: 0.55rem 1.15rem; }
+
+/* layout */
+.yapp-container { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+.yapp-section { padding: 6rem 0; position: relative; z-index: 1; }
+.yapp-section-alt { background: var(--yapp-surface); }
+
+/* utility / announcement bar — Yappli's thin top notice strip */
+.yapp-announce {
+  position: relative;
+  z-index: 60;
+  color: #ffffff;
+  background: linear-gradient(90deg, var(--yapp-accent), var(--yapp-accent-2));
+}
+.yapp-announce-tag {
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.1rem 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* nav dropdown panel */
+.yapp-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 17rem;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--yapp-border);
+  box-shadow: 0 24px 60px -24px rgba(28, 36, 56, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+.group:hover > .yapp-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(4px);
+}
+.yapp-dropdown-item {
+  display: block;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  transition: background 0.15s ease;
+}
+.yapp-dropdown-item:hover { background: var(--yapp-surface); }
+
+/* hero stat numbers — Montserrat accent figures */
+.yapp-stat-value {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  color: var(--yapp-accent);
+  letter-spacing: -0.01em;
+}
+
+/* dark stats band — Yappli's navy metric strip */
+.yapp-stats-band {
+  position: relative;
+  z-index: 1;
+  padding: 4.5rem 0;
+  background:
+    radial-gradient(60rem 30rem at 80% -20%, rgba(0, 169, 224, 0.35), transparent 60%),
+    var(--yapp-navy);
+}
+.yapp-stats-band .yapp-stat-value { color: #ffffff; }
+
+/* solid CTA cards (triple block) */
+.yapp-cta-card {
+  border-radius: 14px;
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgba(35, 179, 227, 0.5), transparent 60%),
+    linear-gradient(160deg, var(--yapp-accent), var(--yapp-accent-dark));
+  box-shadow: 0 24px 50px -26px rgba(0, 169, 224, 0.6);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.yapp-cta-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -24px rgba(0, 169, 224, 0.65);
+}
+
+/* footer */
+.yapp-footer {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border-top: 1px solid var(--yapp-border);
+}
+
+/* inner-page hero band */
+.yapp-page-hero {
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--yapp-border);
+  background:
+    radial-gradient(60% 130% at 50% -10%, rgba(0, 169, 224, 0.1), transparent 60%),
+    linear-gradient(180deg, var(--yapp-tint), #ffffff);
+}
+
+/* nav — white, sticky, subtle bottom border */
+.yapp-nav {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--yapp-border);
+}
+.yapp-nav a { color: var(--yapp-text); }
+
+/* marquee */
+.yapp-marquee { display: flex; width: max-content; }
+
+/* divider rule */
+.yapp-rule {
+  height: 1px;
+  background: var(--yapp-border);
+}

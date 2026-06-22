@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 
-const heroText = {
+export const heroText = {
   ja: {
     label: "プライバシーポリシー",
     heading: "プライバシーポリシー",
@@ -16,7 +16,7 @@ const heroText = {
   },
 };
 
-const content = {
+export const content = {
   ja: {
     intro:
       "UNCHAIN株式会社（以下「当社」といいます。）は、当社が取得する個人情報（個人情報の保護に関する法律（平成十五年法律第五十七号、以下「個人情報保護法」といいます。）にいう「個人情報」を指すものとし、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日その他の記述等により特定の個人を識別できるもの又は個人識別符号が含まれるものを指します。）の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。",

@@ -39,7 +39,9 @@ const pageRoutes = (
     <Route index element={<Index />} />
     <Route path="about" element={<AboutPage />} />
     <Route path="news" element={<NewsPage />} />
+    <Route path="news/:slug" element={<NewsPage />} />
     <Route path="blog" element={<BlogPage />} />
+    <Route path="blog/:slug" element={<BlogPage />} />
     <Route path="career" element={<CareerPage />} />
     <Route path="contact" element={<ContactPage />} />
     <Route path="solutions" element={<SolutionsPage />} />

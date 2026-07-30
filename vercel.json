@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    { "source": "/blog/:slug", "destination": "/api/og?section=blog&slug=:slug&lang=ja" },
+    { "source": "/news/:slug", "destination": "/api/og?section=news&slug=:slug&lang=ja" },
+    { "source": "/en/blog/:slug", "destination": "/api/og?section=blog&slug=:slug&lang=en" },
+    { "source": "/en/news/:slug", "destination": "/api/og?section=news&slug=:slug&lang=en" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

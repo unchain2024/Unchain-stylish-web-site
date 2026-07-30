@@ -1,0 +1,32 @@
+/**
+ * Hand-picked URLs for individual articles, keyed by article id.
+ *
+ * Slugs are normally derived from an article's title (see articleLinks.ts).
+ * That works well when a post has an English title, but a Japanese-only title
+ * has almost no latin text to work with — "UNCHAIN、プレシードラウンドで3500万円
+ * 調達を実施" reduces to "unchain-3500". Add an entry here to pin a readable URL
+ * instead.
+ *
+ * Also use this when you want a shorter or more memorable URL than the title
+ * gives, or to freeze an article's URL before editing its title.
+ *
+ * Rules:
+ *   - the key is the article's uuid, from the admin edit URL (/edit/<id> or
+ *     /edit-blog/<id>) — it works for both news and blog posts
+ *   - the value is the slug only, with no leading slash and no /blog or /news
+ *   - keep values lowercase, latin, hyphen-separated
+ *   - an override always wins; if a derived slug would clash with one, the
+ *     *derived* one moves aside, never the override
+ *
+ * Changing an entry changes that article's URL. Previously shared links keep
+ * working — the old derived slug and the bare id both still resolve.
+ */
+export const ARTICLE_SLUG_OVERRIDES: Record<string, string> = {
+  // --- News: Japanese-only titles ---------------------------------------
+  // UNCHAIN、AIツール「NEURON」を「読むAI」から「動くAI」へ進化。…POC導入企業を募集
+  "a2b5d4cf-daaf-461d-8e66-6031cef74468": "neuron-reading-ai-to-acting-ai-poc",
+  // UNCHAIN、プロダクトの意思決定を「いつ・誰が・なぜ」で可視化するAIツール「NEURON」をリリース
+  "0cd7c415-1d86-4f34-9638-863ab70f7efe": "neuron-release",
+  // UNCHAIN、プレシードラウンドで3500万円調達を実施 ー「継続的最適化」のAI基盤で世界に挑む
+  "6a3401ac-3d4d-4e09-babe-855098b6b5fb": "pre-seed-round-35m-jpy",
+};

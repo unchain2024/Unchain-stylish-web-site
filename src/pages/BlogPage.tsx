@@ -1,14 +1,21 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type ElementType } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Loader2, Search, Filter, ExternalLink } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLang } from "@/lib/language";
 import { supabase } from "@/lib/supabase";
-import { Helmet } from "react-helmet-async";
 import SEO from "@/components/SEO";
 import PressReleaseRenderer, { parsePressRelease } from "@/components/PressReleaseRenderer";
 import { getCategoryColor } from "./NewsPage";
+import {
+  SITE_URL,
+  articlePath,
+  articleUrl,
+  buildSlugIndex,
+  resolveArticleBySlug,
+} from "@/lib/articleLinks";
 
 const heroText = {
   ja: {
@@ -23,6 +30,9 @@ const heroText = {
     allLanguages: "すべての言語",
     langJapanese: "日本語のみ",
     langEnglish: "英語のみ",
+    backToBlog: "ブログ一覧へ戻る",
+    notFoundHeading: "記事が見つかりませんでした",
+    notFoundBody: "お探しの記事は削除されたか、URLが変更された可能性があります。",
   },
   en: {
     label: "BLOG & INSIGHTS",
@@ -36,11 +46,15 @@ const heroText = {
     allLanguages: "All Languages",
     langJapanese: "Japanese Only",
     langEnglish: "English Only",
+    backToBlog: "Back to Blog",
+    notFoundHeading: "Article not found",
+    notFoundBody: "This article may have been removed, or its URL may have changed.",
   },
 };
 
 interface Article {
   id: string;
+  slug?: string | null;
   category?: string;
   title: string;
   description: string;
@@ -77,15 +91,25 @@ const getLocalizedCustomHtml = (article: Article, lang: "ja" | "en") => {
 };
 
 const BlogPage = () => {
-  const { lang } = useLang();
+  const { lang, localePath } = useLang();
+  const { slug } = useParams<{ slug?: string }>();
   const hero = heroText[lang];
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // The detail view is driven entirely by the `:slug` route param, so every
+  // article is deep-linkable and shareable.
+  const slugIndex = useMemo(() => buildSlugIndex(articles), [articles]);
+  const selectedArticle = useMemo(
+    () => (slug ? resolveArticleBySlug(articles, slug) : null),
+    [articles, slug]
+  );
+  const selectedSlug = selectedArticle
+    ? slugIndex.get(selectedArticle.id) ?? selectedArticle.id
+    : "";
+  const notFound = !!slug && !loading && !error && !selectedArticle;
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState("");
@@ -114,28 +138,6 @@ const BlogPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleArticleClick = (article: Article) => {
-    if (article.is_external && article.external_url) {
-      window.open(article.external_url, "_blank", "noopener,noreferrer");
-      return;
-    }
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedArticle(article);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setIsTransitioning(false);
-    }, 300);
-  };
-
-  const handleBackToBlog = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedArticle(null);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setIsTransitioning(false);
-    }, 300);
   };
 
   const formatDate = (dateString: string) => {
@@ -201,26 +203,38 @@ const BlogPage = () => {
 
   const currentTitle = selectedArticle
     ? `${getLocalized(selectedArticle, "title", lang)} | UNCHAIN`
-    : `${hero.label} | UNCHAIN`;
+    : notFound
+      ? `${hero.notFoundHeading} | UNCHAIN`
+      : `${hero.label} | UNCHAIN`;
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden font-mono">
       {!selectedArticle ? (
-        <SEO title={currentTitle} description={hero.description} />
+        <SEO
+          title={currentTitle}
+          description={hero.description}
+          canonical={`${SITE_URL}${localePath("/blog")}`}
+          alternates={{ ja: `${SITE_URL}/blog`, en: `${SITE_URL}/en/blog` }}
+        />
       ) : (
-        <SEO 
-          title={currentTitle} 
+        <SEO
+          title={currentTitle}
           description={getLocalized(selectedArticle, "description", lang)}
           type="article"
           image={selectedArticle.image_url}
           author={{ name: `${selectedArticle.author_first_name} ${selectedArticle.author_last_name}` }}
           datePublished={selectedArticle.created_at}
+          canonical={articleUrl("blog", selectedSlug, lang)}
+          alternates={{
+            ja: selectedArticle.title?.trim() ? articleUrl("blog", selectedSlug, "ja") : undefined,
+            en: selectedArticle.title_en?.trim() ? articleUrl("blog", selectedSlug, "en") : undefined,
+          }}
         />
       )}
       <Navigation />
 
-      <div className={`transition-opacity duration-300 relative z-10 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
-        {!selectedArticle ? (
+      <div key={slug ?? "list"} className="animate-in fade-in duration-300 relative z-10">
+        {!slug ? (
           <>
             <section data-nav-theme="light" className="bg-background pt-32 pb-4 sm:pt-40 sm:pb-8">
               <div className="container-site">
@@ -341,10 +355,17 @@ const BlogPage = () => {
                       : ["INSIGHT"];
                     const isExternal = article.is_external && !!article.external_url;
 
+                    // Real anchors, so posts can be opened in a new tab, copied,
+                    // and followed by crawlers.
+                    const Wrapper: ElementType = isExternal ? "a" : Link;
+                    const wrapperProps: Record<string, unknown> = isExternal
+                      ? { href: article.external_url, target: "_blank", rel: "noopener noreferrer" }
+                      : { to: localePath(articlePath("blog", slugIndex.get(article.id) ?? article.id)) };
+
                     return (
                       <ScrollReveal key={article.id} delay={i * 0.08}>
-                        <button
-                          onClick={() => handleArticleClick(article)}
+                        <Wrapper
+                          {...wrapperProps}
                           className="group block py-6 w-full text-left focus:outline-none"
                         >
                           <div className="flex items-start gap-6 lg:gap-8">
@@ -396,7 +417,7 @@ const BlogPage = () => {
                               )}
                             </div>
                           </div>
-                        </button>
+                        </Wrapper>
 
                         {i < filteredArticles.length - 1 && (
                           <div className="border-t border-border" />
@@ -409,14 +430,33 @@ const BlogPage = () => {
               </div>
             </section>
           </>
+        ) : loading ? (
+          <div className="flex flex-col items-center justify-center py-64 space-y-4">
+            <Loader2 className="w-12 h-12 animate-spin text-primary" />
+          </div>
+        ) : !selectedArticle ? (
+          <div className="pt-32 pb-32 sm:pt-40 container-site max-w-4xl text-center">
+            <p className="heading-2 text-light-heading mb-3">
+              {error ? "Failed to load article" : hero.notFoundHeading}
+            </p>
+            <p className="body text-light-body mb-8">{error || hero.notFoundBody}</p>
+            <Link
+              to={localePath("/blog")}
+              className="inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors group"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              {hero.backToBlog}
+            </Link>
+          </div>
         ) : (
           <article className="pt-32 pb-32 sm:pt-40 container-site max-w-4xl relative z-10">
-            <button
-              onClick={handleBackToBlog}
-              className="mb-12 flex items-center gap-2 body text-light-body hover:text-foreground transition-colors group"
+            <Link
+              to={localePath("/blog")}
+              className="mb-12 inline-flex items-center gap-2 body text-light-body hover:text-foreground transition-colors group"
             >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Blog
-            </button>
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              {hero.backToBlog}
+            </Link>
 
             <div className="mb-12 relative">
               <div className="flex items-center gap-4 mb-5 flex-wrap">
